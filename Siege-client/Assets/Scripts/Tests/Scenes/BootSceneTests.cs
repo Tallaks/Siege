@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
@@ -43,6 +44,17 @@ namespace Kulinaria.Siege.Tests.Scenes
             // Assert
             Assert.IsNotNull(Object.FindObjectOfType<ProjectContext>());
             Assert.IsNotNull(Object.FindObjectOfType<GameInstaller>());
+        }
+
+        [UnityTest]
+        public IEnumerator WhenBootSceneLoaded_ThenProjectContextContainsGameInstallerInMonoInstallers()
+        {
+            // Arrange
+            yield return LoadBootSceneAndWait();
+            var projectContext = Object.FindObjectOfType<ProjectContext>();
+            
+            // Assert
+            Assert.IsTrue(projectContext.Installers.Contains(Object.FindObjectOfType<GameInstaller>()));
         }
 
         private IEnumerator LoadBootSceneAndWait()
