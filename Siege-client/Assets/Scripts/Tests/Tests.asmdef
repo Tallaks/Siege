@@ -3,7 +3,8 @@
     "rootNamespace": "Kulinaria.Siege",
     "references": [
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
