@@ -59,6 +59,16 @@ namespace Kulinaria.Siege.Tests.Scenes
             Assert.IsTrue(ProjectContext.Installers.Contains(GameInstaller));
         }
 
+        [UnityTest]
+        public IEnumerator WhenBootSceneLoaded_ThenThereIsOnlyOneGameInstaller()
+        {
+            // Arrange
+            yield return LoadBootSceneAndWait();
+            
+            // Assert
+            Assert.AreEqual(1, Object.FindObjectsOfType<GameInstaller>().Length);
+        }
+        
         private IEnumerator LoadBootSceneAndWait()
         {
             yield return LoadBootScene();
