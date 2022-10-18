@@ -13,6 +13,9 @@ namespace Kulinaria.Siege.Tests.Scenes
     [TestFixture]
     public class BootSceneTests
     {
+        private GameInstaller GameInstaller => Object.FindObjectOfType<GameInstaller>();
+        private ProjectContext ProjectContext => Object.FindObjectOfType<ProjectContext>();
+
         [UnityTest]
         public IEnumerator WhenBootSceneLoadCalled_ThenItLoads()
         {
@@ -42,8 +45,8 @@ namespace Kulinaria.Siege.Tests.Scenes
             yield return LoadBootSceneAndWait();
 
             // Assert
-            Assert.IsNotNull(Object.FindObjectOfType<ProjectContext>());
-            Assert.IsNotNull(Object.FindObjectOfType<GameInstaller>());
+            Assert.IsNotNull(ProjectContext);
+            Assert.IsNotNull(GameInstaller);
         }
 
         [UnityTest]
@@ -51,10 +54,9 @@ namespace Kulinaria.Siege.Tests.Scenes
         {
             // Arrange
             yield return LoadBootSceneAndWait();
-            var projectContext = Object.FindObjectOfType<ProjectContext>();
             
             // Assert
-            Assert.IsTrue(projectContext.Installers.Contains(Object.FindObjectOfType<GameInstaller>()));
+            Assert.IsTrue(ProjectContext.Installers.Contains(GameInstaller));
         }
 
         private IEnumerator LoadBootSceneAndWait()
