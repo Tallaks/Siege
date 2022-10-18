@@ -45,6 +45,18 @@ namespace Kulinaria.Siege.Tests.Scenes
             Assert.IsNotNull(projectContextComponent);
         }
 
+        [UnityTest]
+        public IEnumerator WhenBootSceneLoaded_ThenGameInstallerInstantiated()
+        {            
+            // Act
+            yield return LoadBootScene();
+            yield return new WaitForSeconds(0.5f);
+            
+            var projectInstallerComponent = Object.FindObjectOfType<GameInstaller>();
+            // Assert
+            Assert.IsNotNull(projectInstallerComponent);
+        }
+        
         private AsyncOperation LoadBootScene() => 
             SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
     }
