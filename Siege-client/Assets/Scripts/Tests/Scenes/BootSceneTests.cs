@@ -15,8 +15,8 @@ namespace Kulinaria.Siege.Tests.Scenes
         public IEnumerator WhenBootSceneLoadCalled_ThenItLoads()
         {
             // Arrange
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
             // Act
+            AsyncOperation asyncOperation = LoadBootScene();
             yield return asyncOperation;
             // Assert
             Assert.IsTrue(asyncOperation.isDone);
@@ -35,15 +35,17 @@ namespace Kulinaria.Siege.Tests.Scenes
 
         [UnityTest]
         public IEnumerator WhenBootSceneLoaded_ThenProjectContextLoaded()
-        {
+        {            
             // Act
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
-            yield return asyncOperation;
+            yield return LoadBootScene();
             yield return new WaitForSeconds(0.5f);
-
+            
             var projectContextComponent = Object.FindObjectOfType<ProjectContext>();
             // Assert
             Assert.IsNotNull(projectContextComponent);
         }
+
+        private AsyncOperation LoadBootScene() => 
+            SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
     }
 }
