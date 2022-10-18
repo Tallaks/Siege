@@ -35,29 +35,22 @@ namespace Kulinaria.Siege.Tests.Scenes
         }
 
         [UnityTest]
-        public IEnumerator WhenBootSceneLoaded_ThenProjectContextLoaded()
-        {            
-            // Act
-            yield return LoadBootScene();
-            yield return new WaitForSeconds(0.5f);
-            
-            var projectContextComponent = Object.FindObjectOfType<ProjectContext>();
+        public IEnumerator WhenBootSceneLoaded_ThenProjectContextAndGameInstallerExist()
+        {
+            // Arrange
+            yield return LoadBootSceneAndWait();
+
             // Assert
-            Assert.IsNotNull(projectContextComponent);
+            Assert.IsNotNull(Object.FindObjectOfType<ProjectContext>());
+            Assert.IsNotNull(Object.FindObjectOfType<GameInstaller>());
         }
 
-        [UnityTest]
-        public IEnumerator WhenBootSceneLoaded_ThenGameInstallerInstantiated()
-        {            
-            // Act
+        private IEnumerator LoadBootSceneAndWait()
+        {
             yield return LoadBootScene();
             yield return new WaitForSeconds(0.5f);
-            
-            var projectInstallerComponent = Object.FindObjectOfType<GameInstaller>();
-            // Assert
-            Assert.IsNotNull(projectInstallerComponent);
         }
-        
+
         private AsyncOperation LoadBootScene() => 
             SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
     }
