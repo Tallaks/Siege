@@ -1,5 +1,6 @@
 using System.Collections;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
+using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
