@@ -44,5 +44,21 @@ namespace Kulinaria.Siege.Tests.InputService
 
 			Assert.Fail();
 		}
+		
+		[UnityTest]
+		public IEnumerator WhenWASDPressed_ThenInputServiceRegistersMovement()
+		{
+			var moved = false;
+			InputService.OnMove += (_) => moved = true;
+
+			for (var i = 0; i < 10; i++)
+			{
+				yield return new WaitForSeconds(0.5f);
+				if(moved)
+					Assert.Pass();
+			}
+
+			Assert.Fail();
+		}
 	}
 }
