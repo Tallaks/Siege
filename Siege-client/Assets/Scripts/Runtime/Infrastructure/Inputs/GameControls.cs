@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace Kulinaria.Siege.Runtime.Infrastructure.InputService
+namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
 {
     public partial class @GameControls : IInputActionCollection2, IDisposable
     {
