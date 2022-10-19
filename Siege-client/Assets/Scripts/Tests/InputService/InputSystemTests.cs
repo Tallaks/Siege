@@ -36,7 +36,6 @@ namespace Kulinaria.Siege.Tests.InputService
 
 		public override void TearDown()
 		{
-			base.TearDown();
 		}
 	}
 }
