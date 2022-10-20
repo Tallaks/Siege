@@ -35,30 +35,61 @@ namespace Kulinaria.Siege.Tests.InputService
 			var clicked = false;
 			InputService.OnClick += (_) => clicked = true;
 
-			for (var i = 0; i < 10; i++)
+			while (true)
 			{
 				yield return new WaitForSeconds(0.5f);
 				if(clicked)
 					Assert.Pass();
 			}
-
-			Assert.Fail();
 		}
+
+		[UnityTest]
+		public IEnumerator WhenMouseInputsUsed_ThenThisTestPasses()
+		{
+			var clicked = false;
+			var rotated = false;
+			var zoomed = false;
+			InputService.OnClick += (_) => clicked = true;
+			InputService.OnClick += (_) => Debug.Log("Click");
+			InputService.OnRotate += (_) => rotated = true;
+			InputService.OnRotate += (_) => Debug.Log("Rotate");
+			InputService.OnZoom += (_) => zoomed = true;
+			InputService.OnZoom += (_) => Debug.Log("Zoom");
+
+			while (true)
+			{
+				yield return new WaitForSeconds(0.5f);
+				if(clicked && rotated && zoomed)
+					Assert.Pass();
+			}
+		}
+
 		
 		[UnityTest]
 		public IEnumerator WhenWASDPressed_ThenInputServiceRegistersMovement()
 		{
-			var moved = false;
-			InputService.OnMove += (_) => moved = true;
+			var movedUp = false;
+			var movedDown = false;
+			var movedRight = false;
+			var movedLeft = false;
+			InputService.OnMove += (inputMove) =>
+			{
+				if (inputMove.x > 0)
+					movedRight = true;
+				if (inputMove.x < 0)
+					movedLeft = true;
+				if (inputMove.y > 0)
+					movedUp = true;
+				if (inputMove.y < 0)
+					movedDown = true;
+			};
 
-			for (var i = 0; i < 10; i++)
+			while (true)
 			{
 				yield return new WaitForSeconds(0.5f);
-				if(moved)
+				if(movedDown && movedLeft && movedRight && movedUp)
 					Assert.Pass();
 			}
-
-			Assert.Fail();
 		}
 	}
 }

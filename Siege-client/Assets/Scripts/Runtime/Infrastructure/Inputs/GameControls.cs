@@ -49,12 +49,12 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                 },
                 {
                     ""name"": ""Rotate"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""8ca734ce-dfa5-4f56-b422-88d661491f76"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Zoom"",
@@ -189,9 +189,9 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Button With One Modifier"",
+                    ""name"": ""Alt+LeftButtton"",
                     ""id"": ""b2a9646d-d1a6-4257-ae78-dd4c379536c5"",
-                    ""path"": ""ButtonWithOneModifier"",
+                    ""path"": ""TwoModifiers"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -200,7 +200,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Modifier"",
+                    ""name"": ""Modifier1"",
                     ""id"": ""34d8087e-b1bd-4ca0-8938-a4288c7fcb37"",
                     ""path"": ""<Keyboard>/leftAlt"",
                     ""interactions"": """",
@@ -211,9 +211,20 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Button"",
+                    ""name"": ""Modifier2"",
                     ""id"": ""bfa397d5-5057-40ce-8ad7-9f39a7d26878"",
                     ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Binding"",
+                    ""id"": ""2e16c277-235a-4aed-83c4-f641648de68f"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
