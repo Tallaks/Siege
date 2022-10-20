@@ -30,20 +30,6 @@ namespace Kulinaria.Siege.Tests.InputService
 		}
 
 		[UnityTest]
-		public IEnumerator WhenLeftClickPressed_ThenInputServiceRegistersClick()
-		{
-			var clicked = false;
-			InputService.OnClick += (_) => clicked = true;
-
-			while (true)
-			{
-				yield return new WaitForSeconds(0.5f);
-				if(clicked)
-					Assert.Pass();
-			}
-		}
-
-		[UnityTest]
 		public IEnumerator WhenMouseInputsUsed_ThenThisTestPasses()
 		{
 			var clicked = false;
