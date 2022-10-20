@@ -5,11 +5,14 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Runtime",
-        "Zenject"
+        "Zenject",
+        "Unity.InputSystem.TestFramework",
+        "Unity.InputSystem",
+        "Zenject-TestFramework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll"
