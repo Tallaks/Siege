@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Linq;
+using Kulinaria.Siege.Runtime.Infrastructure;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
+using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
 using UnityEngine;
@@ -67,6 +69,20 @@ namespace Kulinaria.Siege.Tests.Scenes
             
             // Assert
             Assert.AreEqual(1, Object.FindObjectsOfType<GameInstaller>().Length);
+        }
+
+        [UnityTest]
+        public IEnumerator WhenBootSceneLoaded_ThenCoroutineRunnerExists()
+        {
+            yield return LoadBootScene();
+            Assert.NotNull(Object.FindObjectOfType<CoroutineRunner>());
+        }
+        
+        [UnityTest]
+        public IEnumerator WhenBootSceneLoaded_ThenBootstrapperExists()
+        {
+            yield return LoadBootScene();
+            Assert.NotNull(Object.FindObjectOfType<Bootstrapper>());
         }
         
         private IEnumerator LoadBootSceneAndWait()
