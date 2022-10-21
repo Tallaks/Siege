@@ -29,6 +29,8 @@ namespace Kulinaria.Siege.Tests
 			Coroutine runningRoutine = Container.Resolve<ICoroutineRunner>().StartCoroutine(RoutineExample());
 
 			Assert.NotNull(runningRoutine);
+			Container.Resolve<ICoroutineRunner>().StopCoroutine(runningRoutine);
+			
 			yield break;
 		}
 
