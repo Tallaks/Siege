@@ -1,6 +1,6 @@
-using Kulinaria.Siege.Runtime.Infrastructure.Constants;
+using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
-using UnityEngine.SceneManagement;
+using Kulinaria.Siege.Runtime.Infrastructure.Scenes;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
@@ -10,12 +10,21 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 		public override void InstallBindings()
 		{
 			Container
+				.Bind<ICoroutineRunner>()
+				.To<CoroutineRunner>()
+				.FromMethod(FindObjectOfType<CoroutineRunner>)
+				.AsSingle();
+				
+			Container
+				.Bind<ISceneLoader>()
+				.To<SceneLoader>()
+				.AsSingle();
+			
+			Container
 				.Bind<IInputService>()
 				.To<InputService>()
 				.FromNewComponentOnRoot()
 				.AsSingle();
-
-			SceneManager.LoadSceneAsync(SceneNames.BattleScene);
 		}
 	}
 }
