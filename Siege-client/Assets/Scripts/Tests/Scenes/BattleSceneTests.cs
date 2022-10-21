@@ -1,5 +1,6 @@
 using System.Collections;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
+using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,14 @@ namespace Kulinaria.Siege.Tests.Scenes
 	[TestFixture]
 	public class BattleSceneTests
 	{
+		[UnitySetUp]
+		public IEnumerator SetUp()
+		{
+			var gameInstaller = Object.FindObjectOfType<GameInstaller>();
+			gameInstaller?.Initialize();
+			yield break;
+		}
+
 		[UnityTest]
 		public IEnumerator WhenBattleSceneLoadCalled_ThenItLoads()
 		{
@@ -17,8 +26,6 @@ namespace Kulinaria.Siege.Tests.Scenes
 			// Act
 			AsyncOperation asyncOperation = LoadBattleScene();
 			yield return asyncOperation;
-			
-			Debug.Log(SceneManager.GetActiveScene().name);
 			
 			// Assert
 			Assert.IsTrue(asyncOperation.isDone);
@@ -29,13 +36,15 @@ namespace Kulinaria.Siege.Tests.Scenes
 		[UnityTest]
 		public IEnumerator WhenBootSceneLoaded_ThenBattleSceneLoadedAfterIt()
 		{
+			
 			yield return LoadBootScene();
+			Object.FindObjectOfType<GameInstaller>()?.Initialize();
 			yield return new WaitForSeconds(1);
 			
 			Assert.IsTrue(SceneManager.GetActiveScene().name == SceneNames.BattleScene);
 			Assert.IsTrue(SceneManager.GetActiveScene().name != SceneNames.BootScene);
 		}
-		
+
 		private AsyncOperation LoadBootScene() => 
 			SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
 

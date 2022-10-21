@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.Scenes

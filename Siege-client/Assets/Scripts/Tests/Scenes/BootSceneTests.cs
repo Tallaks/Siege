@@ -78,13 +78,6 @@ namespace Kulinaria.Siege.Tests.Scenes
             Assert.NotNull(Object.FindObjectOfType<CoroutineRunner>());
         }
         
-        [UnityTest]
-        public IEnumerator WhenBootSceneLoaded_ThenBootstrapperExists()
-        {
-            yield return LoadBootScene();
-            Assert.NotNull(Object.FindObjectOfType<Bootstrapper>());
-        }
-        
         private IEnumerator LoadBootSceneAndWait()
         {
             yield return LoadBootScene();
