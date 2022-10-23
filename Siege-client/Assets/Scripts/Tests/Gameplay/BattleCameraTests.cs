@@ -31,6 +31,24 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Assert.NotNull(Object.FindObjectOfType<CameraMover>());
 		}
 		
+		[UnityTest]
+		public IEnumerator WhenMovementForwardCommandSent_ThenCameraMovesForward()
+		{
+			yield return LoadBootScene();
+			Object.FindObjectOfType<GameInstaller>()?.Initialize();
+			yield return new WaitForSeconds(0.5f);
+
+			var camera = Object.FindObjectOfType<CameraMover>();
+			float startPosZ = camera.transform.position.z;
+			
+			while (true)
+			{
+				yield return null;
+				if(camera.transform.position.z > startPosZ)
+					Assert.Pass();
+			}
+		}
+		
 		private AsyncOperation LoadBootScene() => 
 			SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
 	}
