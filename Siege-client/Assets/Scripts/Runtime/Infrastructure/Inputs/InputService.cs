@@ -10,7 +10,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
 		public Action<Vector2> OnClick { get; set; }
 		public Action<Vector2> OnMove { get; set; }
 		public Action<Vector2> OnRotate { get; set; }
-		public Action<Vector2> OnZoom { get; set; }
+		public Action<float> OnZoom { get; set; }
 
 		private void Awake()
 		{
@@ -30,7 +30,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
 				OnRotate?.Invoke(_inputSystem.CameraActions.Rotate.ReadValue<Vector2>());
 			
 			if(_inputSystem.CameraActions.Zoom.WasPerformedThisFrame())
-				OnZoom?.Invoke(_inputSystem.CameraActions.Zoom.ReadValue<Vector2>());
+				OnZoom?.Invoke(_inputSystem.CameraActions.Zoom.ReadValue<float>());
 		}
 	}
 }

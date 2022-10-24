@@ -106,6 +106,8 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			var zoomedIn = false;
 			var zoomedOut = false;
 			
+			_camera = Object.FindObjectOfType<Camera>();
+			
 			while (true)
 			{
 				yield return null;
