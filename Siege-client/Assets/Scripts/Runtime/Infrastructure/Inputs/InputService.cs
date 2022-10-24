@@ -23,7 +23,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
 			if (_inputSystem.CameraActions.Click.WasPerformedThisFrame()) 
 				OnClick?.Invoke(Mouse.current.position.ReadValue());
 
-			if (_inputSystem.CameraActions.Move.WasPerformedThisFrame())
+			if (_inputSystem.CameraActions.Move.IsInProgress())
 				OnMove?.Invoke(_inputSystem.CameraActions.Move.ReadValue<Vector2>());
 			
 			if(_inputSystem.CameraActions.Rotate.WasPerformedThisFrame())
