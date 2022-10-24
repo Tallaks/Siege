@@ -15,15 +15,23 @@ namespace Kulinaria.Siege.Tests.Gameplay
 	[TestFixture]
 	public class BattleCameraTests
 	{
+		private CameraMover _cameraMover;
+		private Vector3 _startPosition;
+		private Camera _camera;
+		private float _startDistance;
+
 		[UnitySetUp]
 		public IEnumerator SetUp()
 		{
 			yield return LoadBootScene();
-			yield return new WaitForSeconds(0.5f);
 			Object.FindObjectOfType<GameInstaller>()?.Initialize();
+			yield return new WaitForSeconds(0.5f);
 			
-			var resolvedInputService = Object.FindObjectOfType<Runtime.Infrastructure.Inputs.InputService>();
-			Object.DontDestroyOnLoad(resolvedInputService.gameObject);
+			_camera = Object.FindObjectOfType<Camera>();
+			_cameraMover = Object.FindObjectOfType<CameraMover>();
+
+			_startPosition = _cameraMover.transform.position;
+			_startDistance = _camera.transform.localPosition.magnitude;
 		}
 		
 		[UnityTest]
@@ -43,13 +51,12 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenMovementForwardCommandSent_ThenCameraMovesForward()
 		{
-			var camera = Object.FindObjectOfType<CameraMover>();
-			float startPosZ = camera.transform.position.z;
+			float startPosZ = _startPosition.z;
 			
 			while (true)
 			{
 				yield return null;
-				if(camera.transform.position.z > startPosZ)
+				if(_cameraMover.transform.position.z > startPosZ)
 					Assert.Pass();
 			}
 		}
@@ -57,13 +64,12 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenMovementBackCommandSent_ThenCameraMovesBack()
 		{
-			var camera = Object.FindObjectOfType<CameraMover>();
-			float startPosZ = camera.transform.position.z;
+			float startPosZ = _startPosition.z;
 			
 			while (true)
 			{
 				yield return null;
-				if(camera.transform.position.z < startPosZ)
+				if(_cameraMover.transform.position.z < startPosZ)
 					Assert.Pass();
 			}
 		}
@@ -71,13 +77,12 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenMovementLeftCommandSent_ThenCameraMovesLeft()
 		{
-			var camera = Object.FindObjectOfType<CameraMover>();
-			float startPosX = camera.transform.position.x;
+			float startPosX = _startPosition.x;
 			
 			while (true)
 			{
 				yield return null;
-				if(camera.transform.position.x < startPosX)
+				if(_cameraMover.transform.position.x < startPosX)
 					Assert.Pass();
 			}
 		}
@@ -85,17 +90,35 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenMovementRightCommandSent_ThenCameraMovesRight()
 		{
-			var camera = Object.FindObjectOfType<CameraMover>();
-			float startPosX = camera.transform.position.x;
+			float startPosX = _startPosition.x;
 			
 			while (true)
 			{
 				yield return null;
-				if(camera.transform.position.x > startPosX)
+				if(_cameraMover.transform.position.x > startPosX)
 					Assert.Pass();
 			}
 		}
 
+		[UnityTest]
+		public IEnumerator WhenMovementZoomCommandSent_ThenCameraDoesZoom()
+		{
+			var zoomedIn = false;
+			var zoomedOut = false;
+			
+			while (true)
+			{
+				yield return null;
+				if (_camera.transform.localPosition.magnitude > _startDistance)
+					zoomedOut = true;
+				if (_camera.transform.localPosition.magnitude < _startDistance)
+					zoomedIn = true;
+				
+				if(zoomedIn && zoomedOut)
+					Assert.Pass();
+			}
+		}
+		
 		[UnityTearDown]
 		public IEnumerator TearDown()
 		{

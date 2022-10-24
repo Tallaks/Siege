@@ -30,7 +30,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 			Container
 				.Bind<IInputService>()
 				.To<InputService>()
-				.FromNewComponentOnRoot()
+				.FromComponentOn(gameObject)
 				.AsSingle();
 		}
 
