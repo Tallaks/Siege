@@ -7,6 +7,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 {
 	public class CameraMover : MonoBehaviour
 	{
+		[SerializeField] private float _movementSpeed = 1;
+		
 		private IInputService _inputService;
 
 		[Inject]
@@ -23,7 +25,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 			moveInput =>
 			{
 				var delta = new Vector3(moveInput.x, 0, moveInput.y);
-				transform.position += delta;
+				transform.position += delta * Time.deltaTime * _movementSpeed;
 			};
 	}
 }

@@ -20,6 +20,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		{
 			yield return LoadBootScene();
 			yield return new WaitForSeconds(0.5f);
+			Object.FindObjectOfType<GameInstaller>()?.Initialize();
 			
 			var resolvedInputService = Object.FindObjectOfType<Runtime.Infrastructure.Inputs.InputService>();
 			Object.DontDestroyOnLoad(resolvedInputService.gameObject);
@@ -35,20 +36,13 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenBattleSceneLoaded_ThenCameraMoverComponentExists()
 		{
-			yield return LoadBootScene();
-			Object.FindObjectOfType<GameInstaller>()?.Initialize();
-			yield return new WaitForSeconds(0.5f);
-
 			Assert.NotNull(Object.FindObjectOfType<CameraMover>());
+			yield break;
 		}
 		
 		[UnityTest]
 		public IEnumerator WhenMovementForwardCommandSent_ThenCameraMovesForward()
 		{
-			yield return LoadBootScene();
-			Object.FindObjectOfType<GameInstaller>()?.Initialize();
-			yield return new WaitForSeconds(0.5f);
-
 			var camera = Object.FindObjectOfType<CameraMover>();
 			float startPosZ = camera.transform.position.z;
 			
@@ -63,10 +57,6 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenMovementBackCommandSent_ThenCameraMovesBack()
 		{
-			yield return LoadBootScene();
-			Object.FindObjectOfType<GameInstaller>()?.Initialize();
-			yield return new WaitForSeconds(0.5f);
-
 			var camera = Object.FindObjectOfType<CameraMover>();
 			float startPosZ = camera.transform.position.z;
 			
@@ -81,10 +71,6 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenMovementLeftCommandSent_ThenCameraMovesLeft()
 		{
-			yield return LoadBootScene();
-			Object.FindObjectOfType<GameInstaller>()?.Initialize();
-			yield return new WaitForSeconds(0.5f);
-
 			var camera = Object.FindObjectOfType<CameraMover>();
 			float startPosX = camera.transform.position.x;
 			
@@ -99,10 +85,6 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenMovementRightCommandSent_ThenCameraMovesRight()
 		{
-			yield return LoadBootScene();
-			Object.FindObjectOfType<GameInstaller>()?.Initialize();
-			yield return new WaitForSeconds(0.5f);
-
 			var camera = Object.FindObjectOfType<CameraMover>();
 			float startPosX = camera.transform.position.x;
 			
