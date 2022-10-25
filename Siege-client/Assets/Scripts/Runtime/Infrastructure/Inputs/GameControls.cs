@@ -60,7 +60,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     ""name"": ""Zoom"",
                     ""type"": ""Value"",
                     ""id"": ""f3aed1eb-7cf0-467c-8730-5d85d51b4aa0"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -235,7 +235,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                 {
                     ""name"": """",
                     ""id"": ""fc87f66c-2be4-48c7-8a1e-488cd241a3d2"",
-                    ""path"": ""<Mouse>/scroll"",
+                    ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
