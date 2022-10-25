@@ -40,22 +40,28 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 		}
 
 		private Action<Vector2> RotateCamera() =>
-			delta =>
+			rotateInput =>
 			{
-				_xDeg += delta.x * _rotationSpeed * Time.deltaTime;
-				_yDeg -= delta.y * _rotationSpeed * Time.deltaTime;
+				_xDeg += rotateInput.x * _rotationSpeed * Time.deltaTime;
+				_yDeg -= rotateInput.y * _rotationSpeed * Time.deltaTime;
 				_yDeg = _yDeg.ClampedAngle(-80f, 80f);
 				
 				transform.rotation = Quaternion.Euler(_yDeg, _xDeg, 0);
 			};
 
 		private Action<float> ZoomCamera() =>
-			zoomInput => _camera.transform.position += _camera.transform.forward * zoomInput * _zoomSpeed;
+			zoomInput =>
+			{
+				Transform transform1 = _camera.transform;
+				transform1.position += transform1.forward * zoomInput * _zoomSpeed;
+			};
 
 		private Action<Vector2> MoveCamera() =>
 			moveInput =>
 			{
-				var delta = new Vector3(moveInput.x, 0, moveInput.y);
+				Transform cameraTransform = _camera.transform;
+				Vector3 moveDirection = moveInput.y * cameraTransform.forward + moveInput.x * cameraTransform.right;
+				Vector3 delta = Vector3.ProjectOnPlane(moveDirection, Vector3.up);
 				transform.position += delta * Time.deltaTime * _movementSpeed;
 			};
 	}

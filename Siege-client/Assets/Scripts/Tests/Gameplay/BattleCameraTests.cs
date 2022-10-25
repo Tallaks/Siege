@@ -132,6 +132,30 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			}
 		}
 		
+		[UnityTest]
+		public IEnumerator WhenCameraRotated_ThenCameraMovesForwardRight()
+		{
+			while (true)
+			{
+				_cameraMover.transform.rotation = Quaternion.Euler(00, 180, 0);
+				yield return null;
+				if (_camera.transform.position.z <= -5) 
+					Assert.Pass();
+			}
+		}
+		
+		[UnityTest]
+		public IEnumerator WhenCameraRotated_ThenCameraMovesLeftRightWay()
+		{
+			while (true)
+			{
+				_cameraMover.transform.rotation = Quaternion.Euler(00, 90, 0);
+				yield return null;
+				if (_camera.transform.position.z >= 5) 
+					Assert.Pass();
+			}
+		}
+		
 		[UnityTearDown]
 		public IEnumerator TearDown()
 		{
