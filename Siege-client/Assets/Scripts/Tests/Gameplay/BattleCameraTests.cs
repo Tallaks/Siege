@@ -19,6 +19,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		private Vector3 _startPosition;
 		private Camera _camera;
 		private float _startDistance;
+		private Quaternion _startRotation;
 
 		[UnitySetUp]
 		public IEnumerator SetUp()
@@ -31,6 +32,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			_cameraMover = Object.FindObjectOfType<CameraMover>();
 
 			_startPosition = _cameraMover.transform.position;
+			_startRotation = _cameraMover.transform.rotation;
 			_startDistance = _camera.transform.localPosition.magnitude;
 		}
 		
@@ -106,8 +108,6 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			var zoomedIn = false;
 			var zoomedOut = false;
 			
-			_camera = Object.FindObjectOfType<Camera>();
-			
 			while (true)
 			{
 				yield return null;
@@ -117,6 +117,17 @@ namespace Kulinaria.Siege.Tests.Gameplay
 					zoomedIn = true;
 				
 				if(zoomedIn && zoomedOut)
+					Assert.Pass();
+			}
+		}
+
+		[UnityTest]
+		public IEnumerator WhenMovementRotateCommandSent_ThenCameraRotates()
+		{
+			while (true)
+			{
+				yield return null;
+				if(_cameraMover.transform.rotation != _startRotation)
 					Assert.Pass();
 			}
 		}

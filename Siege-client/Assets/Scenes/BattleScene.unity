@@ -3895,6 +3895,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementSpeed: 10
   _zoomSpeed: 0.01
+  _rotationSpeed: 10
 --- !u!850595691 &1937742237
 LightingSettings:
   m_ObjectHideFlags: 0
