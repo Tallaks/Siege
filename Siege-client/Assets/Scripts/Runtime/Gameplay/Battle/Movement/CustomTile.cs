@@ -1,6 +1,8 @@
+using UnityEngine;
+
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 {
-	public class CustomTile
+	public class CustomTile : MonoBehaviour
 	{
 		
 	}
