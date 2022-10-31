@@ -12,6 +12,10 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.To<TileMovementService>()
 				.FromNew()
 				.AsSingle();
+			
+			Container
+				.BindFactory<CustomTile, TilemapFactory>()
+				.AsSingle();
 		}
 	}
 }

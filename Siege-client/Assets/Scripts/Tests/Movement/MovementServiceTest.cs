@@ -15,16 +15,19 @@ namespace Kulinaria.Siege.Tests.Movement
 		private SceneContext Context => Object.FindObjectOfType<SceneContext>();
 
 		[UnityTest]
-		public IEnumerator WhenBootSceneLoaded_ThenMovementServiceResolved()
+		public IEnumerator WhenBootSceneLoaded_ThenMovementServicesResolved()
 		{
 			yield return LoadBootScene();
 			yield return new WaitForSeconds(2);
-			
+
 			var movementService = Context.Container.Resolve<IMovementService>();
+			var tileFactory = Context.Container.Resolve<TilemapFactory>();
+
 			Assert.NotNull(movementService);
+			Assert.NotNull(tileFactory);
 		}
-		
-		private AsyncOperation LoadBootScene() => 
+
+		private AsyncOperation LoadBootScene() =>
 			SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
 	}
 }
