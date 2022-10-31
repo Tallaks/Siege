@@ -6,21 +6,17 @@ using Zenject;
 
 namespace Kulinaria.Siege.Tests.Movement
 {
-	public class GridTests : ZenjectIntegrationTestFixture
+	public class MovementServiceTests : ZenjectIntegrationTestFixture
 	{
 		[UnityTest]
 		public IEnumerator WhenMovementServiceBound_ThenMovementServiceIsInstalled()
 		{
 			PreInstall();
-			
-			Container
-				.Bind<IMovementService>()
-				.To<TileMovementService>()
-				.FromNew()
-				.AsSingle();
-			
+
+			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
+
 			PostInstall();
-			
+
 			Assert.NotNull(Container.Resolve<IMovementService>());
 			yield break;
 		}
@@ -29,13 +25,11 @@ namespace Kulinaria.Siege.Tests.Movement
 		public IEnumerator WhenTileFactoryBound_ThenTileFactoryInstalled()
 		{
 			PreInstall();
-			
-			Container
-				.BindFactory<CustomTile, TilemapFactory>()
-				.AsSingle();
+
+			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 
 			PostInstall();
-			
+
 			Assert.NotNull(Container.Resolve<TilemapFactory>());
 			yield break;
 		}

@@ -2,6 +2,7 @@ using Kulinaria.Siege.Runtime.Infrastructure.Constants;
 using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using Kulinaria.Siege.Runtime.Infrastructure.Scenes;
+using UnityEngine;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
@@ -19,7 +20,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 			Container
 				.Bind<ICoroutineRunner>()
 				.To<CoroutineRunner>()
-				.FromMethod(FindObjectOfType<CoroutineRunner>)
+				.FromMethod(() => new GameObject().AddComponent<CoroutineRunner>())
 				.AsSingle();
 				
 			Container
