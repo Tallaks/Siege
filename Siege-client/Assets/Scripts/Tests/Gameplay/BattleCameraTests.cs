@@ -49,7 +49,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Assert.NotNull(Object.FindObjectOfType<CameraMover>());
 			yield break;
 		}
-		
+		 
 		[UnityTest]
 		public IEnumerator WhenMovementForwardCommandSent_ThenCameraMovesForward()
 		{
@@ -164,7 +164,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 
 			foreach (CoroutineRunner runner in Object.FindObjectsOfType<CoroutineRunner>())
 			{
-				if(runner == resolvedRunner)
+				if(ReferenceEquals(runner, resolvedRunner))
 					continue;
 				
 				Object.Destroy(runner.gameObject);
@@ -172,7 +172,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 
 			foreach (Runtime.Infrastructure.Inputs.InputService inputService in Object.FindObjectsOfType<Runtime.Infrastructure.Inputs.InputService>())
 			{
-				if(inputService == resolvedInputService)
+				if(ReferenceEquals(inputService, resolvedInputService))
 					continue;
 				
 				Object.Destroy(inputService.gameObject);

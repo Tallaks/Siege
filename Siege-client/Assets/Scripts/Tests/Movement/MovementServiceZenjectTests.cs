@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Kulinaria.Siege.Tests.Movement
 {
-	public class MovementServiceTests : ZenjectIntegrationTestFixture
+	public class MovementServiceZenjectTests : ZenjectIntegrationTestFixture
 	{
 		[UnityTest]
 		public IEnumerator WhenMovementServiceBound_ThenMovementServiceIsInstalled()
