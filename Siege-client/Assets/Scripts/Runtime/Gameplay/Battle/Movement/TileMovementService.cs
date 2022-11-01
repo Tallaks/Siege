@@ -18,7 +18,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			for (var j = 0; j <= upperBound1; j++)
 			{
 				if(grid[i,j] == 1)
-					_tilemapFactory.Create(new Vector2Int(i, j));
+					_tilemapFactory.Create(new Vector2Int(j, upperBound0 - i));
 			}
 		}
 	}

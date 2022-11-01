@@ -1,5 +1,4 @@
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
-using UnityEngine;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
@@ -27,7 +26,6 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 
 		public void Initialize()
 		{
-			//Container.Resolve<TilemapFactory>().Create(Vector2Int.zero);
 		}
 	}
 }
