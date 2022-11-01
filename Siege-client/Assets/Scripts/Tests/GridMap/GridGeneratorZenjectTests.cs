@@ -1,26 +1,27 @@
 using System.Collections;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Zenject;
 
-namespace Kulinaria.Siege.Tests.Movement
+namespace Kulinaria.Siege.Tests.GridMap
 {
-	public class MovementServiceZenjectTests : ZenjectIntegrationTestFixture
+	public class GridGeneratorZenjectTests : ZenjectIntegrationTestFixture
 	{
 		[UnityTest]
-		public IEnumerator WhenMovementServiceAndTileFactoryBound_ThenTheyCanBeResolved()
+		public IEnumerator WhenTileFactoryAndGridGeneratorBound_ThenTheyCanBeResolved()
 		{
 			PreInstall();
 			
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
+			Container.Bind<IGridGenerator>().To<GridGenerator>().FromNew().AsSingle();
 
 			PostInstall();
 
-			Assert.NotNull(Container.Resolve<IMovementService>());
 			Assert.NotNull(Container.Resolve<TilemapFactory>());
+			Assert.NotNull(Container.Resolve<IGridGenerator>());
 			yield break;
 		}
 		
@@ -32,11 +33,11 @@ namespace Kulinaria.Siege.Tests.Movement
 			PreInstall();
 			
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
+			Container.Bind<IGridGenerator>().To<GridGenerator>().FromNew().AsSingle();
 
 			PostInstall();
 
-			Container.Resolve<IMovementService>().GenerateMap(grid0);
+			Container.Resolve<IGridGenerator>().GenerateMap(grid0);
 			
 			Assert.NotZero(Object.FindObjectsOfType<CustomTile>().Length);
 			Assert.AreEqual(4, Object.FindObjectsOfType<CustomTile>().Length);
@@ -55,11 +56,11 @@ namespace Kulinaria.Siege.Tests.Movement
 			PreInstall();
 			
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
+			Container.Bind<IGridGenerator>().To<GridGenerator>().FromNew().AsSingle();
 
 			PostInstall();
 
-			Container.Resolve<IMovementService>().GenerateMap(grid1);
+			Container.Resolve<IGridGenerator>().GenerateMap(grid1);
 
 			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>();
 			Assert.NotZero(customTiles.Length);
@@ -83,11 +84,11 @@ namespace Kulinaria.Siege.Tests.Movement
 			PreInstall();
 			
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
+			Container.Bind<IGridGenerator>().To<GridGenerator>().FromNew().AsSingle();
 
 			PostInstall();
 
-			Container.Resolve<IMovementService>().GenerateMap(grid1);
+			Container.Resolve<IGridGenerator>().GenerateMap(grid1);
 
 			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>();
 			Assert.NotZero(customTiles.Length);

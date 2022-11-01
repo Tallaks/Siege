@@ -1,5 +1,6 @@
 using System.Collections;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
 using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
@@ -9,10 +10,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using Zenject;
 
-namespace Kulinaria.Siege.Tests.Movement
+namespace Kulinaria.Siege.Tests.GridMap
 {
 	[TestFixture]
-	public class MovementServiceTest
+	public class GridGeneratorTest
 	{
 		private SceneContext Context => Object.FindObjectOfType<SceneContext>();
 		private GameInstaller GameInstaller => Object.FindObjectOfType<GameInstaller>();
@@ -26,9 +27,9 @@ namespace Kulinaria.Siege.Tests.Movement
 		}
 		
 		[UnityTest]
-		public IEnumerator WhenBootSceneLoaded_ThenMovementServicesResolved()
+		public IEnumerator WhenBootSceneLoaded_ThenGridGeneratorResolved()
 		{
-			var movementService = Context.Container.Resolve<IMovementService>();
+			var movementService = Context.Container.Resolve<IGridGenerator>();
 			var tileFactory = Context.Container.Resolve<TilemapFactory>();
 
 			Assert.NotNull(movementService);
