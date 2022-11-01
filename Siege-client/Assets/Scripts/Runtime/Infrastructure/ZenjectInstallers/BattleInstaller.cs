@@ -25,7 +25,9 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.AsSingle();
 		}
 
-		public void Initialize() => 
-			Container.Resolve<TilemapFactory>().Create(Vector2Int.zero);
+		public void Initialize()
+		{
+			//Container.Resolve<TilemapFactory>().Create(Vector2Int.zero);
+		}
 	}
 }
