@@ -29,7 +29,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenBootSceneLoaded_ThenGridGeneratorResolved()
 		{
-			var movementService = Context.Container.Resolve<IGridGenerator>();
+			var movementService = Context.Container.Resolve<IGridMap>();
 			var tileFactory = Context.Container.Resolve<TilemapFactory>();
 
 			Assert.NotNull(movementService);

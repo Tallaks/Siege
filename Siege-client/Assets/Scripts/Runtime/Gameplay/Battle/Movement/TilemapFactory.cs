@@ -17,11 +17,16 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			_parent = new GameObject("Tilemap").transform;
 		}
 
-		public CustomTile Create(Vector2Int cellPosition) =>
-			_container.InstantiatePrefabResourceForComponent<CustomTile>(
-				TilePrefabPath, 
+		public CustomTile Create(Vector2Int cellPosition)
+		{
+			var tile = _container.InstantiatePrefabResourceForComponent<CustomTile>(
+				TilePrefabPath,
 				cellPosition.ToWorld(),
 				Quaternion.identity,
 				_parent);
+			
+			tile.Initialize(cellPosition);
+			return tile;
+		}
 	}
 }

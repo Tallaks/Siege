@@ -19,8 +19,8 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.AsSingle();
 
 			Container
-				.Bind<IGridGenerator>()
-				.To<GridGenerator>()
+				.Bind<IGridMap>()
+				.To<GridMap>()
 				.FromNew()
 				.AsSingle();
 			
@@ -33,13 +33,16 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 
 		public void Initialize()
 		{
-			var grid1 = new[,]
+			var grid = new[,]
 			{
 				{ 1, 1, 1, 1, 0 }, 
-				{ 0, 0, 0, 0, 1 }
+				{ 0, 0, 0, 0, 1 },
+				{ 1, 1, 1, 1, 1 },
+				{ 0, 0, 1, 0, 1 },
+				{ 1, 0, 1, 1, 0 }
 			};
 
-			Container.Resolve<IGridGenerator>().GenerateMap(grid1);
+			Container.Resolve<IGridMap>().GenerateMap(grid);
 		}
 	}
 }
