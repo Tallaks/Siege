@@ -33,7 +33,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 
 		public void Initialize()
 		{
-			var grid = new[,]
+			GridMap.GridArray = new[,]
 			{
 				{ 1, 1, 1, 1, 0 }, 
 				{ 0, 0, 0, 0, 1 },
@@ -42,7 +42,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				{ 1, 0, 1, 1, 0 }
 			};
 
-			Container.Resolve<IGridMap>().GenerateMap(grid);
+			Container.Resolve<IGridMap>().GenerateMap();
 		}
 	}
 }

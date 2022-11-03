@@ -3,6 +3,7 @@ using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using Kulinaria.Siege.Runtime.Infrastructure.Scenes;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
@@ -24,6 +25,11 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.AsSingle();
 				
 			Container
+				.Bind<Camera>()
+				.FromInstance(Camera.main)
+				.AsSingle();
+			
+			Container
 				.Bind<ISceneLoader>()
 				.To<SceneLoader>()
 				.AsSingle();
@@ -35,7 +41,13 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.AsSingle();
 		}
 
-		public void Initialize() => 
-			Container.Resolve<ISceneLoader>().LoadSceneAsync(SceneNames.BattleScene);
+		public void Initialize()
+		{
+			for (var i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+			{
+				if (!SceneManager.GetActiveScene().name.Contains("InitTestScene"))
+					Container.Resolve<ISceneLoader>().LoadSceneAsync(SceneNames.BattleScene);
+			}
+		}
 	}
 }
