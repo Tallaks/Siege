@@ -3,13 +3,14 @@ using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using Kulinaria.Siege.Runtime.Infrastructure.Scenes;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 {
 	public class GameInstaller : MonoInstaller, IInitializable
 	{
+		public static bool Testing = false;
+		
 		public override void InstallBindings()
 		{
 			Container
@@ -43,11 +44,8 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 
 		public void Initialize()
 		{
-			for (var i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
-			{
-				if (!SceneManager.GetActiveScene().name.Contains("InitTestScene"))
-					Container.Resolve<ISceneLoader>().LoadSceneAsync(SceneNames.BattleScene);
-			}
+			if(!Testing)
+				Container.Resolve<ISceneLoader>().LoadSceneAsync(SceneNames.BattleScene);
 		}
 	}
 }

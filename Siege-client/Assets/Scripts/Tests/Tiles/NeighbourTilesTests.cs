@@ -2,8 +2,8 @@ using System.Collections;
 using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
+using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
-using UnityEngine;
 using UnityEngine.TestTools;
 using Zenject;
 
@@ -16,6 +16,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 		[UnityTest]
 		public IEnumerator WhenMapGenerated_ThenTilesHaveRightNeighbourCount()
 		{
+			GameInstaller.Testing = true;
 			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
 			{
 				{ 1, 1, 1, 1, 0 },
@@ -47,7 +48,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 		[UnityTest]
 		public IEnumerator WhenMapGenerated_ThenTilesAreNeighboursToEachOther()
-		{			
+		{
+			GameInstaller.Testing = true;
 			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
 			{
 				{ 1, 1, 1, 1, 0 },
