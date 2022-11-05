@@ -16,6 +16,23 @@ namespace Kulinaria.Siege.Tests.Movement
 		private IPathFinder _pathFinder;
 
 		[UnityTest]
+		public IEnumerator WhenTileSelected_ThenDistanceAndPathToSameTileIsZero()
+		{
+			PrepareTiles();
+
+			CustomTile tile04 = _gridMap.GetTile(0, 4);
+
+			_gridMap.OnTileSelection?.Invoke(tile04);
+
+			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile04);
+			
+			Assert.AreEqual(0, _pathFinder.Distance(tile04));
+			Assert.AreEqual(0, path.Count);
+			
+			yield break;
+		}
+		
+		[UnityTest]
 		public IEnumerator WhenTileSelected_ThenDistancesToChosenTileAreCorrect()
 		{
 			PrepareTiles();
