@@ -48,6 +48,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			return path;
 		}
 
+		public IEnumerable<CustomTile> GetAvailableTilesByDistance(int distance) => 
+			_map.AllTiles.Where(k => _distances[k] <= distance);
+
 		private void FindDistancesToAllTilesFrom(CustomTile startTile)
 		{
 			_startTile = startTile;
@@ -63,17 +66,18 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 
 			_distances[startTile] = 0;
 			CustomTile[] arrayOfTiles = _map.AllTiles.ToArray();
-			
-			for (var i = 0; i < tileCount; i++)
+			for (var j = 0; j < tileCount; j++)
 			{
-				CustomTile currentTile = arrayOfTiles[i];
-				
-				foreach (CustomTile tile in currentTile.NeighboursWithDistances.Keys)
+				for (var i = 0; i < tileCount; i++)
 				{
-					if (_distances[currentTile] > AddDistances(_distances[tile], currentTile.NeighboursWithDistances[tile]))
+					CustomTile currentTile = arrayOfTiles[i];
+					foreach (CustomTile tile in currentTile.NeighboursWithDistances.Keys)
 					{
-						_distances[currentTile] = AddDistances(_distances[tile],currentTile.NeighboursWithDistances[tile]);
-						_predecessors[currentTile] = tile;
+						if (_distances[currentTile] > AddDistances(_distances[tile], currentTile.NeighboursWithDistances[tile]))
+						{
+							_distances[currentTile] = AddDistances(_distances[tile], currentTile.NeighboursWithDistances[tile]);
+							_predecessors[currentTile] = tile;
+						}
 					}
 				}
 			}

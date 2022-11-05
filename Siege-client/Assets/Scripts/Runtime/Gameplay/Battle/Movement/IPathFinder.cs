@@ -6,5 +6,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 	{
 		int Distance(CustomTile tileB);
 		LinkedList<CustomTile> GetShortestPath(CustomTile tile32);
+		IEnumerable<CustomTile> GetAvailableTilesByDistance(int distance);
 	}
 }
