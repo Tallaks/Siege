@@ -8,14 +8,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 {
 	public class CustomTile : MonoBehaviour
 	{
-		private readonly HashSet<CustomTile> _neighbours = new();
+		private readonly Dictionary<CustomTile, int> _neighboursWithDistances = new();
 
 		private IGridMap _map;
 		private IInputService _inputService;
 		private Camera _camera;
 
-		public IEnumerable<CustomTile> Neighbours =>
-			_neighbours;
+		public IReadOnlyDictionary<CustomTile, int> NeighboursWithDistances =>
+			_neighboursWithDistances;
 
 		public Vector2Int CellPosition { get; private set; }
 
@@ -27,10 +27,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			_map = map;
 		}
 
-		private void OnEnable() => 
+		private void OnEnable() =>
 			_inputService.OnClick += Select;
 
-		private void OnDisable() => 
+		private void OnDisable() =>
 			_inputService.OnClick -= Select;
 
 		public void Initialize(Vector2Int cellPos)
@@ -45,7 +45,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			Ray ray = _camera.ScreenPointToRay(screenPosition);
 			if (Physics.Raycast(ray, out RaycastHit hit))
 			{
-				if(hit.transform.GetComponent<CustomTile>() == this)
+				if (hit.transform.GetComponent<CustomTile>() == this)
 					_map.OnTileSelection?.Invoke(this);
 			}
 		}
@@ -64,11 +64,22 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 
 		private static void AddNeighbours(CustomTile a, CustomTile b)
 		{
-			if(a == null || b == null)
+			if (a == null || b == null)
 				return;
-			
-			a._neighbours.Add(b);
-			b._neighbours.Add(a);
+
+			int deltaX = Mathf.Abs(a.CellPosition.x - b.CellPosition.x);
+			int deltaY = Mathf.Abs(a.CellPosition.y - b.CellPosition.y);
+
+			if (deltaX + deltaY < 2)
+			{
+				a._neighboursWithDistances[b] = 2;
+				b._neighboursWithDistances[a] = 2;
+			}
+			else
+			{
+				a._neighboursWithDistances[b] = 3;
+				b._neighboursWithDistances[a] = 3;
+			}
 		}
 	}
 }
