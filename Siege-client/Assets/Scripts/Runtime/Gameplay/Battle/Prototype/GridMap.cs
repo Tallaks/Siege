@@ -9,14 +9,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 	public class GridMap : IGridMap
 	{
 		public static int[,] GridArray;
-		
+
 		private readonly TilemapFactory _tilemapFactory;
-		private readonly List<CustomTile> _tiles  = new();
+		private readonly List<CustomTile> _tiles = new();
 
 		public IEnumerable<CustomTile> AllTiles => _tiles;
 		public Action<CustomTile> OnTileSelection { get; set; }
 
-		public GridMap(TilemapFactory tilemapFactory) => 
+		public GridMap(TilemapFactory tilemapFactory) =>
 			_tilemapFactory = tilemapFactory;
 
 		public void GenerateMap()
@@ -35,7 +35,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 			}
 		}
 
-		public CustomTile GetTile(int x, int y) => 
+		public CustomTile GetTile(int x, int y) =>
 			_tiles.FirstOrDefault(k => k.CellPosition == new Vector2Int(x, y));
 	}
 }

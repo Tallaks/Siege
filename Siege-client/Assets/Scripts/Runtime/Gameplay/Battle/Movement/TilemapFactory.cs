@@ -7,7 +7,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 	public class TilemapFactory : PlaceholderFactory<CustomTile>
 	{
 		private const string TilePrefabPath = "Prefabs/Battle/Tile";
-		
+
 		private readonly DiContainer _container;
 		private readonly Transform _parent;
 
@@ -24,7 +24,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 				cellPosition.ToWorld(),
 				Quaternion.identity,
 				_parent);
-			
+
 			tile.Initialize(cellPosition);
 			return tile;
 		}

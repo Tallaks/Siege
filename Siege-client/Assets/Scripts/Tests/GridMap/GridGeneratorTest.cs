@@ -25,7 +25,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			GameInstaller.Initialize();
 			yield return new WaitForSeconds(2);
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenBootSceneLoaded_ThenGridGeneratorResolved()
 		{
@@ -52,12 +52,12 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			foreach (CoroutineRunner runner in Object.FindObjectsOfType<CoroutineRunner>())
 			{
-				if(ReferenceEquals(runner, resolvedRunner))
+				if (ReferenceEquals(runner, resolvedRunner))
 					continue;
-				
+
 				Object.Destroy(runner.gameObject);
 			}
-			
+
 			yield break;
 		}
 
