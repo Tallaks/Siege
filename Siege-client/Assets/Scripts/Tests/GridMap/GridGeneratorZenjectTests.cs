@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using NUnit.Framework;
@@ -41,6 +42,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			
 			Assert.NotZero(Object.FindObjectsOfType<CustomTile>().Length);
 			Assert.AreEqual(4, Object.FindObjectsOfType<CustomTile>().Length);
+			Assert.AreEqual(4, Container.Resolve<IGridMap>().AllTiles.Count());
 			yield break;
 		}
 		
@@ -68,7 +70,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Assert.AreEqual(
 				new Vector3(0.5f, 0.1f, 0.5f),
 				customTiles[0].transform.position);
-			
+			Assert.AreEqual(2, Container.Resolve<IGridMap>().AllTiles.Count());
 			yield break;
 		}
 		
@@ -99,7 +101,8 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Assert.AreEqual(
 				new Vector3(4.5f, 0.1f, 0.5f),
 				customTiles[0].transform.position);
-			
+			Assert.AreEqual(5, Container.Resolve<IGridMap>().AllTiles.Count());
+
 			yield break;
 		}
 
