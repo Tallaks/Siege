@@ -2,52 +2,52 @@
 
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Zenject
 {
-    public class DefaultGameObjectParentInstaller : Installer<string, DefaultGameObjectParentInstaller>
-    {
-        readonly string _name;
+	public class DefaultGameObjectParentInstaller : Installer<string, DefaultGameObjectParentInstaller>
+	{
+		private readonly string _name;
 
-        public DefaultGameObjectParentInstaller(string name)
-        {
-            _name = name;
-        }
+		public DefaultGameObjectParentInstaller(string name)
+		{
+			_name = name;
+		}
 
-        public override void InstallBindings()
-        {
+		public override void InstallBindings()
+		{
 #if !ZEN_TESTS_OUTSIDE_UNITY
-            var defaultParent = new GameObject(_name);
+			var defaultParent = new GameObject(_name);
 
-            defaultParent.transform.SetParent(
-                Container.InheritedDefaultParent, false);
+			defaultParent.transform.SetParent(
+				Container.InheritedDefaultParent, false);
 
-            Container.DefaultParent = defaultParent.transform;
+			Container.DefaultParent = defaultParent.transform;
 
-            Container.Bind<IDisposable>()
-                .To<DefaultParentObjectDestroyer>().AsCached().WithArguments(defaultParent);
+			Container.Bind<IDisposable>().To<DefaultParentObjectDestroyer>().AsCached().WithArguments(defaultParent);
 
-            // Always destroy the default parent last so that the non-monobehaviours get a chance
-            // to clean it up if they want to first
-            Container.BindDisposableExecutionOrder<DefaultParentObjectDestroyer>(int.MinValue);
+			// Always destroy the default parent last so that the non-monobehaviours get a chance
+			// to clean it up if they want to first
+			Container.BindDisposableExecutionOrder<DefaultParentObjectDestroyer>(int.MinValue);
 #endif
-        }
+		}
 
-        class DefaultParentObjectDestroyer : IDisposable
-        {
-            readonly GameObject _gameObject;
+		private class DefaultParentObjectDestroyer : IDisposable
+		{
+			private readonly GameObject _gameObject;
 
-            public DefaultParentObjectDestroyer(GameObject gameObject)
-            {
-                _gameObject = gameObject;
-            }
+			public DefaultParentObjectDestroyer(GameObject gameObject)
+			{
+				_gameObject = gameObject;
+			}
 
-            public void Dispose()
-            {
-                GameObject.Destroy(_gameObject);
-            }
-        }
-    }
+			public void Dispose()
+			{
+				Object.Destroy(_gameObject);
+			}
+		}
+	}
 }
 
 #endif

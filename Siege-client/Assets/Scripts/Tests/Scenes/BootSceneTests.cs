@@ -99,7 +99,6 @@ namespace Kulinaria.Siege.Tests.Scenes
 			yield return new WaitForSeconds(0.5f);
 		}
 
-		private AsyncOperation LoadBootScene() =>
-			SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		private AsyncOperation LoadBootScene() => SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
 	}
 }

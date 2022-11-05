@@ -3,48 +3,48 @@ using ModestTree;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class PlaceholderFactoryBindingFinalizer<TContract> : ProviderBindingFinalizer
-    {
-        readonly FactoryBindInfo _factoryBindInfo;
+	[NoReflectionBaking]
+	public class PlaceholderFactoryBindingFinalizer<TContract> : ProviderBindingFinalizer
+	{
+		private readonly FactoryBindInfo _factoryBindInfo;
 
-        public PlaceholderFactoryBindingFinalizer(
-            BindInfo bindInfo, FactoryBindInfo factoryBindInfo)
-            : base(bindInfo)
-        {
-            // Note that it doesn't derive from PlaceholderFactory<TContract>
-            // when used with To<>, so we can only check IPlaceholderFactory
-            Assert.That(factoryBindInfo.FactoryType.DerivesFrom<IPlaceholderFactory>());
+		public PlaceholderFactoryBindingFinalizer(
+			BindInfo bindInfo, FactoryBindInfo factoryBindInfo)
+			: base(bindInfo)
+		{
+			// Note that it doesn't derive from PlaceholderFactory<TContract>
+			// when used with To<>, so we can only check IPlaceholderFactory
+			Assert.That(factoryBindInfo.FactoryType.DerivesFrom<IPlaceholderFactory>());
 
-            _factoryBindInfo = factoryBindInfo;
-        }
+			_factoryBindInfo = factoryBindInfo;
+		}
 
-        protected override void OnFinalizeBinding(DiContainer container)
-        {
-            var provider = _factoryBindInfo.ProviderFunc(container);
+		protected override void OnFinalizeBinding(DiContainer container)
+		{
+			IProvider provider = _factoryBindInfo.ProviderFunc(container);
 
-            var transientProvider = new TransientProvider(
-                _factoryBindInfo.FactoryType,
-                container,
-                _factoryBindInfo.Arguments.Concat(
-                    InjectUtil.CreateArgListExplicit(
-                        provider,
-                        new InjectContext(container, typeof(TContract)))).ToList(),
-                BindInfo.ContextInfo, BindInfo.ConcreteIdentifier, null);
+			var transientProvider = new TransientProvider(
+				_factoryBindInfo.FactoryType,
+				container,
+				_factoryBindInfo.Arguments.Concat(
+					InjectUtil.CreateArgListExplicit(
+						provider,
+						new InjectContext(container, typeof(TContract)))).ToList(),
+				BindInfo.ContextInfo, BindInfo.ConcreteIdentifier, null);
 
-            IProvider mainProvider;
+			IProvider mainProvider;
 
-            if (BindInfo.Scope == ScopeTypes.Unset || BindInfo.Scope == ScopeTypes.Singleton)
-            {
-                mainProvider = BindingUtil.CreateCachedProvider(transientProvider);
-            }
-            else
-            {
-                Assert.IsEqual(BindInfo.Scope, ScopeTypes.Transient);
-                mainProvider = transientProvider;
-            }
+			if (BindInfo.Scope == ScopeTypes.Unset || BindInfo.Scope == ScopeTypes.Singleton)
+			{
+				mainProvider = BindingUtil.CreateCachedProvider(transientProvider);
+			}
+			else
+			{
+				Assert.IsEqual(BindInfo.Scope, ScopeTypes.Transient);
+				mainProvider = transientProvider;
+			}
 
-            RegisterProviderForAllContracts(container, mainProvider);
-        }
-    }
+			RegisterProviderForAllContracts(container, mainProvider);
+		}
+	}
 }

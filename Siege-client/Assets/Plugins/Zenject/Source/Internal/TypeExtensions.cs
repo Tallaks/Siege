@@ -6,125 +6,116 @@ using System.Text;
 
 namespace ModestTree
 {
-    public static class TypeExtensions
-    {
-        static readonly Dictionary<Type, bool> _isClosedGenericType = new Dictionary<Type, bool>();
-        static readonly Dictionary<Type, bool> _isOpenGenericType = new Dictionary<Type, bool>();
-        static readonly Dictionary<Type, bool> _isValueType = new Dictionary<Type, bool>();
-        static readonly Dictionary<Type, Type[]> _interfaces = new Dictionary<Type, Type[]>();
+	public static class TypeExtensions
+	{
+		private static readonly Dictionary<Type, bool> _isClosedGenericType = new();
+		private static readonly Dictionary<Type, bool> _isOpenGenericType = new();
+		private static readonly Dictionary<Type, bool> _isValueType = new();
+		private static readonly Dictionary<Type, Type[]> _interfaces = new();
 
-        public static bool DerivesFrom<T>(this Type a)
-        {
-            return DerivesFrom(a, typeof(T));
-        }
+		public static bool DerivesFrom<T>(this Type a)
+		{
+			return DerivesFrom(a, typeof(T));
+		}
 
-        // This seems easier to think about than IsAssignableFrom
-        public static bool DerivesFrom(this Type a, Type b)
-        {
-            return b != a && a.DerivesFromOrEqual(b);
-        }
+		// This seems easier to think about than IsAssignableFrom
+		public static bool DerivesFrom(this Type a, Type b)
+		{
+			return b != a && a.DerivesFromOrEqual(b);
+		}
 
-        public static bool DerivesFromOrEqual<T>(this Type a)
-        {
-            return DerivesFromOrEqual(a, typeof(T));
-        }
+		public static bool DerivesFromOrEqual<T>(this Type a)
+		{
+			return DerivesFromOrEqual(a, typeof(T));
+		}
 
-        public static bool DerivesFromOrEqual(this Type a, Type b)
-        {
+		public static bool DerivesFromOrEqual(this Type a, Type b)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return b == a || b.GetTypeInfo().IsAssignableFrom(a.GetTypeInfo());
 #else
-            return b == a || b.IsAssignableFrom(a);
+			return b == a || b.IsAssignableFrom(a);
 #endif
-        }
+		}
 
 #if !(UNITY_WSA && ENABLE_DOTNET)
-        // TODO: Is it possible to do this on WSA?
-        public static bool IsAssignableToGenericType(Type givenType, Type genericType)
-        {
-            var interfaceTypes = givenType.Interfaces();
+		// TODO: Is it possible to do this on WSA?
+		public static bool IsAssignableToGenericType(Type givenType, Type genericType)
+		{
+			Type[] interfaceTypes = givenType.Interfaces();
 
-            foreach (var it in interfaceTypes)
-            {
-                if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
-                {
-                    return true;
-                }
-            }
+			foreach (Type it in interfaceTypes)
+				if (it.IsGenericType && it.GetGenericTypeDefinition() == genericType)
+					return true;
 
-            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
-            {
-                return true;
-            }
+			if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType) return true;
 
-            Type baseType = givenType.BaseType;
+			Type baseType = givenType.BaseType;
 
-            if (baseType == null)
-            {
-                return false;
-            }
+			if (baseType == null) return false;
 
-            return IsAssignableToGenericType(baseType, genericType);
-        }
+			return IsAssignableToGenericType(baseType, genericType);
+		}
 #endif
 
-        public static bool IsEnum(this Type type)
-        {
+		public static bool IsEnum(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().IsEnum;
 #else
-            return type.IsEnum;
+			return type.IsEnum;
 #endif
-        }
+		}
 
-        public static bool IsValueType(this Type type)
-        {
-            bool result;
-            if (!_isValueType.TryGetValue(type, out result))
-            {
+		public static bool IsValueType(this Type type)
+		{
+			bool result;
+			if (!_isValueType.TryGetValue(type, out result))
+			{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
                 result = type.GetTypeInfo().IsValueType;
 #else
-                result = type.IsValueType;
+				result = type.IsValueType;
 #endif
-                _isValueType[type] = result;
-            }
-            return result;
-        }
+				_isValueType[type] = result;
+			}
 
-        public static MethodInfo[] DeclaredInstanceMethods(this Type type)
-        {
+			return result;
+		}
+
+		public static MethodInfo[] DeclaredInstanceMethods(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetRuntimeMethods()
                 .Where(x => x.DeclaringType == type).ToArray();
 #else
-            return type.GetMethods(
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			return type.GetMethods(
+				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 #endif
-        }
+		}
 
-        public static PropertyInfo[] DeclaredInstanceProperties(this Type type)
-        {
+		public static PropertyInfo[] DeclaredInstanceProperties(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             // There doesn't appear to be an IsStatic member on PropertyInfo
             return type.GetRuntimeProperties()
                 .Where(x => x.DeclaringType == type).ToArray();
 #else
-            return type.GetProperties(
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			return type.GetProperties(
+				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 #endif
-        }
+		}
 
-        public static FieldInfo[] DeclaredInstanceFields(this Type type)
-        {
+		public static FieldInfo[] DeclaredInstanceFields(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetRuntimeFields()
                 .Where(x => x.DeclaringType == type && !x.IsStatic).ToArray();
 #else
-            return type.GetFields(
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			return type.GetFields(
+				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 #endif
-        }
+		}
 
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
         public static bool IsAssignableFrom(this Type a, Type b)
@@ -133,122 +124,124 @@ namespace ModestTree
         }
 #endif
 
-        public static Type BaseType(this Type type)
-        {
+		public static Type BaseType(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().BaseType;
 #else
-            return type.BaseType;
+			return type.BaseType;
 #endif
-        }
+		}
 
-        public static bool IsGenericType(this Type type)
-        {
+		public static bool IsGenericType(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().IsGenericType;
 #else
-            return type.IsGenericType;
+			return type.IsGenericType;
 #endif
-        }
-        public static bool IsGenericTypeDefinition(this Type type)
-        {
+		}
+
+		public static bool IsGenericTypeDefinition(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().IsGenericTypeDefinition;
 #else
-            return type.IsGenericTypeDefinition;
+			return type.IsGenericTypeDefinition;
 #endif
-        }
+		}
 
-        public static bool IsPrimitive(this Type type)
-        {
+		public static bool IsPrimitive(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().IsPrimitive;
 #else
-            return type.IsPrimitive;
+			return type.IsPrimitive;
 #endif
-        }
+		}
 
-        public static bool IsInterface(this Type type)
-        {
+		public static bool IsInterface(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().IsInterface;
 #else
-            return type.IsInterface;
+			return type.IsInterface;
 #endif
-        }
+		}
 
-        public static bool ContainsGenericParameters(this Type type)
-        {
+		public static bool ContainsGenericParameters(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().ContainsGenericParameters;
 #else
-            return type.ContainsGenericParameters;
+			return type.ContainsGenericParameters;
 #endif
-        }
+		}
 
-        public static bool IsAbstract(this Type type)
-        {
+		public static bool IsAbstract(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().IsAbstract;
 #else
-            return type.IsAbstract;
+			return type.IsAbstract;
 #endif
-        }
+		}
 
-        public static bool IsSealed(this Type type)
-        {
+		public static bool IsSealed(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().IsSealed;
 #else
-            return type.IsSealed;
+			return type.IsSealed;
 #endif
-        }
+		}
 
-        public static MethodInfo Method(this Delegate del)
-        {
+		public static MethodInfo Method(this Delegate del)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return del.GetMethodInfo();
 #else
-            return del.Method;
+			return del.Method;
 #endif
-        }
+		}
 
-        public static Type[] GenericArguments(this Type type)
-        {
+		public static Type[] GenericArguments(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().GenericTypeArguments;
 #else
-            return type.GetGenericArguments();
+			return type.GetGenericArguments();
 #endif
-        }
+		}
 
-        public static Type[] Interfaces(this Type type)
-        {
-            Type[] result;
-            if (!_interfaces.TryGetValue(type, out result))
-            {
+		public static Type[] Interfaces(this Type type)
+		{
+			Type[] result;
+			if (!_interfaces.TryGetValue(type, out result))
+			{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
                 result = type.GetTypeInfo().ImplementedInterfaces.ToArray();
 #else
-                result = type.GetInterfaces();
+				result = type.GetInterfaces();
 #endif
-                _interfaces.Add(type, result);
-            }
-            return result;
-        }
+				_interfaces.Add(type, result);
+			}
 
-        public static ConstructorInfo[] Constructors(this Type type)
-        {
+			return result;
+		}
+
+		public static ConstructorInfo[] Constructors(this Type type)
+		{
 #if UNITY_WSA && ENABLE_DOTNET && !UNITY_EDITOR
             return type.GetTypeInfo().DeclaredConstructors.ToArray();
 #else
-            return type.GetConstructors(
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			return type.GetConstructors(
+				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 #endif
-        }
+		}
 
-        public static object GetDefaultValue(this Type type)
-        {
+		public static object GetDefaultValue(this Type type)
+		{
 #if ENABLE_IL2CPP
             // Workaround for IL2CPP returning default(T) for Activator.CreateInstance(typeof(T?))
             if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -257,135 +250,123 @@ namespace ModestTree
             }
 #endif
 
-            if (type.IsValueType())
-            {
-                return Activator.CreateInstance(type);
-            }
+			if (type.IsValueType()) return Activator.CreateInstance(type);
 
-            return null;
-        }
+			return null;
+		}
 
-        public static bool IsClosedGenericType(this Type type)
-        {
-            bool result;
-            if (!_isClosedGenericType.TryGetValue(type, out result))
-            {
-                result = type.IsGenericType() && type != type.GetGenericTypeDefinition();
-                _isClosedGenericType[type] = result;
-            }
-            return result;
-        }
+		public static bool IsClosedGenericType(this Type type)
+		{
+			bool result;
+			if (!_isClosedGenericType.TryGetValue(type, out result))
+			{
+				result = type.IsGenericType() && type != type.GetGenericTypeDefinition();
+				_isClosedGenericType[type] = result;
+			}
 
-        public static IEnumerable<Type> GetParentTypes(this Type type)
-        {
-            if (type == null || type.BaseType() == null || type == typeof(object) || type.BaseType() == typeof(object))
-            {
-                yield break;
-            }
+			return result;
+		}
 
-            yield return type.BaseType();
+		public static IEnumerable<Type> GetParentTypes(this Type type)
+		{
+			if (type == null || type.BaseType() == null || type == typeof(object) ||
+			    type.BaseType() == typeof(object)) yield break;
 
-            foreach (var ancestor in type.BaseType().GetParentTypes())
-            {
-                yield return ancestor;
-            }
-        }
+			yield return type.BaseType();
 
-        public static bool IsOpenGenericType(this Type type)
-        {
-            bool result;
-            if (!_isOpenGenericType.TryGetValue(type, out result))
-            {
-                result = type.IsGenericType() && type == type.GetGenericTypeDefinition();
-                _isOpenGenericType[type] = result;
-            }
-            return result;
-        }
+			foreach (Type ancestor in type.BaseType().GetParentTypes()) yield return ancestor;
+		}
 
-        public static T GetAttribute<T>(this MemberInfo provider)
-            where T : Attribute
-        {
-            return provider.AllAttributes<T>().Single();
-        }
+		public static bool IsOpenGenericType(this Type type)
+		{
+			bool result;
+			if (!_isOpenGenericType.TryGetValue(type, out result))
+			{
+				result = type.IsGenericType() && type == type.GetGenericTypeDefinition();
+				_isOpenGenericType[type] = result;
+			}
 
-        public static T TryGetAttribute<T>(this MemberInfo provider)
-            where T : Attribute
-        {
-            return provider.AllAttributes<T>().OnlyOrDefault();
-        }
+			return result;
+		}
 
-        public static bool HasAttribute(
-            this MemberInfo provider, params Type[] attributeTypes)
-        {
-            return provider.AllAttributes(attributeTypes).Any();
-        }
+		public static T GetAttribute<T>(this MemberInfo provider)
+			where T : Attribute
+		{
+			return provider.AllAttributes<T>().Single();
+		}
 
-        public static bool HasAttribute<T>(this MemberInfo provider)
-            where T : Attribute
-        {
-            return provider.AllAttributes(typeof(T)).Any();
-        }
+		public static T TryGetAttribute<T>(this MemberInfo provider)
+			where T : Attribute
+		{
+			return provider.AllAttributes<T>().OnlyOrDefault();
+		}
 
-        public static IEnumerable<T> AllAttributes<T>(
-            this MemberInfo provider)
-            where T : Attribute
-        {
-            return provider.AllAttributes(typeof(T)).Cast<T>();
-        }
+		public static bool HasAttribute(
+			this MemberInfo provider, params Type[] attributeTypes)
+		{
+			return provider.AllAttributes(attributeTypes).Any();
+		}
 
-        public static IEnumerable<Attribute> AllAttributes(
-            this MemberInfo provider, params Type[] attributeTypes)
-        {
-            Attribute[] allAttributes;
+		public static bool HasAttribute<T>(this MemberInfo provider)
+			where T : Attribute
+		{
+			return provider.AllAttributes(typeof(T)).Any();
+		}
+
+		public static IEnumerable<T> AllAttributes<T>(
+			this MemberInfo provider)
+			where T : Attribute
+		{
+			return provider.AllAttributes(typeof(T)).Cast<T>();
+		}
+
+		public static IEnumerable<Attribute> AllAttributes(
+			this MemberInfo provider, params Type[] attributeTypes)
+		{
+			Attribute[] allAttributes;
 #if NETFX_CORE
             allAttributes = provider.GetCustomAttributes<Attribute>(true).ToArray();
 #else
-            allAttributes = System.Attribute.GetCustomAttributes(provider, typeof(Attribute), true);
+			allAttributes = Attribute.GetCustomAttributes(provider, typeof(Attribute), true);
 #endif
-            if (attributeTypes.Length == 0)
-            {
-                return allAttributes;
-            }
+			if (attributeTypes.Length == 0) return allAttributes;
 
-            return allAttributes.Where(a => attributeTypes.Any(x => a.GetType().DerivesFromOrEqual(x)));
-        }
+			return allAttributes.Where(a => attributeTypes.Any(x => a.GetType().DerivesFromOrEqual(x)));
+		}
 
-        // We could avoid this duplication here by using ICustomAttributeProvider but this class
-        // does not exist on the WP8 platform
-        public static bool HasAttribute(
-            this ParameterInfo provider, params Type[] attributeTypes)
-        {
-            return provider.AllAttributes(attributeTypes).Any();
-        }
+		// We could avoid this duplication here by using ICustomAttributeProvider but this class
+		// does not exist on the WP8 platform
+		public static bool HasAttribute(
+			this ParameterInfo provider, params Type[] attributeTypes)
+		{
+			return provider.AllAttributes(attributeTypes).Any();
+		}
 
-        public static bool HasAttribute<T>(this ParameterInfo provider)
-            where T : Attribute
-        {
-            return provider.AllAttributes(typeof(T)).Any();
-        }
+		public static bool HasAttribute<T>(this ParameterInfo provider)
+			where T : Attribute
+		{
+			return provider.AllAttributes(typeof(T)).Any();
+		}
 
-        public static IEnumerable<T> AllAttributes<T>(
-            this ParameterInfo provider)
-            where T : Attribute
-        {
-            return provider.AllAttributes(typeof(T)).Cast<T>();
-        }
+		public static IEnumerable<T> AllAttributes<T>(
+			this ParameterInfo provider)
+			where T : Attribute
+		{
+			return provider.AllAttributes(typeof(T)).Cast<T>();
+		}
 
-        public static IEnumerable<Attribute> AllAttributes(
-            this ParameterInfo provider, params Type[] attributeTypes)
-        {
-            Attribute[] allAttributes;
+		public static IEnumerable<Attribute> AllAttributes(
+			this ParameterInfo provider, params Type[] attributeTypes)
+		{
+			Attribute[] allAttributes;
 #if NETFX_CORE
             allAttributes = provider.GetCustomAttributes<Attribute>(true).ToArray();
 #else
-            allAttributes = System.Attribute.GetCustomAttributes(provider, typeof(Attribute), true);
+			allAttributes = Attribute.GetCustomAttributes(provider, typeof(Attribute), true);
 #endif
-            if (attributeTypes.Length == 0)
-            {
-                return allAttributes;
-            }
+			if (attributeTypes.Length == 0) return allAttributes;
 
-            return allAttributes.Where(a => attributeTypes.Any(x => a.GetType().DerivesFromOrEqual(x)));
-        }
-    }
+			return allAttributes.Where(a => attributeTypes.Any(x => a.GetType().DerivesFromOrEqual(x)));
+		}
+	}
 }

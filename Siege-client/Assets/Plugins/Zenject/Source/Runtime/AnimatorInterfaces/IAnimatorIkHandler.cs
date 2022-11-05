@@ -1,8 +1,7 @@
 namespace Zenject
 {
-    public interface IAnimatorIkHandler
-    {
-        void OnAnimatorIk();
-    }
+	public interface IAnimatorIkHandler
+	{
+		void OnAnimatorIk();
+	}
 }
-

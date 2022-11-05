@@ -12,16 +12,16 @@ namespace Kulinaria.Siege.Tests.InputService
 	[TestFixture]
 	public class InputServiceTests
 	{
-		private IInputService InputService => 
+		private IInputService InputService =>
 			Object.FindObjectOfType<ProjectContext>().Container.Resolve<IInputService>();
 
 		[UnitySetUp]
 		public IEnumerator SetUp()
 		{
-			if(SceneManager.GetActiveScene().name != SceneNames.BootScene)
+			if (SceneManager.GetActiveScene().name != SceneNames.BootScene)
 				yield return SceneManager.LoadSceneAsync(SceneNames.BootScene);
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenGameInstallerInstallsBindings_ThenInputServiceIsBound()
 		{
@@ -35,22 +35,22 @@ namespace Kulinaria.Siege.Tests.InputService
 			var clicked = false;
 			var rotated = false;
 			var zoomed = false;
-			InputService.OnClick += (_) => clicked = true;
-			InputService.OnClick += (_) => Debug.Log("Click");
-			InputService.OnRotate += (_) => rotated = true;
-			InputService.OnRotate += (_) => Debug.Log("Rotate");
-			InputService.OnZoom += (_) => zoomed = true;
-			InputService.OnZoom += (_) => Debug.Log("Zoom");
+			InputService.OnClick += _ => clicked = true;
+			InputService.OnClick += _ => Debug.Log("Click");
+			InputService.OnRotate += _ => rotated = true;
+			InputService.OnRotate += _ => Debug.Log("Rotate");
+			InputService.OnZoom += _ => zoomed = true;
+			InputService.OnZoom += _ => Debug.Log("Zoom");
 
 			while (true)
 			{
 				yield return new WaitForSeconds(0.5f);
-				if(clicked && rotated && zoomed)
+				if (clicked && rotated && zoomed)
 					Assert.Pass();
 			}
 		}
 
-		
+
 		[UnityTest]
 		public IEnumerator WhenWASDPressed_ThenInputServiceRegistersMovement()
 		{
@@ -58,7 +58,7 @@ namespace Kulinaria.Siege.Tests.InputService
 			var movedDown = false;
 			var movedRight = false;
 			var movedLeft = false;
-			InputService.OnMove += (inputMove) =>
+			InputService.OnMove += inputMove =>
 			{
 				if (inputMove.x > 0)
 					movedRight = true;
@@ -73,7 +73,7 @@ namespace Kulinaria.Siege.Tests.InputService
 			while (true)
 			{
 				yield return new WaitForSeconds(0.5f);
-				if(movedDown && movedLeft && movedRight && movedUp)
+				if (movedDown && movedLeft && movedRight && movedUp)
 					Assert.Pass();
 			}
 		}

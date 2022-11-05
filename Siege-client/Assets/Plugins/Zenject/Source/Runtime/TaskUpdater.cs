@@ -5,190 +5,176 @@ using ModestTree;
 
 namespace Zenject
 {
-    // Update tasks once per frame based on a priority
-    [DebuggerStepThrough]
-    public abstract class TaskUpdater<TTask>
-    {
-        readonly LinkedList<TaskInfo> _tasks = new LinkedList<TaskInfo>();
-        readonly List<TaskInfo> _queuedTasks = new List<TaskInfo>();
+	// Update tasks once per frame based on a priority
+	[DebuggerStepThrough]
+	public abstract class TaskUpdater<TTask>
+	{
+		private readonly List<TaskInfo> _queuedTasks = new();
+		private readonly LinkedList<TaskInfo> _tasks = new();
 
-        IEnumerable<TaskInfo> AllTasks
-        {
-            get { return ActiveTasks.Concat(_queuedTasks); }
-        }
+		private IEnumerable<TaskInfo> AllTasks => ActiveTasks.Concat(_queuedTasks);
 
-        IEnumerable<TaskInfo> ActiveTasks
-        {
-            get { return _tasks; }
-        }
+		private IEnumerable<TaskInfo> ActiveTasks => _tasks;
 
-        public void AddTask(TTask task, int priority)
-        {
-            AddTaskInternal(task, priority);
-        }
+		public void AddTask(TTask task, int priority)
+		{
+			AddTaskInternal(task, priority);
+		}
 
-        void AddTaskInternal(TTask task, int priority)
-        {
-            Assert.That(!AllTasks.Select(x => x.Task).ContainsItem(task),
-                "Duplicate task added to DependencyRoot with name '" + task.GetType().FullName + "'");
+		private void AddTaskInternal(TTask task, int priority)
+		{
+			Assert.That(!AllTasks.Select(x => x.Task).ContainsItem(task),
+				"Duplicate task added to DependencyRoot with name '" + task.GetType().FullName + "'");
 
-            // Wait until next frame to add the task, otherwise whether it gets updated
-            // on the current frame depends on where in the update order it was added
-            // from, so you might get off by one frame issues
-            _queuedTasks.Add(new TaskInfo(task, priority));
-        }
+			// Wait until next frame to add the task, otherwise whether it gets updated
+			// on the current frame depends on where in the update order it was added
+			// from, so you might get off by one frame issues
+			_queuedTasks.Add(new TaskInfo(task, priority));
+		}
 
-        public void RemoveTask(TTask task)
-        {
-            var info = AllTasks.Where(x => ReferenceEquals(x.Task, task)).SingleOrDefault();
+		public void RemoveTask(TTask task)
+		{
+			TaskInfo info = AllTasks.Where(x => ReferenceEquals(x.Task, task)).SingleOrDefault();
 
-            Assert.IsNotNull(info, "Tried to remove a task not added to DependencyRoot, task = " + task.GetType().Name);
+			Assert.IsNotNull(info, "Tried to remove a task not added to DependencyRoot, task = " + task.GetType().Name);
 
-            Assert.That(!info.IsRemoved, "Tried to remove task twice, task = " + task.GetType().Name);
-            info.IsRemoved = true;
-        }
+			Assert.That(!info.IsRemoved, "Tried to remove task twice, task = " + task.GetType().Name);
+			info.IsRemoved = true;
+		}
 
-        public void OnFrameStart()
-        {
-            // See above comment
-            AddQueuedTasks();
-        }
+		public void OnFrameStart()
+		{
+			// See above comment
+			AddQueuedTasks();
+		}
 
-        public void UpdateAll()
-        {
-            UpdateRange(int.MinValue, int.MaxValue);
-        }
+		public void UpdateAll()
+		{
+			UpdateRange(int.MinValue, int.MaxValue);
+		}
 
-        public void UpdateRange(int minPriority, int maxPriority)
-        {
-            var node = _tasks.First;
+		public void UpdateRange(int minPriority, int maxPriority)
+		{
+			LinkedListNode<TaskInfo> node = _tasks.First;
 
-            while (node != null)
-            {
-                var next = node.Next;
-                var taskInfo = node.Value;
+			while (node != null)
+			{
+				LinkedListNode<TaskInfo> next = node.Next;
+				TaskInfo taskInfo = node.Value;
 
-                // Make sure that tasks with priority of int.MaxValue are updated when maxPriority is int.MaxValue
-                if (!taskInfo.IsRemoved && taskInfo.Priority >= minPriority
-                    && (maxPriority == int.MaxValue || taskInfo.Priority < maxPriority))
-                {
-                    UpdateItem(taskInfo.Task);
-                }
+				// Make sure that tasks with priority of int.MaxValue are updated when maxPriority is int.MaxValue
+				if (!taskInfo.IsRemoved && taskInfo.Priority >= minPriority
+				                        && (maxPriority == int.MaxValue || taskInfo.Priority < maxPriority))
+					UpdateItem(taskInfo.Task);
 
-                node = next;
-            }
+				node = next;
+			}
 
-            ClearRemovedTasks(_tasks);
-        }
+			ClearRemovedTasks(_tasks);
+		}
 
-        void ClearRemovedTasks(LinkedList<TaskInfo> tasks)
-        {
-            var node = tasks.First;
+		private void ClearRemovedTasks(LinkedList<TaskInfo> tasks)
+		{
+			LinkedListNode<TaskInfo> node = tasks.First;
 
-            while (node != null)
-            {
-                var next = node.Next;
-                var info = node.Value;
+			while (node != null)
+			{
+				LinkedListNode<TaskInfo> next = node.Next;
+				TaskInfo info = node.Value;
 
-                if (info.IsRemoved)
-                {
-                    //ModestTree.Log.Debug("Removed task '" + info.Task.GetType().ToString() + "'");
-                    tasks.Remove(node);
-                }
+				if (info.IsRemoved)
+					//ModestTree.Log.Debug("Removed task '" + info.Task.GetType().ToString() + "'");
+					tasks.Remove(node);
 
-                node = next;
-            }
-        }
+				node = next;
+			}
+		}
 
-        void AddQueuedTasks()
-        {
-            for (int i = 0; i < _queuedTasks.Count; i++)
-            {
-                var task = _queuedTasks[i];
+		private void AddQueuedTasks()
+		{
+			for (var i = 0; i < _queuedTasks.Count; i++)
+			{
+				TaskInfo task = _queuedTasks[i];
 
-                if (!task.IsRemoved)
-                {
-                    InsertTaskSorted(task);
-                }
-            }
-            _queuedTasks.Clear();
-        }
+				if (!task.IsRemoved) InsertTaskSorted(task);
+			}
 
-        void InsertTaskSorted(TaskInfo task)
-        {
-            for (var current = _tasks.First; current != null; current = current.Next)
-            {
-                if (current.Value.Priority > task.Priority)
-                {
-                    _tasks.AddBefore(current, task);
-                    return;
-                }
-            }
+			_queuedTasks.Clear();
+		}
 
-            _tasks.AddLast(task);
-        }
+		private void InsertTaskSorted(TaskInfo task)
+		{
+			for (LinkedListNode<TaskInfo> current = _tasks.First; current != null; current = current.Next)
+				if (current.Value.Priority > task.Priority)
+				{
+					_tasks.AddBefore(current, task);
+					return;
+				}
 
-        protected abstract void UpdateItem(TTask task);
+			_tasks.AddLast(task);
+		}
 
-        class TaskInfo
-        {
-            public TTask Task;
-            public int Priority;
-            public bool IsRemoved;
+		protected abstract void UpdateItem(TTask task);
 
-            public TaskInfo(TTask task, int priority)
-            {
-                Task = task;
-                Priority = priority;
-            }
-        }
-    }
+		private class TaskInfo
+		{
+			public bool IsRemoved;
+			public readonly int Priority;
+			public readonly TTask Task;
 
-    public class TickablesTaskUpdater : TaskUpdater<ITickable>
-    {
-        protected override void UpdateItem(ITickable task)
-        {
+			public TaskInfo(TTask task, int priority)
+			{
+				Task = task;
+				Priority = priority;
+			}
+		}
+	}
+
+	public class TickablesTaskUpdater : TaskUpdater<ITickable>
+	{
+		protected override void UpdateItem(ITickable task)
+		{
 #if ZEN_INTERNAL_PROFILING
             using (ProfileTimers.CreateTimedBlock("User Code"))
 #endif
 #if UNITY_EDITOR
-            using (ProfileBlock.Start("{0}.Tick()", task.GetType()))
+			using (ProfileBlock.Start("{0}.Tick()", task.GetType()))
 #endif
-            {
-                task.Tick();
-            }
-        }
-    }
+			{
+				task.Tick();
+			}
+		}
+	}
 
-    public class LateTickablesTaskUpdater : TaskUpdater<ILateTickable>
-    {
-        protected override void UpdateItem(ILateTickable task)
-        {
+	public class LateTickablesTaskUpdater : TaskUpdater<ILateTickable>
+	{
+		protected override void UpdateItem(ILateTickable task)
+		{
 #if ZEN_INTERNAL_PROFILING
             using (ProfileTimers.CreateTimedBlock("User Code"))
 #endif
 #if UNITY_EDITOR
-            using (ProfileBlock.Start("{0}.LateTick()", task.GetType()))
+			using (ProfileBlock.Start("{0}.LateTick()", task.GetType()))
 #endif
-            {
-                task.LateTick();
-            }
-        }
-    }
+			{
+				task.LateTick();
+			}
+		}
+	}
 
-    public class FixedTickablesTaskUpdater : TaskUpdater<IFixedTickable>
-    {
-        protected override void UpdateItem(IFixedTickable task)
-        {
+	public class FixedTickablesTaskUpdater : TaskUpdater<IFixedTickable>
+	{
+		protected override void UpdateItem(IFixedTickable task)
+		{
 #if ZEN_INTERNAL_PROFILING
             using (ProfileTimers.CreateTimedBlock("User Code"))
 #endif
 #if UNITY_EDITOR
-            using (ProfileBlock.Start("{0}.FixedTick()", task.GetType()))
+			using (ProfileBlock.Start("{0}.FixedTick()", task.GetType()))
 #endif
-            {
-                task.FixedTick();
-            }
-        }
-    }
+			{
+				task.FixedTick();
+			}
+		}
+	}
 }

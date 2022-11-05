@@ -4,70 +4,64 @@ using ModestTree;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class SubContainerDependencyProvider : IProvider
-    {
-        readonly ISubContainerCreator _subContainerCreator;
-        readonly Type _dependencyType;
-        readonly object _identifier;
-        readonly bool _resolveAll;
+	[NoReflectionBaking]
+	public class SubContainerDependencyProvider : IProvider
+	{
+		private readonly Type _dependencyType;
+		private readonly object _identifier;
+		private readonly bool _resolveAll;
+		private readonly ISubContainerCreator _subContainerCreator;
 
-        // if concreteType is null we use the contract type from inject context
-        public SubContainerDependencyProvider(
-            Type dependencyType,
-            object identifier,
-            ISubContainerCreator subContainerCreator, bool resolveAll)
-        {
-            _subContainerCreator = subContainerCreator;
-            _dependencyType = dependencyType;
-            _identifier = identifier;
-            _resolveAll = resolveAll;
-        }
+		// if concreteType is null we use the contract type from inject context
+		public SubContainerDependencyProvider(
+			Type dependencyType,
+			object identifier,
+			ISubContainerCreator subContainerCreator, bool resolveAll)
+		{
+			_subContainerCreator = subContainerCreator;
+			_dependencyType = dependencyType;
+			_identifier = identifier;
+			_resolveAll = resolveAll;
+		}
 
-        public bool IsCached
-        {
-            get { return false; }
-        }
+		public bool IsCached => false;
 
-        public bool TypeVariesBasedOnMemberType
-        {
-            get { return false; }
-        }
+		public bool TypeVariesBasedOnMemberType => false;
 
-        public Type GetInstanceType(InjectContext context)
-        {
-            return _dependencyType;
-        }
+		public Type GetInstanceType(InjectContext context)
+		{
+			return _dependencyType;
+		}
 
-        InjectContext CreateSubContext(
-            InjectContext parent, DiContainer subContainer)
-        {
-            var subContext = parent.CreateSubContext(_dependencyType, _identifier);
+		public void GetAllInstancesWithInjectSplit(
+			InjectContext context, List<TypeValuePair> args, out Action injectAction, List<object> buffer)
+		{
+			Assert.IsNotNull(context);
 
-            subContext.Container = subContainer;
+			DiContainer subContainer = _subContainerCreator.CreateSubContainer(args, context, out injectAction);
 
-            // This is important to avoid infinite loops
-            subContext.SourceType = InjectSources.Local;
+			InjectContext subContext = CreateSubContext(context, subContainer);
 
-            return subContext;
-        }
+			if (_resolveAll)
+			{
+				subContainer.ResolveAll(subContext, buffer);
+				return;
+			}
 
-        public void GetAllInstancesWithInjectSplit(
-            InjectContext context, List<TypeValuePair> args, out Action injectAction, List<object> buffer)
-        {
-            Assert.IsNotNull(context);
+			buffer.Add(subContainer.Resolve(subContext));
+		}
 
-            var subContainer = _subContainerCreator.CreateSubContainer(args, context, out injectAction);
+		private InjectContext CreateSubContext(
+			InjectContext parent, DiContainer subContainer)
+		{
+			InjectContext subContext = parent.CreateSubContext(_dependencyType, _identifier);
 
-            var subContext = CreateSubContext(context, subContainer);
+			subContext.Container = subContainer;
 
-            if (_resolveAll)
-            {
-                subContainer.ResolveAll(subContext, buffer);
-                return;
-            }
+			// This is important to avoid infinite loops
+			subContext.SourceType = InjectSources.Local;
 
-            buffer.Add(subContainer.Resolve(subContext));
-        }
-    }
+			return subContext;
+		}
+	}
 }

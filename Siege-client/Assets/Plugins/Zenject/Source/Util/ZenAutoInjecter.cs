@@ -3,71 +3,58 @@ using UnityEngine;
 
 namespace Zenject
 {
-    public class ZenAutoInjecter : MonoBehaviour
-    {
-        [SerializeField]
-        ContainerSources _containerSource = ContainerSources.SearchHierarchy;
+	public class ZenAutoInjecter : MonoBehaviour
+	{
+		public enum ContainerSources
+		{
+			SceneContext,
+			ProjectContext,
+			SearchHierarchy
+		}
 
-        bool _hasInjected;
+		[SerializeField] private ContainerSources _containerSource = ContainerSources.SearchHierarchy;
 
-        public ContainerSources ContainerSource
-        {
-            get { return _containerSource; }
-            set { _containerSource = value; }
-        }
+		private bool _hasInjected;
 
-        // Make sure they don't cause injection to happen twice
-        [Inject]
-        public void Construct()
-        {
-            if (!_hasInjected)
-            {
-                throw Assert.CreateException(
-                    "ZenAutoInjecter was injected!  Do not use ZenAutoInjecter for objects that are instantiated through zenject or which exist in the initial scene hierarchy");
-            }
-        }
+		public ContainerSources ContainerSource
+		{
+			get => _containerSource;
+			set => _containerSource = value;
+		}
 
-        public void Awake()
-        {
-            _hasInjected = true;
-            LookupContainer().InjectGameObject(gameObject);
-        }
+		public void Awake()
+		{
+			_hasInjected = true;
+			LookupContainer().InjectGameObject(gameObject);
+		}
 
-        DiContainer LookupContainer()
-        {
-            if (_containerSource == ContainerSources.ProjectContext)
-            {
-                return ProjectContext.Instance.Container;
-            }
+		// Make sure they don't cause injection to happen twice
+		[Inject]
+		public void Construct()
+		{
+			if (!_hasInjected)
+				throw Assert.CreateException(
+					"ZenAutoInjecter was injected!  Do not use ZenAutoInjecter for objects that are instantiated through zenject or which exist in the initial scene hierarchy");
+		}
 
-            if (_containerSource == ContainerSources.SceneContext)
-            {
-                return GetContainerForCurrentScene();
-            }
+		private DiContainer LookupContainer()
+		{
+			if (_containerSource == ContainerSources.ProjectContext) return ProjectContext.Instance.Container;
 
-            Assert.IsEqual(_containerSource, ContainerSources.SearchHierarchy);
+			if (_containerSource == ContainerSources.SceneContext) return GetContainerForCurrentScene();
 
-            var parentContext = transform.GetComponentInParent<Context>();
+			Assert.IsEqual(_containerSource, ContainerSources.SearchHierarchy);
 
-            if (parentContext != null)
-            {
-                return parentContext.Container;
-            }
+			var parentContext = transform.GetComponentInParent<Context>();
 
-            return GetContainerForCurrentScene();
-        }
+			if (parentContext != null) return parentContext.Container;
 
-        DiContainer GetContainerForCurrentScene()
-        {
-            return ProjectContext.Instance.Container.Resolve<SceneContextRegistry>()
-                .GetContainerForScene(gameObject.scene);
-        }
+			return GetContainerForCurrentScene();
+		}
 
-        public enum ContainerSources
-        {
-            SceneContext,
-            ProjectContext,
-            SearchHierarchy
-        }
-    }
+		private DiContainer GetContainerForCurrentScene()
+		{
+			return ProjectContext.Instance.Container.Resolve<SceneContextRegistry>().GetContainerForScene(gameObject.scene);
+		}
+	}
 }

@@ -4,25 +4,25 @@ using UnityEditor;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class RunnableContextEditor : ContextEditor
-    {
-        SerializedProperty _autoRun;
+	[NoReflectionBaking]
+	public class RunnableContextEditor : ContextEditor
+	{
+		private SerializedProperty _autoRun;
 
-        public override void OnEnable()
-        {
-            base.OnEnable();
+		public override void OnEnable()
+		{
+			base.OnEnable();
 
-            _autoRun = serializedObject.FindProperty("_autoRun");
-        }
+			_autoRun = serializedObject.FindProperty("_autoRun");
+		}
 
-        protected override void OnGui()
-        {
-            base.OnGui();
+		protected override void OnGui()
+		{
+			base.OnGui();
 
-            EditorGUILayout.PropertyField(_autoRun);
-        }
-    }
+			EditorGUILayout.PropertyField(_autoRun);
+		}
+	}
 }
 
 

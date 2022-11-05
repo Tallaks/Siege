@@ -4,93 +4,80 @@ using ModestTree;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class GetterProvider<TObj, TResult> : IProvider
-    {
-        readonly DiContainer _container;
-        readonly object _identifier;
-        readonly Func<TObj, TResult> _method;
-        readonly bool _matchAll;
-        readonly InjectSources _sourceType;
+	[NoReflectionBaking]
+	public class GetterProvider<TObj, TResult> : IProvider
+	{
+		private readonly DiContainer _container;
+		private readonly object _identifier;
+		private readonly bool _matchAll;
+		private readonly Func<TObj, TResult> _method;
+		private readonly InjectSources _sourceType;
 
-        public GetterProvider(
-            object identifier, Func<TObj, TResult> method,
-            DiContainer container, InjectSources sourceType, bool matchAll)
-        {
-            _container = container;
-            _identifier = identifier;
-            _method = method;
-            _matchAll = matchAll;
-            _sourceType = sourceType;
-        }
+		public GetterProvider(
+			object identifier, Func<TObj, TResult> method,
+			DiContainer container, InjectSources sourceType, bool matchAll)
+		{
+			_container = container;
+			_identifier = identifier;
+			_method = method;
+			_matchAll = matchAll;
+			_sourceType = sourceType;
+		}
 
-        public bool IsCached
-        {
-            get { return false; }
-        }
+		public bool IsCached => false;
 
-        public bool TypeVariesBasedOnMemberType
-        {
-            get { return false; }
-        }
+		public bool TypeVariesBasedOnMemberType => false;
 
-        public Type GetInstanceType(InjectContext context)
-        {
-            return typeof(TResult);
-        }
+		public Type GetInstanceType(InjectContext context)
+		{
+			return typeof(TResult);
+		}
 
-        InjectContext GetSubContext(InjectContext parent)
-        {
-            var subContext = parent.CreateSubContext(
-                typeof(TObj), _identifier);
+		public void GetAllInstancesWithInjectSplit(
+			InjectContext context, List<TypeValuePair> args, out Action injectAction, List<object> buffer)
+		{
+			Assert.IsEmpty(args);
+			Assert.IsNotNull(context);
 
-            subContext.Optional = false;
-            subContext.SourceType = _sourceType;
+			Assert.That(typeof(TResult).DerivesFromOrEqual(context.MemberType));
 
-            return subContext;
-        }
+			injectAction = null;
 
-        public void GetAllInstancesWithInjectSplit(
-            InjectContext context, List<TypeValuePair> args, out Action injectAction, List<object> buffer)
-        {
-            Assert.IsEmpty(args);
-            Assert.IsNotNull(context);
+			if (_container.IsValidating)
+			{
+				// All we can do is validate that the getter object can be resolved
+				if (_matchAll)
+					_container.ResolveAll(GetSubContext(context));
+				else
+					_container.Resolve(GetSubContext(context));
 
-            Assert.That(typeof(TResult).DerivesFromOrEqual(context.MemberType));
+				buffer.Add(new ValidationMarker(typeof(TResult)));
+				return;
+			}
 
-            injectAction = null;
+			if (_matchAll)
+			{
+				Assert.That(buffer.Count == 0);
+				_container.ResolveAll(GetSubContext(context), buffer);
 
-            if (_container.IsValidating)
-            {
-                // All we can do is validate that the getter object can be resolved
-                if (_matchAll)
-                {
-                    _container.ResolveAll(GetSubContext(context));
-                }
-                else
-                {
-                    _container.Resolve(GetSubContext(context));
-                }
+				for (var i = 0; i < buffer.Count; i++) buffer[i] = _method((TObj)buffer[i]);
+			}
+			else
+			{
+				buffer.Add(_method(
+					(TObj)_container.Resolve(GetSubContext(context))));
+			}
+		}
 
-                buffer.Add(new ValidationMarker(typeof(TResult)));
-                return;
-            }
+		private InjectContext GetSubContext(InjectContext parent)
+		{
+			InjectContext subContext = parent.CreateSubContext(
+				typeof(TObj), _identifier);
 
-            if (_matchAll)
-            {
-                Assert.That(buffer.Count == 0);
-                _container.ResolveAll(GetSubContext(context), buffer);
+			subContext.Optional = false;
+			subContext.SourceType = _sourceType;
 
-                for (int i = 0; i < buffer.Count; i++)
-                {
-                    buffer[i] = _method((TObj)buffer[i]);
-                }
-            }
-            else
-            {
-                buffer.Add(_method(
-                    (TObj)_container.Resolve(GetSubContext(context))));
-            }
-        }
-    }
+			return subContext;
+		}
+	}
 }

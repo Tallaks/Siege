@@ -7,145 +7,142 @@ using UnityEngine.SceneManagement;
 
 namespace Zenject
 {
-    public enum LoadSceneRelationship
-    {
-        // This will use the ProjectContext container as parent for the new scene
-        // This is similar to just running the new scene normally
-        None,
-        // This will use current scene as parent for the new scene
-        // This will allow the new scene to refer to dependencies in the current scene
-        Child,
-        // This will use the parent of the current scene as the parent for the next scene
-        // In most cases this will be the same as None
-        Sibling
-    }
+	public enum LoadSceneRelationship
+	{
+		// This will use the ProjectContext container as parent for the new scene
+		// This is similar to just running the new scene normally
+		None,
 
-    public class ZenjectSceneLoader
-    {
-        readonly ProjectKernel _projectKernel;
-        readonly DiContainer _sceneContainer;
+		// This will use current scene as parent for the new scene
+		// This will allow the new scene to refer to dependencies in the current scene
+		Child,
 
-        public ZenjectSceneLoader(
-            [InjectOptional]
-            SceneContext sceneRoot,
-            ProjectKernel projectKernel)
-        {
-            _projectKernel = projectKernel;
-            _sceneContainer = sceneRoot == null ? null : sceneRoot.Container;
-        }
+		// This will use the parent of the current scene as the parent for the next scene
+		// In most cases this will be the same as None
+		Sibling
+	}
 
-        public void LoadScene(
-            string sceneName,
-            LoadSceneMode loadMode = LoadSceneMode.Single,
-            Action<DiContainer> extraBindings = null,
-            LoadSceneRelationship containerMode = LoadSceneRelationship.None,
-            Action<DiContainer> extraBindingsLate = null)
-        {
-            PrepareForLoadScene(loadMode, extraBindings, extraBindingsLate, containerMode);
+	public class ZenjectSceneLoader
+	{
+		private readonly ProjectKernel _projectKernel;
+		private readonly DiContainer _sceneContainer;
 
-            Assert.That(Application.CanStreamedLevelBeLoaded(sceneName),
-                "Unable to load scene '{0}'", sceneName);
+		public ZenjectSceneLoader(
+			[InjectOptional] SceneContext sceneRoot,
+			ProjectKernel projectKernel)
+		{
+			_projectKernel = projectKernel;
+			_sceneContainer = sceneRoot == null ? null : sceneRoot.Container;
+		}
 
-            SceneManager.LoadScene(sceneName, loadMode);
+		public void LoadScene(
+			string sceneName,
+			LoadSceneMode loadMode = LoadSceneMode.Single,
+			Action<DiContainer> extraBindings = null,
+			LoadSceneRelationship containerMode = LoadSceneRelationship.None,
+			Action<DiContainer> extraBindingsLate = null)
+		{
+			PrepareForLoadScene(loadMode, extraBindings, extraBindingsLate, containerMode);
 
-            // It would be nice here to actually verify that the new scene has a SceneContext
-            // if we have extra binding hooks, or LoadSceneRelationship != None, but
-            // we can't do that in this case since the scene isn't loaded until the next frame
-        }
+			Assert.That(Application.CanStreamedLevelBeLoaded(sceneName),
+				"Unable to load scene '{0}'", sceneName);
 
-            public AsyncOperation LoadSceneAsync(
-            string sceneName,
-            LoadSceneMode loadMode = LoadSceneMode.Single,
-            Action<DiContainer> extraBindings = null,
-            LoadSceneRelationship containerMode = LoadSceneRelationship.None,
-            Action<DiContainer> extraBindingsLate = null)
-        {
-            PrepareForLoadScene(loadMode, extraBindings, extraBindingsLate, containerMode);
+			SceneManager.LoadScene(sceneName, loadMode);
 
-            Assert.That(Application.CanStreamedLevelBeLoaded(sceneName),
-                "Unable to load scene '{0}'", sceneName);
+			// It would be nice here to actually verify that the new scene has a SceneContext
+			// if we have extra binding hooks, or LoadSceneRelationship != None, but
+			// we can't do that in this case since the scene isn't loaded until the next frame
+		}
 
-            return SceneManager.LoadSceneAsync(sceneName, loadMode);
-        }
+		public AsyncOperation LoadSceneAsync(
+			string sceneName,
+			LoadSceneMode loadMode = LoadSceneMode.Single,
+			Action<DiContainer> extraBindings = null,
+			LoadSceneRelationship containerMode = LoadSceneRelationship.None,
+			Action<DiContainer> extraBindingsLate = null)
+		{
+			PrepareForLoadScene(loadMode, extraBindings, extraBindingsLate, containerMode);
 
-        void PrepareForLoadScene(
-            LoadSceneMode loadMode,
-            Action<DiContainer> extraBindings,
-            Action<DiContainer> extraBindingsLate,
-            LoadSceneRelationship containerMode)
-        {
-            if (loadMode == LoadSceneMode.Single)
-            {
-                Assert.IsEqual(containerMode, LoadSceneRelationship.None);
+			Assert.That(Application.CanStreamedLevelBeLoaded(sceneName),
+				"Unable to load scene '{0}'", sceneName);
 
-                // Here we explicitly unload all existing scenes rather than relying on Unity to
-                // do this for us.  The reason we do this is to ensure a deterministic destruction
-                // order for everything in the scene and in the container.
-                // See comment at ProjectKernel.OnApplicationQuit for more details
-                _projectKernel.ForceUnloadAllScenes();
-            }
+			return SceneManager.LoadSceneAsync(sceneName, loadMode);
+		}
 
-            if (containerMode == LoadSceneRelationship.None)
-            {
-                SceneContext.ParentContainers = null;
-            }
-            else if (containerMode == LoadSceneRelationship.Child)
-            {
-                if (_sceneContainer == null)
-                {
-                    SceneContext.ParentContainers = null;
-                }
-                else
-                {
-                    SceneContext.ParentContainers = new[] { _sceneContainer };
-                }
-            }
-            else
-            {
-                Assert.IsNotNull(_sceneContainer,
-                    "Cannot use LoadSceneRelationship.Sibling when loading scenes from ProjectContext");
-                Assert.IsEqual(containerMode, LoadSceneRelationship.Sibling);
-                SceneContext.ParentContainers = _sceneContainer.ParentContainers;
-            }
+		private void PrepareForLoadScene(
+			LoadSceneMode loadMode,
+			Action<DiContainer> extraBindings,
+			Action<DiContainer> extraBindingsLate,
+			LoadSceneRelationship containerMode)
+		{
+			if (loadMode == LoadSceneMode.Single)
+			{
+				Assert.IsEqual(containerMode, LoadSceneRelationship.None);
 
-            SceneContext.ExtraBindingsInstallMethod = extraBindings;
-            SceneContext.ExtraBindingsLateInstallMethod = extraBindingsLate;
-        }
+				// Here we explicitly unload all existing scenes rather than relying on Unity to
+				// do this for us.  The reason we do this is to ensure a deterministic destruction
+				// order for everything in the scene and in the container.
+				// See comment at ProjectKernel.OnApplicationQuit for more details
+				_projectKernel.ForceUnloadAllScenes();
+			}
 
-        public void LoadScene(
-            int sceneIndex,
-            LoadSceneMode loadMode = LoadSceneMode.Single,
-            Action<DiContainer> extraBindings = null,
-            LoadSceneRelationship containerMode = LoadSceneRelationship.None,
-            Action<DiContainer> extraBindingsLate = null)
-        {
-            PrepareForLoadScene(loadMode, extraBindings, extraBindingsLate, containerMode);
+			if (containerMode == LoadSceneRelationship.None)
+			{
+				SceneContext.ParentContainers = null;
+			}
+			else if (containerMode == LoadSceneRelationship.Child)
+			{
+				if (_sceneContainer == null)
+					SceneContext.ParentContainers = null;
+				else
+					SceneContext.ParentContainers = new[] { _sceneContainer };
+			}
+			else
+			{
+				Assert.IsNotNull(_sceneContainer,
+					"Cannot use LoadSceneRelationship.Sibling when loading scenes from ProjectContext");
+				Assert.IsEqual(containerMode, LoadSceneRelationship.Sibling);
+				SceneContext.ParentContainers = _sceneContainer.ParentContainers;
+			}
 
-            Assert.That(Application.CanStreamedLevelBeLoaded(sceneIndex),
-                "Unable to load scene '{0}'", sceneIndex);
+			SceneContext.ExtraBindingsInstallMethod = extraBindings;
+			SceneContext.ExtraBindingsLateInstallMethod = extraBindingsLate;
+		}
 
-            SceneManager.LoadScene(sceneIndex, loadMode);
+		public void LoadScene(
+			int sceneIndex,
+			LoadSceneMode loadMode = LoadSceneMode.Single,
+			Action<DiContainer> extraBindings = null,
+			LoadSceneRelationship containerMode = LoadSceneRelationship.None,
+			Action<DiContainer> extraBindingsLate = null)
+		{
+			PrepareForLoadScene(loadMode, extraBindings, extraBindingsLate, containerMode);
 
-            // It would be nice here to actually verify that the new scene has a SceneContext
-            // if we have extra binding hooks, or LoadSceneRelationship != None, but
-            // we can't do that in this case since the scene isn't loaded until the next frame
-        }
+			Assert.That(Application.CanStreamedLevelBeLoaded(sceneIndex),
+				"Unable to load scene '{0}'", sceneIndex);
 
-        public AsyncOperation LoadSceneAsync(
-            int sceneIndex,
-            LoadSceneMode loadMode = LoadSceneMode.Single,
-            Action<DiContainer> extraBindings = null,
-            LoadSceneRelationship containerMode = LoadSceneRelationship.None,
-            Action<DiContainer> extraBindingsLate = null)
-        {
-            PrepareForLoadScene(loadMode, extraBindings, extraBindingsLate, containerMode);
+			SceneManager.LoadScene(sceneIndex, loadMode);
 
-            Assert.That(Application.CanStreamedLevelBeLoaded(sceneIndex),
-                "Unable to load scene '{0}'", sceneIndex);
+			// It would be nice here to actually verify that the new scene has a SceneContext
+			// if we have extra binding hooks, or LoadSceneRelationship != None, but
+			// we can't do that in this case since the scene isn't loaded until the next frame
+		}
 
-            return SceneManager.LoadSceneAsync(sceneIndex, loadMode);
-        }
-    }
+		public AsyncOperation LoadSceneAsync(
+			int sceneIndex,
+			LoadSceneMode loadMode = LoadSceneMode.Single,
+			Action<DiContainer> extraBindings = null,
+			LoadSceneRelationship containerMode = LoadSceneRelationship.None,
+			Action<DiContainer> extraBindingsLate = null)
+		{
+			PrepareForLoadScene(loadMode, extraBindings, extraBindingsLate, containerMode);
+
+			Assert.That(Application.CanStreamedLevelBeLoaded(sceneIndex),
+				"Unable to load scene '{0}'", sceneIndex);
+
+			return SceneManager.LoadSceneAsync(sceneIndex, loadMode);
+		}
+	}
 }
 
 #endif

@@ -5,79 +5,71 @@ using Zenject.Internal;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class BindStatement : IDisposable
-    {
-        readonly List<IDisposable> _disposables;
-        IBindingFinalizer _bindingFinalizer;
+	[NoReflectionBaking]
+	public class BindStatement : IDisposable
+	{
+		private readonly List<IDisposable> _disposables;
+		private IBindingFinalizer _bindingFinalizer;
 
-        public BindStatement()
-        {
-            _disposables = new List<IDisposable>();
-            Reset();
-        }
+		public BindStatement()
+		{
+			_disposables = new List<IDisposable>();
+			Reset();
+		}
 
-        public BindingInheritanceMethods BindingInheritanceMethod
-        {
-            get
-            {
-                AssertHasFinalizer();
-                return _bindingFinalizer.BindingInheritanceMethod;
-            }
-        }
+		public BindingInheritanceMethods BindingInheritanceMethod
+		{
+			get
+			{
+				AssertHasFinalizer();
+				return _bindingFinalizer.BindingInheritanceMethod;
+			}
+		}
 
-        public bool HasFinalizer
-        {
-            get { return _bindingFinalizer != null; }
-        }
+		public bool HasFinalizer => _bindingFinalizer != null;
 
-        public void SetFinalizer(IBindingFinalizer bindingFinalizer)
-        {
-            _bindingFinalizer = bindingFinalizer;
-        }
+		public void Dispose()
+		{
+			ZenPools.DespawnStatement(this);
+		}
 
-        void AssertHasFinalizer()
-        {
-            if (_bindingFinalizer == null)
-            {
-                throw Assert.CreateException(
-                    "Unfinished binding!  Some required information was left unspecified.");
-            }
-        }
+		public void SetFinalizer(IBindingFinalizer bindingFinalizer)
+		{
+			_bindingFinalizer = bindingFinalizer;
+		}
 
-        public void AddDisposable(IDisposable disposable)
-        {
-            _disposables.Add(disposable);
-        }
+		private void AssertHasFinalizer()
+		{
+			if (_bindingFinalizer == null)
+				throw Assert.CreateException(
+					"Unfinished binding!  Some required information was left unspecified.");
+		}
 
-        public BindInfo SpawnBindInfo()
-        {
-            var bindInfo = ZenPools.SpawnBindInfo();
-            AddDisposable(bindInfo);
-            return bindInfo;
-        }
+		public void AddDisposable(IDisposable disposable)
+		{
+			_disposables.Add(disposable);
+		}
 
-        public void FinalizeBinding(DiContainer container)
-        {
-            AssertHasFinalizer();
-            _bindingFinalizer.FinalizeBinding(container);
-        }
+		public BindInfo SpawnBindInfo()
+		{
+			BindInfo bindInfo = ZenPools.SpawnBindInfo();
+			AddDisposable(bindInfo);
+			return bindInfo;
+		}
 
-        public void Reset()
-        {
-            _bindingFinalizer = null;
+		public void FinalizeBinding(DiContainer container)
+		{
+			AssertHasFinalizer();
+			_bindingFinalizer.FinalizeBinding(container);
+		}
 
-            for (int i = 0; i < _disposables.Count; i++)
-            {
-                _disposables[i].Dispose();
-            }
+		public void Reset()
+		{
+			_bindingFinalizer = null;
 
-            _disposables.Clear();
-        }
+			for (var i = 0; i < _disposables.Count; i++) _disposables[i].Dispose();
 
-        public void Dispose()
-        {
-            ZenPools.DespawnStatement(this);
-        }
-    }
+			_disposables.Clear();
+		}
+	}
 }

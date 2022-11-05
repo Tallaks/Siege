@@ -4,64 +4,53 @@ using ModestTree;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class MethodProviderMultiple<TReturn> : IProvider
-    {
-        readonly DiContainer _container;
-        readonly Func<InjectContext, IEnumerable<TReturn>> _method;
+	[NoReflectionBaking]
+	public class MethodProviderMultiple<TReturn> : IProvider
+	{
+		private readonly DiContainer _container;
+		private readonly Func<InjectContext, IEnumerable<TReturn>> _method;
 
-        public MethodProviderMultiple(
-            Func<InjectContext, IEnumerable<TReturn>> method,
-            DiContainer container)
-        {
-            _container = container;
-            _method = method;
-        }
+		public MethodProviderMultiple(
+			Func<InjectContext, IEnumerable<TReturn>> method,
+			DiContainer container)
+		{
+			_container = container;
+			_method = method;
+		}
 
-        public bool IsCached
-        {
-            get { return false; }
-        }
+		public bool IsCached => false;
 
-        public bool TypeVariesBasedOnMemberType
-        {
-            get { return false; }
-        }
+		public bool TypeVariesBasedOnMemberType => false;
 
-        public Type GetInstanceType(InjectContext context)
-        {
-            return typeof(TReturn);
-        }
+		public Type GetInstanceType(InjectContext context)
+		{
+			return typeof(TReturn);
+		}
 
-        public void GetAllInstancesWithInjectSplit(
-            InjectContext context, List<TypeValuePair> args, out Action injectAction, List<object> buffer)
-        {
-            Assert.IsEmpty(args);
-            Assert.IsNotNull(context);
+		public void GetAllInstancesWithInjectSplit(
+			InjectContext context, List<TypeValuePair> args, out Action injectAction, List<object> buffer)
+		{
+			Assert.IsEmpty(args);
+			Assert.IsNotNull(context);
 
-            Assert.That(typeof(TReturn).DerivesFromOrEqual(context.MemberType));
+			Assert.That(typeof(TReturn).DerivesFromOrEqual(context.MemberType));
 
-            injectAction = null;
-            if (_container.IsValidating && !TypeAnalyzer.ShouldAllowDuringValidation(context.MemberType))
-            {
-                buffer.Add(new ValidationMarker(typeof(TReturn)));
-            }
-            else
-            {
-                var result = _method(context);
+			injectAction = null;
+			if (_container.IsValidating && !TypeAnalyzer.ShouldAllowDuringValidation(context.MemberType))
+			{
+				buffer.Add(new ValidationMarker(typeof(TReturn)));
+			}
+			else
+			{
+				IEnumerable<TReturn> result = _method(context);
 
-                if (result == null)
-                {
-                    throw Assert.CreateException(
-                        "Method '{0}' returned null when list was expected. Object graph:\n {1}",
-                        _method.ToDebugString(), context.GetObjectGraphString());
-                }
+				if (result == null)
+					throw Assert.CreateException(
+						"Method '{0}' returned null when list was expected. Object graph:\n {1}",
+						_method.ToDebugString(), context.GetObjectGraphString());
 
-                foreach (var obj in result)
-                {
-                    buffer.Add(obj);
-                }
-            }
-        }
-    }
+				foreach (TReturn obj in result) buffer.Add(obj);
+			}
+		}
+	}
 }

@@ -2,35 +2,32 @@ using ModestTree;
 
 namespace Zenject
 {
-    public class FactoryProviderWrapper<TContract> : IFactory<TContract>
-    {
-        readonly IProvider _provider;
-        readonly InjectContext _injectContext;
+	public class FactoryProviderWrapper<TContract> : IFactory<TContract>
+	{
+		private readonly InjectContext _injectContext;
+		private readonly IProvider _provider;
 
-        public FactoryProviderWrapper(
-            IProvider provider, InjectContext injectContext)
-        {
-            Assert.That(injectContext.MemberType.DerivesFromOrEqual<TContract>());
+		public FactoryProviderWrapper(
+			IProvider provider, InjectContext injectContext)
+		{
+			Assert.That(injectContext.MemberType.DerivesFromOrEqual<TContract>());
 
-            _provider = provider;
-            _injectContext = injectContext;
-        }
+			_provider = provider;
+			_injectContext = injectContext;
+		}
 
-        public TContract Create()
-        {
-            var instance = _provider.GetInstance(_injectContext);
+		public TContract Create()
+		{
+			object instance = _provider.GetInstance(_injectContext);
 
-            if (_injectContext.Container.IsValidating)
-            {
-                // During validation it is sufficient to just call the _provider.GetInstance
-                return default(TContract);
-            }
+			if (_injectContext.Container.IsValidating)
+				// During validation it is sufficient to just call the _provider.GetInstance
+				return default;
 
-            Assert.That(instance == null
-                || instance.GetType().DerivesFromOrEqual(_injectContext.MemberType));
+			Assert.That(instance == null
+			            || instance.GetType().DerivesFromOrEqual(_injectContext.MemberType));
 
-            return (TContract)instance;
-        }
-    }
+			return (TContract)instance;
+		}
+	}
 }
-
