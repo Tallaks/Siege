@@ -4,103 +4,101 @@ using ModestTree;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class SubContainerBindingFinalizer : ProviderBindingFinalizer
-    {
-        readonly object _subIdentifier;
-        readonly bool _resolveAll;
-        readonly Func<DiContainer, ISubContainerCreator> _creatorFactory;
+	[NoReflectionBaking]
+	public class SubContainerBindingFinalizer : ProviderBindingFinalizer
+	{
+		private readonly Func<DiContainer, ISubContainerCreator> _creatorFactory;
+		private readonly bool _resolveAll;
+		private readonly object _subIdentifier;
 
-        public SubContainerBindingFinalizer(
-            BindInfo bindInfo, object subIdentifier,
-            bool resolveAll, Func<DiContainer, ISubContainerCreator> creatorFactory)
-            : base(bindInfo)
-        {
-            _subIdentifier = subIdentifier;
-            _resolveAll = resolveAll;
-            _creatorFactory = creatorFactory;
-        }
+		public SubContainerBindingFinalizer(
+			BindInfo bindInfo, object subIdentifier,
+			bool resolveAll, Func<DiContainer, ISubContainerCreator> creatorFactory)
+			: base(bindInfo)
+		{
+			_subIdentifier = subIdentifier;
+			_resolveAll = resolveAll;
+			_creatorFactory = creatorFactory;
+		}
 
-        protected override void OnFinalizeBinding(DiContainer container)
-        {
-            if (BindInfo.ToChoice == ToChoices.Self)
-            {
-                Assert.IsEmpty(BindInfo.ToTypes);
-                FinalizeBindingSelf(container);
-            }
-            else
-            {
-                FinalizeBindingConcrete(container, BindInfo.ToTypes);
-            }
-        }
+		protected override void OnFinalizeBinding(DiContainer container)
+		{
+			if (BindInfo.ToChoice == ToChoices.Self)
+			{
+				Assert.IsEmpty(BindInfo.ToTypes);
+				FinalizeBindingSelf(container);
+			}
+			else
+			{
+				FinalizeBindingConcrete(container, BindInfo.ToTypes);
+			}
+		}
 
-        void FinalizeBindingConcrete(DiContainer container, List<Type> concreteTypes)
-        {
-            var scope = GetScope();
+		private void FinalizeBindingConcrete(DiContainer container, List<Type> concreteTypes)
+		{
+			ScopeTypes scope = GetScope();
 
-            switch (scope)
-            {
-                case ScopeTypes.Transient:
-                {
-                    RegisterProvidersForAllContractsPerConcreteType(
-                        container,
-                        concreteTypes,
-                        (_, concreteType) =>
-                            new SubContainerDependencyProvider(
-                                concreteType, _subIdentifier, _creatorFactory(container), _resolveAll));
-                    break;
-                }
-                case ScopeTypes.Singleton:
-                {
-                    var containerCreator = new SubContainerCreatorCached(_creatorFactory(container));
+			switch (scope)
+			{
+				case ScopeTypes.Transient:
+				{
+					RegisterProvidersForAllContractsPerConcreteType(
+						container,
+						concreteTypes,
+						(_, concreteType) =>
+							new SubContainerDependencyProvider(
+								concreteType, _subIdentifier, _creatorFactory(container), _resolveAll));
+					break;
+				}
+				case ScopeTypes.Singleton:
+				{
+					var containerCreator = new SubContainerCreatorCached(_creatorFactory(container));
 
-                    RegisterProvidersForAllContractsPerConcreteType(
-                        container,
-                        concreteTypes,
-                        (_, concreteType) =>
-                            new SubContainerDependencyProvider(
-                                concreteType, _subIdentifier, containerCreator, _resolveAll));
-                    break;
-                }
-                default:
-                {
-                    throw Assert.CreateException();
-                }
-            }
-        }
+					RegisterProvidersForAllContractsPerConcreteType(
+						container,
+						concreteTypes,
+						(_, concreteType) =>
+							new SubContainerDependencyProvider(
+								concreteType, _subIdentifier, containerCreator, _resolveAll));
+					break;
+				}
+				default:
+				{
+					throw Assert.CreateException();
+				}
+			}
+		}
 
-        void FinalizeBindingSelf(DiContainer container)
-        {
-            var scope = GetScope();
+		private void FinalizeBindingSelf(DiContainer container)
+		{
+			ScopeTypes scope = GetScope();
 
-            switch (scope)
-            {
-                case ScopeTypes.Transient:
-                {
-                    RegisterProviderPerContract(
-                        container,
-                        (_, contractType) => new SubContainerDependencyProvider(
-                            contractType, _subIdentifier, _creatorFactory(container), _resolveAll));
-                    break;
-                }
-                case ScopeTypes.Singleton:
-                {
-                    var containerCreator = new SubContainerCreatorCached(_creatorFactory(container));
+			switch (scope)
+			{
+				case ScopeTypes.Transient:
+				{
+					RegisterProviderPerContract(
+						container,
+						(_, contractType) => new SubContainerDependencyProvider(
+							contractType, _subIdentifier, _creatorFactory(container), _resolveAll));
+					break;
+				}
+				case ScopeTypes.Singleton:
+				{
+					var containerCreator = new SubContainerCreatorCached(_creatorFactory(container));
 
-                    RegisterProviderPerContract(
-                        container,
-                        (_, contractType) =>
-                            new SubContainerDependencyProvider(
-                                contractType, _subIdentifier, containerCreator, _resolveAll));
-                    break;
-                }
-                default:
-                {
-                    throw Assert.CreateException();
-                }
-            }
-        }
-    }
+					RegisterProviderPerContract(
+						container,
+						(_, contractType) =>
+							new SubContainerDependencyProvider(
+								contractType, _subIdentifier, containerCreator, _resolveAll));
+					break;
+				}
+				default:
+				{
+					throw Assert.CreateException();
+				}
+			}
+		}
+	}
 }
-
-

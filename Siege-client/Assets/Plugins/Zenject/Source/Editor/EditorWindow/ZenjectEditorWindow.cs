@@ -5,156 +5,133 @@ using UnityEngine;
 
 namespace Zenject
 {
-    public abstract class ZenjectEditorWindow : EditorWindow
-    {
-        [Inject]
-        [NonSerialized]
-        Kernel _kernel;
+	public abstract class ZenjectEditorWindow : EditorWindow
+	{
+		[NonSerialized] private GUIStyle _errorTextStyle;
 
-        [Inject]
-        [NonSerialized]
-        GuiRenderableManager _guiRenderableManager;
+		[NonSerialized] private Exception _fatalError;
 
-        [NonSerialized]
-        DiContainer _container;
+		[Inject] [NonSerialized] private GuiRenderableManager _guiRenderableManager;
 
-        [NonSerialized]
-        Exception _fatalError;
+		[Inject] [NonSerialized] private Kernel _kernel;
 
-        [NonSerialized]
-        GUIStyle _errorTextStyle;
+		private GUIStyle ErrorTextStyle
+		{
+			get
+			{
+				if (_errorTextStyle == null)
+				{
+					_errorTextStyle = new GUIStyle(GUI.skin.label);
+					_errorTextStyle.fontSize = 18;
+					_errorTextStyle.normal.textColor = Color.red;
+					_errorTextStyle.wordWrap = true;
+					_errorTextStyle.alignment = TextAnchor.MiddleCenter;
+				}
 
-        GUIStyle ErrorTextStyle
-        {
-            get
-            {
-                if (_errorTextStyle == null)
-                {
-                    _errorTextStyle = new GUIStyle(GUI.skin.label);
-                    _errorTextStyle.fontSize = 18;
-                    _errorTextStyle.normal.textColor = Color.red;
-                    _errorTextStyle.wordWrap = true;
-                    _errorTextStyle.alignment = TextAnchor.MiddleCenter;
-                }
+				return _errorTextStyle;
+			}
+		}
 
-                return _errorTextStyle;
-            }
-        }
+		[field: NonSerialized] protected DiContainer Container { get; private set; }
 
-        protected DiContainer Container
-        {
-            get { return _container; }
-        }
+		public virtual void Update()
+		{
+			if (_fatalError != null) return;
 
-        public virtual void OnEnable()
-        {
-            if (_fatalError != null)
-            {
-                return;
-            }
+			try
+			{
+				_kernel.Tick();
+			}
+			catch (Exception e)
+			{
+				Log.ErrorException(e);
+				_fatalError = e;
+			}
 
-            Initialize();
-        }
+			// We might also consider only calling Repaint when changes occur
+			Repaint();
+		}
 
-        protected virtual void Initialize()
-        {
-            Assert.IsNull(_container);
+		public virtual void OnEnable()
+		{
+			if (_fatalError != null) return;
 
-            _container = new DiContainer(new[] { StaticContext.Container });
+			Initialize();
+		}
 
-            // Make sure we don't create any game objects since editor windows don't have a scene
-            _container.AssertOnNewGameObjects = true;
+		public virtual void OnDisable()
+		{
+			if (_fatalError != null) return;
 
-            ZenjectManagersInstaller.Install(_container);
+			_kernel.Dispose();
+		}
 
-            _container.Bind<Kernel>().AsSingle();
-            _container.Bind<GuiRenderableManager>().AsSingle();
-            _container.BindInstance(this);
+		public virtual void OnGUI()
+		{
+			if (_fatalError != null)
+			{
+				var labelWidth = 600;
+				var labelHeight = 200;
 
-            InstallBindings();
+				GUI.Label(
+					new Rect(Screen.width / 2 - labelWidth / 2, Screen.height / 3 - labelHeight / 2, labelWidth, labelHeight),
+					"Unrecoverable error occurred!  \nSee log for details.", ErrorTextStyle);
 
-            _container.QueueForInject(this);
-            _container.ResolveRoots();
+				var buttonWidth = 100;
+				var buttonHeight = 50;
+				var offset = new Vector2(0, 100);
 
-            _kernel.Initialize();
-        }
+				if (GUI.Button(
+					    new Rect(Screen.width / 2 - buttonWidth / 2 + offset.x, Screen.height / 3 - buttonHeight / 2 + offset.y,
+						    buttonWidth, buttonHeight), "Reload")) ExecuteFullReload();
+			}
+			else
+			{
+				try
+				{
+					if (_guiRenderableManager != null) _guiRenderableManager.OnGui();
+				}
+				catch (Exception e)
+				{
+					Log.ErrorException(e);
+					_fatalError = e;
+				}
+			}
+		}
 
-        public virtual void OnDisable()
-        {
-            if (_fatalError != null)
-            {
-                return;
-            }
+		protected virtual void Initialize()
+		{
+			Assert.IsNull(Container);
 
-            _kernel.Dispose();
-        }
+			Container = new DiContainer(new[] { StaticContext.Container });
 
-        public virtual void Update()
-        {
-            if (_fatalError != null)
-            {
-                return;
-            }
+			// Make sure we don't create any game objects since editor windows don't have a scene
+			Container.AssertOnNewGameObjects = true;
 
-            try
-            {
-                _kernel.Tick();
-            }
-            catch (Exception e)
-            {
-                Log.ErrorException(e);
-                _fatalError = e;
-            }
+			ZenjectManagersInstaller.Install(Container);
 
-            // We might also consider only calling Repaint when changes occur
-            Repaint();
-        }
+			Container.Bind<Kernel>().AsSingle();
+			Container.Bind<GuiRenderableManager>().AsSingle();
+			Container.BindInstance(this);
 
-        public virtual void OnGUI()
-        {
-            if (_fatalError != null)
-            {
-                var labelWidth = 600;
-                var labelHeight = 200;
+			InstallBindings();
 
-                GUI.Label(new Rect(Screen.width / 2 - labelWidth / 2, Screen.height / 3 - labelHeight / 2, labelWidth, labelHeight), "Unrecoverable error occurred!  \nSee log for details.", ErrorTextStyle);
+			Container.QueueForInject(this);
+			Container.ResolveRoots();
 
-                var buttonWidth = 100;
-                var buttonHeight = 50;
-                var offset = new Vector2(0, 100);
+			_kernel.Initialize();
+		}
 
-                if (GUI.Button(new Rect(Screen.width / 2 - buttonWidth / 2 + offset.x, Screen.height / 3 - buttonHeight / 2 + offset.y, buttonWidth, buttonHeight), "Reload"))
-                {
-                    ExecuteFullReload();
-                }
-            }
-            else
-            {
-                try
-                {
-                    if (_guiRenderableManager != null)
-                    {
-                        _guiRenderableManager.OnGui();
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorException(e);
-                    _fatalError = e;
-                }
-            }
-        }
+		protected virtual void ExecuteFullReload()
+		{
+			_kernel = null;
+			_guiRenderableManager = null;
+			Container = null;
+			_fatalError = null;
 
-        protected virtual void ExecuteFullReload()
-        {
-            _kernel = null;
-            _guiRenderableManager = null;
-            _container = null;
-            _fatalError = null;
+			Initialize();
+		}
 
-            Initialize();
-        }
-
-        public abstract void InstallBindings();
-    }
+		public abstract void InstallBindings();
+	}
 }

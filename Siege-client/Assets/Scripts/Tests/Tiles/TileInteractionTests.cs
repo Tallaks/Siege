@@ -39,7 +39,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			_gridMap.GenerateMap();
 
 			CustomTile tile0 = _gridMap.GetTile(0, 0);
-			
+
 			var success = false;
 
 			_gridMap.OnTileSelection += tile =>

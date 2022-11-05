@@ -1,12 +1,9 @@
 namespace Zenject
 {
-    public interface IBindingFinalizer
-    {
-        BindingInheritanceMethods BindingInheritanceMethod
-        {
-            get;
-        }
+	public interface IBindingFinalizer
+	{
+		BindingInheritanceMethods BindingInheritanceMethod { get; }
 
-        void FinalizeBinding(DiContainer container);
-    }
+		void FinalizeBinding(DiContainer container);
+	}
 }

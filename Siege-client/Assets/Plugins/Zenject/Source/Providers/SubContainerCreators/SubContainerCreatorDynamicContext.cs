@@ -8,55 +8,50 @@ using Zenject.Internal;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public abstract class SubContainerCreatorDynamicContext : ISubContainerCreator
-    {
-        readonly DiContainer _container;
+	[NoReflectionBaking]
+	public abstract class SubContainerCreatorDynamicContext : ISubContainerCreator
+	{
+		public SubContainerCreatorDynamicContext(DiContainer container)
+		{
+			Container = container;
+		}
 
-        public SubContainerCreatorDynamicContext(DiContainer container)
-        {
-            _container = container;
-        }
+		protected DiContainer Container { get; }
 
-        protected DiContainer Container
-        {
-            get { return _container; }
-        }
+		public DiContainer CreateSubContainer(
+			List<TypeValuePair> args, InjectContext parentContext, out Action injectAction)
+		{
+			bool shouldMakeActive;
+			GameObject gameObj = CreateGameObject(parentContext, out shouldMakeActive);
 
-        public DiContainer CreateSubContainer(
-            List<TypeValuePair> args, InjectContext parentContext, out Action injectAction)
-        {
-            bool shouldMakeActive;
-            var gameObj = CreateGameObject(parentContext, out shouldMakeActive);
+			var context = gameObj.AddComponent<GameObjectContext>();
 
-            var context = gameObj.AddComponent<GameObjectContext>();
+			AddInstallers(args, context);
 
-            AddInstallers(args, context);
+			context.Install(Container);
 
-            context.Install(_container);
+			injectAction = () =>
+			{
+				// Note: We don't need to call ResolveRoots here because GameObjectContext does this for us
+				Container.Inject(context);
 
-            injectAction = () => 
-            {
-                // Note: We don't need to call ResolveRoots here because GameObjectContext does this for us
-                _container.Inject(context);
-
-                if (shouldMakeActive && !_container.IsValidating)
-                {
+				if (shouldMakeActive && !Container.IsValidating)
+				{
 #if ZEN_INTERNAL_PROFILING
                     using (ProfileTimers.CreateTimedBlock("User Code"))
 #endif
-                    {
-                        gameObj.SetActive(true);
-                    }
-                }
-            };
+					{
+						gameObj.SetActive(true);
+					}
+				}
+			};
 
-            return context.Container;
-        }
+			return context.Container;
+		}
 
-        protected abstract void AddInstallers(List<TypeValuePair> args, GameObjectContext context);
-        protected abstract GameObject CreateGameObject(InjectContext context, out bool shouldMakeActive);
-    }
+		protected abstract void AddInstallers(List<TypeValuePair> args, GameObjectContext context);
+		protected abstract GameObject CreateGameObject(InjectContext context, out bool shouldMakeActive);
+	}
 }
 
 #endif

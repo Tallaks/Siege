@@ -2,37 +2,22 @@ using System;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class SignalDeclarationBindInfo
-    {
-        public SignalDeclarationBindInfo(Type signalType)
-        {
-            SignalType = signalType;
-        }
+	[NoReflectionBaking]
+	public class SignalDeclarationBindInfo
+	{
+		public SignalDeclarationBindInfo(Type signalType)
+		{
+			SignalType = signalType;
+		}
 
-        public object Identifier
-        {
-            get; set;
-        }
+		public object Identifier { get; set; }
 
-        public Type SignalType
-        {
-            get; private set;
-        }
+		public Type SignalType { get; }
 
-        public bool RunAsync
-        {
-            get; set;
-        }
+		public bool RunAsync { get; set; }
 
-        public int TickPriority
-        {
-            get; set;
-        }
+		public int TickPriority { get; set; }
 
-        public SignalMissingHandlerResponses MissingHandlerResponse
-        {
-            get; set;
-        }
-    }
+		public SignalMissingHandlerResponses MissingHandlerResponse { get; set; }
+	}
 }

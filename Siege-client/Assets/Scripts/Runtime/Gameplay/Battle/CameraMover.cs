@@ -11,16 +11,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 		[SerializeField] private float _movementSpeed = 1;
 		[SerializeField] private float _zoomSpeed = 1;
 		[SerializeField] private float _rotationSpeed = 1;
-		
-		private IInputService _inputService;
 		private Camera _camera;
 
-		private float _xDeg = 0f;
-		private float _yDeg = 0f;
-		
-		[Inject]
-		private void Construct(IInputService inputService) => 
-			_inputService = inputService;
+		private IInputService _inputService;
+
+		private float _xDeg;
+		private float _yDeg;
 
 		private void Awake() => 
 			_camera = GetComponentInChildren<Camera>();
@@ -39,30 +35,40 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 			_inputService.OnRotate -= RotateCamera();
 		}
 
-		private Action<Vector2> RotateCamera() =>
-			rotateInput =>
+		[Inject]
+		private void Construct(IInputService inputService) => 
+			_inputService = inputService;
+
+		private Action<Vector2> RotateCamera()
+		{
+			return rotateInput =>
 			{
 				_xDeg += rotateInput.x * _rotationSpeed * Time.deltaTime;
 				_yDeg -= rotateInput.y * _rotationSpeed * Time.deltaTime;
 				_yDeg = _yDeg.ClampedAngle(-80f, 80f);
-				
+
 				transform.rotation = Quaternion.Euler(_yDeg, _xDeg, 0);
 			};
+		}
 
-		private Action<float> ZoomCamera() =>
-			zoomInput =>
+		private Action<float> ZoomCamera()
+		{
+			return zoomInput =>
 			{
 				Transform transform1 = _camera.transform;
 				transform1.position += transform1.forward * zoomInput * _zoomSpeed;
 			};
+		}
 
-		private Action<Vector2> MoveCamera() =>
-			moveInput =>
+		private Action<Vector2> MoveCamera()
+		{
+			return moveInput =>
 			{
 				Transform cameraTransform = _camera.transform;
 				Vector3 moveDirection = moveInput.y * cameraTransform.forward + moveInput.x * cameraTransform.right;
 				Vector3 delta = Vector3.ProjectOnPlane(moveDirection, Vector3.up);
 				transform.position += delta * Time.deltaTime * _movementSpeed;
 			};
+		}
 	}
 }

@@ -2,9 +2,9 @@
 
 namespace Zenject
 {
-    public class DefaultGameObjectKernel : MonoKernel
-    {
-    }
+	public class DefaultGameObjectKernel : MonoKernel
+	{
+	}
 }
 
 #endif

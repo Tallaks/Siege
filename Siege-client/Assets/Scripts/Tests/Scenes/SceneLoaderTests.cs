@@ -17,49 +17,35 @@ namespace Kulinaria.Siege.Tests.Scenes
 		public IEnumerator WhenSceneLoaderBound_ThenItIsNotNull()
 		{
 			var coroutineRunner = new GameObject().AddComponent<CoroutineRunner>();
-			
+
 			PreInstall();
 
-			Container
-				.Bind<ICoroutineRunner>()
-				.To<CoroutineRunner>()
-				.FromInstance(coroutineRunner)
-				.AsSingle();
-			
-			Container
-				.Bind<ISceneLoader>()
-				.To<SceneLoader>()
-				.AsSingle();
-			
+			Container.Bind<ICoroutineRunner>().To<CoroutineRunner>().FromInstance(coroutineRunner).AsSingle();
+
+			Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
+
 			PostInstall();
 
 			Assert.NotNull(Container.Resolve<ICoroutineRunner>());
 			Assert.NotNull(Container.Resolve<ISceneLoader>());
-			
+
 			yield break;
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenBootSceneLoadedWithSceneLoader_ThenItLoads()
 		{
 			var coroutineRunner = new GameObject().AddComponent<CoroutineRunner>();
-			
+
 			PreInstall();
 
-			Container
-				.Bind<ICoroutineRunner>()
-				.To<CoroutineRunner>()
-				.FromInstance(coroutineRunner)
-				.AsSingle();
-			
-			Container
-				.Bind<ISceneLoader>()
-				.To<SceneLoader>()
-				.AsSingle();
-			
+			Container.Bind<ICoroutineRunner>().To<CoroutineRunner>().FromInstance(coroutineRunner).AsSingle();
+
+			Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
+
 			PostInstall();
 
-			Container.Resolve<ISceneLoader>().LoadSceneAsync(SceneNames.BattleScene, () => 
+			Container.Resolve<ISceneLoader>().LoadSceneAsync(SceneNames.BattleScene, () =>
 				Assert.IsTrue(SceneManager.GetActiveScene().name == SceneNames.BattleScene));
 
 			yield return new WaitForSeconds(2);

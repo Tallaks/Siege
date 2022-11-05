@@ -9,113 +9,96 @@ using Zenject.Internal;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class AddToCurrentGameObjectComponentProvider : IProvider
-    {
-        readonly Type _componentType;
-        readonly DiContainer _container;
-        readonly List<TypeValuePair> _extraArguments;
-        readonly object _concreteIdentifier;
-        readonly Action<InjectContext, object> _instantiateCallback;
+	[NoReflectionBaking]
+	public class AddToCurrentGameObjectComponentProvider : IProvider
+	{
+		private readonly object _concreteIdentifier;
+		private readonly List<TypeValuePair> _extraArguments;
+		private readonly Action<InjectContext, object> _instantiateCallback;
 
-        public AddToCurrentGameObjectComponentProvider(
-            DiContainer container, Type componentType,
-            IEnumerable<TypeValuePair> extraArguments, object concreteIdentifier,
-            Action<InjectContext, object> instantiateCallback)
-        {
-            Assert.That(componentType.DerivesFrom<Component>());
+		public AddToCurrentGameObjectComponentProvider(
+			DiContainer container, Type componentType,
+			IEnumerable<TypeValuePair> extraArguments, object concreteIdentifier,
+			Action<InjectContext, object> instantiateCallback)
+		{
+			Assert.That(componentType.DerivesFrom<Component>());
 
-            _extraArguments = extraArguments.ToList();
-            _componentType = componentType;
-            _container = container;
-            _concreteIdentifier = concreteIdentifier;
-            _instantiateCallback = instantiateCallback;
-        }
+			_extraArguments = extraArguments.ToList();
+			ComponentType = componentType;
+			Container = container;
+			_concreteIdentifier = concreteIdentifier;
+			_instantiateCallback = instantiateCallback;
+		}
 
-        public bool IsCached
-        {
-            get { return false; }
-        }
+		protected DiContainer Container { get; }
 
-        public bool TypeVariesBasedOnMemberType
-        {
-            get { return false; }
-        }
+		protected Type ComponentType { get; }
 
-        protected DiContainer Container
-        {
-            get { return _container; }
-        }
+		public bool IsCached => false;
 
-        protected Type ComponentType
-        {
-            get { return _componentType; }
-        }
+		public bool TypeVariesBasedOnMemberType => false;
 
-        public Type GetInstanceType(InjectContext context)
-        {
-            return _componentType;
-        }
+		public Type GetInstanceType(InjectContext context)
+		{
+			return ComponentType;
+		}
 
-        public void GetAllInstancesWithInjectSplit(
-            InjectContext context, List<TypeValuePair> args, out Action injectAction, List<object> buffer)
-        {
-            Assert.IsNotNull(context);
+		public void GetAllInstancesWithInjectSplit(
+			InjectContext context, List<TypeValuePair> args, out Action injectAction, List<object> buffer)
+		{
+			Assert.IsNotNull(context);
 
-            Assert.That(context.ObjectType.DerivesFrom<Component>(),
-                "Object '{0}' can only be injected into MonoBehaviour's since it was bound with 'FromNewComponentSibling'. Attempted to inject into non-MonoBehaviour '{1}'",
-                context.MemberType, context.ObjectType);
+			Assert.That(context.ObjectType.DerivesFrom<Component>(),
+				"Object '{0}' can only be injected into MonoBehaviour's since it was bound with 'FromNewComponentSibling'. Attempted to inject into non-MonoBehaviour '{1}'",
+				context.MemberType, context.ObjectType);
 
-            object instance;
+			object instance;
 
-            if (!_container.IsValidating || TypeAnalyzer.ShouldAllowDuringValidation(_componentType))
-            {
-                var gameObj = ((Component)context.ObjectInstance).gameObject;
+			if (!Container.IsValidating || TypeAnalyzer.ShouldAllowDuringValidation(ComponentType))
+			{
+				GameObject gameObj = ((Component)context.ObjectInstance).gameObject;
 
-                var componentInstance = gameObj.GetComponent(_componentType);
-                instance = componentInstance;
+				Component componentInstance = gameObj.GetComponent(ComponentType);
+				instance = componentInstance;
 
-                // Use componentInstance so that it triggers unity's overloaded comparison operator
-                // So if the component is there but missing then it returns null
-                // (https://github.com/svermeulen/Zenject/issues/582)
-                if (componentInstance != null)
-                {
-                    injectAction = null;
-                    buffer.Add(instance);
-                    return;
-                }
+				// Use componentInstance so that it triggers unity's overloaded comparison operator
+				// So if the component is there but missing then it returns null
+				// (https://github.com/svermeulen/Zenject/issues/582)
+				if (componentInstance != null)
+				{
+					injectAction = null;
+					buffer.Add(instance);
+					return;
+				}
 
-                instance = gameObj.AddComponent(_componentType);
-            }
-            else
-            {
-                instance = new ValidationMarker(_componentType);
-            }
+				instance = gameObj.AddComponent(ComponentType);
+			}
+			else
+			{
+				instance = new ValidationMarker(ComponentType);
+			}
 
-            // Note that we don't just use InstantiateComponentOnNewGameObjectExplicit here
-            // because then circular references don't work
+			// Note that we don't just use InstantiateComponentOnNewGameObjectExplicit here
+			// because then circular references don't work
 
-            injectAction = () =>
-            {
-                var extraArgs = ZenPools.SpawnList<TypeValuePair>();
+			injectAction = () =>
+			{
+				List<TypeValuePair> extraArgs = ZenPools.SpawnList<TypeValuePair>();
 
-                extraArgs.AllocFreeAddRange(_extraArguments);
-                extraArgs.AllocFreeAddRange(args);
+				extraArgs.AllocFreeAddRange(_extraArguments);
+				extraArgs.AllocFreeAddRange(args);
 
-                _container.InjectExplicit(instance, _componentType, extraArgs, context, _concreteIdentifier);
+				Container.InjectExplicit(instance, ComponentType, extraArgs, context, _concreteIdentifier);
 
-                Assert.That(extraArgs.IsEmpty());
-                ZenPools.DespawnList(extraArgs);
+				Assert.That(extraArgs.IsEmpty());
+				ZenPools.DespawnList(extraArgs);
 
-                if (_instantiateCallback != null)
-                {
-                    _instantiateCallback(context, instance);
-                }
-            };
+				if (_instantiateCallback != null) _instantiateCallback(context, instance);
+			};
 
-            buffer.Add(instance);
-        }
-    }
+			buffer.Add(instance);
+		}
+	}
 }
 
 #endif

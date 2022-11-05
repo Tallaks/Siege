@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
-using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 {
@@ -26,13 +25,13 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			var path = new LinkedList<CustomTile>();
 			if (_predecessors[tile] == null)
 				return path;
-			
+
 			path.AddLast(tile);
 
 			CustomTile currentTile = tile;
 			int tileCount = _map.AllTiles.Count();
 			var counter = 0;
-			
+
 			while (currentTile != _startTile)
 			{
 				counter++;
@@ -40,7 +39,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 				path.AddBefore(currentNode, _predecessors[currentTile]);
 
 				currentTile = _predecessors[currentTile];
-				
+
 				if (counter > tileCount)
 					return new LinkedList<CustomTile>();
 			}
@@ -48,7 +47,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			return path;
 		}
 
-		public IEnumerable<CustomTile> GetAvailableTilesByDistance(int distance) => 
+		public IEnumerable<CustomTile> GetAvailableTilesByDistance(int distance) =>
 			_map.AllTiles.Where(k => _distances[k] <= distance);
 
 		private void FindDistancesToAllTilesFrom(CustomTile startTile)
@@ -67,19 +66,15 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			_distances[startTile] = 0;
 			CustomTile[] arrayOfTiles = _map.AllTiles.ToArray();
 			for (var j = 0; j < tileCount; j++)
+			for (var i = 0; i < tileCount; i++)
 			{
-				for (var i = 0; i < tileCount; i++)
-				{
-					CustomTile currentTile = arrayOfTiles[i];
-					foreach (CustomTile tile in currentTile.NeighboursWithDistances.Keys)
+				CustomTile currentTile = arrayOfTiles[i];
+				foreach (CustomTile tile in currentTile.NeighboursWithDistances.Keys)
+					if (_distances[currentTile] > AddDistances(_distances[tile], currentTile.NeighboursWithDistances[tile]))
 					{
-						if (_distances[currentTile] > AddDistances(_distances[tile], currentTile.NeighboursWithDistances[tile]))
-						{
-							_distances[currentTile] = AddDistances(_distances[tile], currentTile.NeighboursWithDistances[tile]);
-							_predecessors[currentTile] = tile;
-						}
+						_distances[currentTile] = AddDistances(_distances[tile], currentTile.NeighboursWithDistances[tile]);
+						_predecessors[currentTile] = tile;
 					}
-				}
 			}
 		}
 

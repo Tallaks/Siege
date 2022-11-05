@@ -4,119 +4,112 @@ using System;
 using System.Collections.Generic;
 using ModestTree;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Zenject.Internal;
 
 namespace Zenject
 {
-    public class SceneDecoratorContext : Context
-    {
-        [SerializeField]
-        List<MonoInstaller> _lateInstallers = new List<MonoInstaller>();
+	public class SceneDecoratorContext : Context
+	{
+		[SerializeField] private List<MonoInstaller> _lateInstallers = new();
 
-        [SerializeField]
-        List<MonoInstaller> _lateInstallerPrefabs = new List<MonoInstaller>();
+		[SerializeField] private List<MonoInstaller> _lateInstallerPrefabs = new();
 
-        [SerializeField]
-        List<ScriptableObjectInstaller> _lateScriptableObjectInstallers = new List<ScriptableObjectInstaller>();
+		[SerializeField] private List<ScriptableObjectInstaller> _lateScriptableObjectInstallers = new();
 
-        public IEnumerable<MonoInstaller> LateInstallers
-        {
-            get { return _lateInstallers; }
-            set
-            {
-                _lateInstallers.Clear();
-                _lateInstallers.AddRange(value);
-            }
-        }
+		[FormerlySerializedAs("SceneName")] [SerializeField]
+		private string _decoratedContractName;
 
-        public IEnumerable<MonoInstaller> LateInstallerPrefabs
-        {
-            get { return _lateInstallerPrefabs; }
-            set
-            {
-                _lateInstallerPrefabs.Clear();
-                _lateInstallerPrefabs.AddRange(value);
-            }
-        }
+		private readonly List<MonoBehaviour> _injectableMonoBehaviours = new();
 
-        public IEnumerable<ScriptableObjectInstaller> LateScriptableObjectInstallers
-        {
-            get { return _lateScriptableObjectInstallers; }
-            set
-            {
-                _lateScriptableObjectInstallers.Clear();
-                _lateScriptableObjectInstallers.AddRange(value);
-            }
-        }
+		private DiContainer _container;
 
-        [FormerlySerializedAs("SceneName")]
-        [SerializeField]
-        string _decoratedContractName = null;
+		public IEnumerable<MonoInstaller> LateInstallers
+		{
+			get => _lateInstallers;
+			set
+			{
+				_lateInstallers.Clear();
+				_lateInstallers.AddRange(value);
+			}
+		}
 
-        DiContainer _container;
-        readonly List<MonoBehaviour> _injectableMonoBehaviours = new List<MonoBehaviour>();
+		public IEnumerable<MonoInstaller> LateInstallerPrefabs
+		{
+			get => _lateInstallerPrefabs;
+			set
+			{
+				_lateInstallerPrefabs.Clear();
+				_lateInstallerPrefabs.AddRange(value);
+			}
+		}
 
-        public string DecoratedContractName
-        {
-            get { return _decoratedContractName; }
-        }
+		public IEnumerable<ScriptableObjectInstaller> LateScriptableObjectInstallers
+		{
+			get => _lateScriptableObjectInstallers;
+			set
+			{
+				_lateScriptableObjectInstallers.Clear();
+				_lateScriptableObjectInstallers.AddRange(value);
+			}
+		}
 
-        public override DiContainer Container
-        {
-            get
-            {
-                Assert.IsNotNull(_container);
-                return _container;
-            }
-        }
+		public string DecoratedContractName => _decoratedContractName;
 
-        public override IEnumerable<GameObject> GetRootGameObjects()
-        {
-            // This method should never be called because SceneDecoratorContext's are not bound
-            // to the container
-            throw Assert.CreateException();
-        }
+		public override DiContainer Container
+		{
+			get
+			{
+				Assert.IsNotNull(_container);
+				return _container;
+			}
+		}
 
-        public void Initialize(DiContainer container)
-        {
-            Assert.IsNull(_container);
-            Assert.That(_injectableMonoBehaviours.IsEmpty());
+		public override IEnumerable<GameObject> GetRootGameObjects()
+		{
+			// This method should never be called because SceneDecoratorContext's are not bound
+			// to the container
+			throw Assert.CreateException();
+		}
 
-            _container = container;
+		public void Initialize(DiContainer container)
+		{
+			Assert.IsNull(_container);
+			Assert.That(_injectableMonoBehaviours.IsEmpty());
 
-            GetInjectableMonoBehaviours(_injectableMonoBehaviours);
+			_container = container;
 
-            foreach (var instance in _injectableMonoBehaviours)
-            {
-                container.QueueForInject(instance);
-            }
-        }
+			GetInjectableMonoBehaviours(_injectableMonoBehaviours);
 
-        public void InstallDecoratorSceneBindings()
-        {
-            _container.Bind<SceneDecoratorContext>().FromInstance(this);
-            InstallSceneBindings(_injectableMonoBehaviours);
-        }
+			foreach (MonoBehaviour instance in _injectableMonoBehaviours) container.QueueForInject(instance);
+		}
 
-        public void InstallDecoratorInstallers()
-        {
-            InstallInstallers();
-        }
+		public void InstallDecoratorSceneBindings()
+		{
+			_container.Bind<SceneDecoratorContext>().FromInstance(this);
+			InstallSceneBindings(_injectableMonoBehaviours);
+		}
 
-        protected override void GetInjectableMonoBehaviours(List<MonoBehaviour> monoBehaviours)
-        {
-            var scene = gameObject.scene;
+		public void InstallDecoratorInstallers()
+		{
+			InstallInstallers();
+		}
 
-            ZenUtilInternal.AddStateMachineBehaviourAutoInjectersInScene(scene);
-            ZenUtilInternal.GetInjectableMonoBehavioursInScene(scene, monoBehaviours);
-        }
+		protected override void GetInjectableMonoBehaviours(List<MonoBehaviour> monoBehaviours)
+		{
+			Scene scene = gameObject.scene;
 
-        public void InstallLateDecoratorInstallers()
-        {
-            InstallInstallers(new List<InstallerBase>(), new List<Type>(), _lateScriptableObjectInstallers, _lateInstallers, _lateInstallerPrefabs);
-        }
-    }
+			ZenUtilInternal.AddStateMachineBehaviourAutoInjectersInScene(scene);
+			ZenUtilInternal.GetInjectableMonoBehavioursInScene(scene, monoBehaviours);
+		}
+
+		public void InstallLateDecoratorInstallers()
+		{
+			InstallInstallers(new List<InstallerBase>(), new List<Type>(), _lateScriptableObjectInstallers, _lateInstallers,
+				_lateInstallerPrefabs);
+		}
+	}
 }
 
 #endif

@@ -14,23 +14,19 @@ namespace Kulinaria.Siege.Tests
 		public IEnumerator WhenCoroutineRunnerBound_ThenCoroutineRuns()
 		{
 			var coroutineRunner = new GameObject().AddComponent<CoroutineRunner>();
-			
+
 			PreInstall();
 
-			Container
-				.Bind<ICoroutineRunner>()
-				.To<CoroutineRunner>()
-				.FromInstance(coroutineRunner)
-				.AsSingle();
-			
+			Container.Bind<ICoroutineRunner>().To<CoroutineRunner>().FromInstance(coroutineRunner).AsSingle();
+
 			PostInstall();
-			
+
 			Assert.NotNull(Container.Resolve<ICoroutineRunner>());
 			Coroutine runningRoutine = Container.Resolve<ICoroutineRunner>().StartCoroutine(RoutineExample());
 
 			Assert.NotNull(runningRoutine);
 			Container.Resolve<ICoroutineRunner>().StopCoroutine(runningRoutine);
-			
+
 			yield break;
 		}
 

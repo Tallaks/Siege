@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace Zenject
 {
-    public class SceneTestFixtureSceneReference : ScriptableObject
-    {
-        public SceneAsset Scene;
-    }
+	public class SceneTestFixtureSceneReference : ScriptableObject
+	{
+		public SceneAsset Scene;
+	}
 }
 
 #endif

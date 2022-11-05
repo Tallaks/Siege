@@ -5,57 +5,51 @@ using ModestTree;
 
 namespace Zenject
 {
-    public interface IPlaceholderFactory : IValidatable
-    {
-    }
+	public interface IPlaceholderFactory : IValidatable
+	{
+	}
 
-    // Placeholder factories can be used to choose a creation method in an installer, using FactoryBinder
-    public abstract class PlaceholderFactoryBase<TValue> : IPlaceholderFactory
-    {
-        IProvider _provider;
-        InjectContext _injectContext;
+	// Placeholder factories can be used to choose a creation method in an installer, using FactoryBinder
+	public abstract class PlaceholderFactoryBase<TValue> : IPlaceholderFactory
+	{
+		private InjectContext _injectContext;
+		private IProvider _provider;
 
-        [Inject]
-        void Construct(IProvider provider, InjectContext injectContext)
-        {
-            Assert.IsNotNull(provider);
-            Assert.IsNotNull(injectContext);
+		protected abstract IEnumerable<Type> ParamTypes { get; }
 
-            _provider = provider;
-            _injectContext = injectContext;
-        }
+		public virtual void Validate()
+		{
+			_provider.GetInstance(
+				_injectContext, ValidationUtil.CreateDefaultArgs(ParamTypes.ToArray()));
+		}
 
-        protected TValue CreateInternal(List<TypeValuePair> extraArgs)
-        {
-            try
-            {
-                var result = _provider.GetInstance(_injectContext, extraArgs);
+		[Inject]
+		private void Construct(IProvider provider, InjectContext injectContext)
+		{
+			Assert.IsNotNull(provider);
+			Assert.IsNotNull(injectContext);
 
-                if (_injectContext.Container.IsValidating && result is ValidationMarker)
-                {
-                    return default(TValue);
-                }
+			_provider = provider;
+			_injectContext = injectContext;
+		}
 
-                Assert.That(result == null || result.GetType().DerivesFromOrEqual<TValue>());
+		protected TValue CreateInternal(List<TypeValuePair> extraArgs)
+		{
+			try
+			{
+				object result = _provider.GetInstance(_injectContext, extraArgs);
 
-                return (TValue) result;
-            }
-            catch (Exception e)
-            {
-                throw new ZenjectException(
-                    "Error during construction of type '{0}' via {1}.Create method!".Fmt(typeof(TValue), GetType()), e);
-            }
-        }
+				if (_injectContext.Container.IsValidating && result is ValidationMarker) return default;
 
-        public virtual void Validate()
-        {
-            _provider.GetInstance(
-                _injectContext, ValidationUtil.CreateDefaultArgs(ParamTypes.ToArray()));
-        }
+				Assert.That(result == null || result.GetType().DerivesFromOrEqual<TValue>());
 
-        protected abstract IEnumerable<Type> ParamTypes
-        {
-            get;
-        }
-    }
+				return (TValue)result;
+			}
+			catch (Exception e)
+			{
+				throw new ZenjectException(
+					"Error during construction of type '{0}' via {1}.Create method!".Fmt(typeof(TValue), GetType()), e);
+			}
+		}
+	}
 }

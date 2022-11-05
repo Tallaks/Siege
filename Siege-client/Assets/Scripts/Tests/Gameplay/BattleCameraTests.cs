@@ -27,7 +27,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			yield return LoadBootScene();
 			Object.FindObjectOfType<GameInstaller>()?.Initialize();
 			yield return new WaitForSeconds(0.5f);
-			
+
 			_camera = Object.FindObjectOfType<Camera>();
 			_cameraMover = Object.FindObjectOfType<CameraMover>();
 
@@ -35,7 +35,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			_startRotation = _cameraMover.transform.rotation;
 			_startDistance = _camera.transform.localPosition.magnitude;
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenBattleSceneLoaded_ThenCameraExists()
 		{
@@ -49,55 +49,55 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Assert.NotNull(Object.FindObjectOfType<CameraMover>());
 			yield break;
 		}
-		 
+
 		[UnityTest]
 		public IEnumerator WhenMovementForwardCommandSent_ThenCameraMovesForward()
 		{
 			float startPosZ = _startPosition.z;
-			
+
 			while (true)
 			{
 				yield return null;
-				if(_cameraMover.transform.position.z > startPosZ)
+				if (_cameraMover.transform.position.z > startPosZ)
 					Assert.Pass();
 			}
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenMovementBackCommandSent_ThenCameraMovesBack()
 		{
 			float startPosZ = _startPosition.z;
-			
+
 			while (true)
 			{
 				yield return null;
-				if(_cameraMover.transform.position.z < startPosZ)
+				if (_cameraMover.transform.position.z < startPosZ)
 					Assert.Pass();
 			}
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenMovementLeftCommandSent_ThenCameraMovesLeft()
 		{
 			float startPosX = _startPosition.x;
-			
+
 			while (true)
 			{
 				yield return null;
-				if(_cameraMover.transform.position.x < startPosX)
+				if (_cameraMover.transform.position.x < startPosX)
 					Assert.Pass();
 			}
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenMovementRightCommandSent_ThenCameraMovesRight()
 		{
 			float startPosX = _startPosition.x;
-			
+
 			while (true)
 			{
 				yield return null;
-				if(_cameraMover.transform.position.x > startPosX)
+				if (_cameraMover.transform.position.x > startPosX)
 					Assert.Pass();
 			}
 		}
@@ -107,7 +107,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		{
 			var zoomedIn = false;
 			var zoomedOut = false;
-			
+
 			while (true)
 			{
 				yield return null;
@@ -115,8 +115,8 @@ namespace Kulinaria.Siege.Tests.Gameplay
 					zoomedOut = true;
 				if (_camera.transform.localPosition.magnitude < _startDistance)
 					zoomedIn = true;
-				
-				if(zoomedIn && zoomedOut)
+
+				if (zoomedIn && zoomedOut)
 					Assert.Pass();
 			}
 		}
@@ -127,11 +127,11 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			while (true)
 			{
 				yield return null;
-				if(_cameraMover.transform.rotation != _startRotation)
+				if (_cameraMover.transform.rotation != _startRotation)
 					Assert.Pass();
 			}
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenCameraRotated_ThenCameraMovesForwardRight()
 		{
@@ -139,11 +139,11 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			{
 				_cameraMover.transform.rotation = Quaternion.Euler(00, 180, 0);
 				yield return null;
-				if (_camera.transform.position.z <= -5) 
+				if (_camera.transform.position.z <= -5)
 					Assert.Pass();
 			}
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenCameraRotated_ThenCameraMovesLeftRightWay()
 		{
@@ -151,11 +151,11 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			{
 				_cameraMover.transform.rotation = Quaternion.Euler(00, 90, 0);
 				yield return null;
-				if (_camera.transform.position.z >= 5) 
+				if (_camera.transform.position.z >= 5)
 					Assert.Pass();
 			}
 		}
-		
+
 		[UnityTearDown]
 		public IEnumerator TearDown()
 		{
@@ -164,24 +164,24 @@ namespace Kulinaria.Siege.Tests.Gameplay
 
 			foreach (CoroutineRunner runner in Object.FindObjectsOfType<CoroutineRunner>())
 			{
-				if(ReferenceEquals(runner, resolvedRunner))
+				if (ReferenceEquals(runner, resolvedRunner))
 					continue;
-				
+
 				Object.Destroy(runner.gameObject);
 			}
 
-			foreach (Runtime.Infrastructure.Inputs.InputService inputService in Object.FindObjectsOfType<Runtime.Infrastructure.Inputs.InputService>())
+			foreach (Runtime.Infrastructure.Inputs.InputService inputService in Object.
+				         FindObjectsOfType<Runtime.Infrastructure.Inputs.InputService>())
 			{
-				if(ReferenceEquals(inputService, resolvedInputService))
+				if (ReferenceEquals(inputService, resolvedInputService))
 					continue;
-				
+
 				Object.Destroy(inputService.gameObject);
 			}
-			
+
 			yield break;
 		}
 
-		private AsyncOperation LoadBootScene() => 
-			SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		private AsyncOperation LoadBootScene() => SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
 	}
 }

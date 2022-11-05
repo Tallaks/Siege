@@ -7,18 +7,18 @@ using Zenject.Internal;
 
 namespace Zenject.ReflectionBaking
 {
-    public static class ReflectionBakingMenuItems
-    {
-        [MenuItem("Assets/Create/Zenject/Reflection Baking Settings", false, 100)]
-        public static void CreateReflectionBakingSettings()
-        {
-            var folderPath = ZenUnityEditorUtil.GetCurrentDirectoryAssetPathFromSelection();
+	public static class ReflectionBakingMenuItems
+	{
+		[MenuItem("Assets/Create/Zenject/Reflection Baking Settings", false, 100)]
+		public static void CreateReflectionBakingSettings()
+		{
+			string folderPath = ZenUnityEditorUtil.GetCurrentDirectoryAssetPathFromSelection();
 
-            var config = ScriptableObject.CreateInstance<ZenjectReflectionBakingSettings>();
+			var config = ScriptableObject.CreateInstance<ZenjectReflectionBakingSettings>();
 
-            ZenUnityEditorUtil.SaveScriptableObjectAsset(
-                Path.Combine(folderPath, "ZenjectReflectionBakingSettings.asset"), config);
-        }
-    }
+			ZenUnityEditorUtil.SaveScriptableObjectAsset(
+				Path.Combine(folderPath, "ZenjectReflectionBakingSettings.asset"), config);
+		}
+	}
 }
 #endif

@@ -68,7 +68,7 @@ namespace Kulinaria.Siege.Tests.Movement
 
 			yield break;
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenTileSelected_ThenCorrectAvailableAreaCreated()
 		{
@@ -88,7 +88,7 @@ namespace Kulinaria.Siege.Tests.Movement
 
 			_gridMap.OnTileSelection?.Invoke(tile04);
 			IEnumerable<CustomTile> nearestTiles = _pathFinder.GetAvailableTilesByDistance(9);
-			
+
 			Assert.AreEqual(10, nearestTiles.Count());
 			Assert.IsTrue(nearestTiles.Contains(tile04));
 			Assert.IsTrue(nearestTiles.Contains(tile05));
@@ -114,7 +114,7 @@ namespace Kulinaria.Siege.Tests.Movement
 
 			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
 			{
-				{ 1, 1, 1, 1, 0, 1, 1 }, 
+				{ 1, 1, 1, 1, 0, 1, 1 },
 				{ 1, 0, 0, 1, 0, 1, 0 },
 				{ 1, 0, 0, 0, 0, 1, 0 },
 				{ 1, 1, 1, 1, 0, 1, 1 },

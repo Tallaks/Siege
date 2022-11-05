@@ -5,41 +5,37 @@ using UnityEngine;
 
 namespace Zenject
 {
-    [NoReflectionBaking]
-    public class TransformScopeConcreteIdArgConditionCopyNonLazyBinder : ScopeConcreteIdArgConditionCopyNonLazyBinder
-    {
-        public TransformScopeConcreteIdArgConditionCopyNonLazyBinder(
-            BindInfo bindInfo,
-            GameObjectCreationParameters gameObjectInfo)
-            : base(bindInfo)
-        {
-            GameObjectInfo = gameObjectInfo;
-        }
+	[NoReflectionBaking]
+	public class TransformScopeConcreteIdArgConditionCopyNonLazyBinder : ScopeConcreteIdArgConditionCopyNonLazyBinder
+	{
+		public TransformScopeConcreteIdArgConditionCopyNonLazyBinder(
+			BindInfo bindInfo,
+			GameObjectCreationParameters gameObjectInfo)
+			: base(bindInfo)
+		{
+			GameObjectInfo = gameObjectInfo;
+		}
 
-        protected GameObjectCreationParameters GameObjectInfo
-        {
-            get;
-            private set;
-        }
+		protected GameObjectCreationParameters GameObjectInfo { get; }
 
-        public ScopeConcreteIdArgConditionCopyNonLazyBinder UnderTransform(Transform parent)
-        {
-            GameObjectInfo.ParentTransform = parent;
-            return this;
-        }
+		public ScopeConcreteIdArgConditionCopyNonLazyBinder UnderTransform(Transform parent)
+		{
+			GameObjectInfo.ParentTransform = parent;
+			return this;
+		}
 
-        public ScopeConcreteIdArgConditionCopyNonLazyBinder UnderTransform(Func<InjectContext, Transform> parentGetter)
-        {
-            GameObjectInfo.ParentTransformGetter = parentGetter;
-            return this;
-        }
+		public ScopeConcreteIdArgConditionCopyNonLazyBinder UnderTransform(Func<InjectContext, Transform> parentGetter)
+		{
+			GameObjectInfo.ParentTransformGetter = parentGetter;
+			return this;
+		}
 
-        public ScopeConcreteIdArgConditionCopyNonLazyBinder UnderTransformGroup(string transformGroupname)
-        {
-            GameObjectInfo.GroupName = transformGroupname;
-            return this;
-        }
-    }
+		public ScopeConcreteIdArgConditionCopyNonLazyBinder UnderTransformGroup(string transformGroupname)
+		{
+			GameObjectInfo.GroupName = transformGroupname;
+			return this;
+		}
+	}
 }
 
 #endif

@@ -20,7 +20,7 @@ namespace Kulinaria.Siege.Tests.Scenes
 			// Act
 			AsyncOperation asyncOperation = LoadBattleScene();
 			yield return asyncOperation;
-			
+
 			// Assert
 			Assert.IsTrue(asyncOperation.isDone);
 			Assert.IsTrue(SceneManager.GetActiveScene().name == SceneNames.BattleScene);
@@ -33,7 +33,7 @@ namespace Kulinaria.Siege.Tests.Scenes
 			yield return LoadBootScene();
 			Object.FindObjectOfType<GameInstaller>()?.Initialize();
 			yield return new WaitForSeconds(1);
-			
+
 			Assert.IsTrue(SceneManager.GetActiveScene().name == SceneNames.BattleScene);
 			Assert.IsTrue(SceneManager.GetActiveScene().name != SceneNames.BootScene);
 		}
@@ -45,19 +45,17 @@ namespace Kulinaria.Siege.Tests.Scenes
 
 			foreach (CoroutineRunner runner in Object.FindObjectsOfType<CoroutineRunner>())
 			{
-				if(ReferenceEquals(runner, resolvedRunner))
+				if (ReferenceEquals(runner, resolvedRunner))
 					continue;
-				
+
 				Object.Destroy(runner.gameObject);
 			}
-			
+
 			yield break;
 		}
 
-		private AsyncOperation LoadBootScene() => 
-			SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		private AsyncOperation LoadBootScene() => SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
 
-		private AsyncOperation LoadBattleScene() => 
-			SceneManager.LoadSceneAsync(SceneNames.BattleScene);
+		private AsyncOperation LoadBattleScene() => SceneManager.LoadSceneAsync(SceneNames.BattleScene);
 	}
 }

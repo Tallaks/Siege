@@ -61,7 +61,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			yield break;
 		}
 
-		private AsyncOperation LoadBootScene() =>
+		private AsyncOperation LoadBootScene() => 
 			SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
 	}
 }

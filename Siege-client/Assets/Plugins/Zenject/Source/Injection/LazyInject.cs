@@ -2,41 +2,41 @@ using ModestTree;
 
 namespace Zenject
 {
-    [ZenjectAllowDuringValidation]
-    [NoReflectionBaking]
-    public class LazyInject<T> : IValidatable
-    {
-        readonly DiContainer _container;
-        readonly InjectContext _context;
+	[ZenjectAllowDuringValidation]
+	[NoReflectionBaking]
+	public class LazyInject<T> : IValidatable
+	{
+		private readonly DiContainer _container;
+		private readonly InjectContext _context;
 
-        bool _hasValue;
-        T _value;
+		private bool _hasValue;
+		private T _value;
 
-        public LazyInject(DiContainer container, InjectContext context)
-        {
-            Assert.DerivesFromOrEqual<T>(context.MemberType);
+		public LazyInject(DiContainer container, InjectContext context)
+		{
+			Assert.DerivesFromOrEqual<T>(context.MemberType);
 
-            _container = container;
-            _context = context;
-        }
+			_container = container;
+			_context = context;
+		}
 
-        void IValidatable.Validate()
-        {
-            _container.Resolve(_context);
-        }
+		public T Value
+		{
+			get
+			{
+				if (!_hasValue)
+				{
+					_value = (T)_container.Resolve(_context);
+					_hasValue = true;
+				}
 
-        public T Value
-        {
-            get
-            {
-                if (!_hasValue)
-                {
-                    _value = (T)_container.Resolve(_context);
-                    _hasValue = true;
-                }
+				return _value;
+			}
+		}
 
-                return _value;
-            }
-        }
-    }
+		void IValidatable.Validate()
+		{
+			_container.Resolve(_context);
+		}
+	}
 }

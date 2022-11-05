@@ -1,7 +1,7 @@
 namespace Zenject
 {
-    public interface IValidatable
-    {
-        void Validate();
-    }
+	public interface IValidatable
+	{
+		void Validate();
+	}
 }
