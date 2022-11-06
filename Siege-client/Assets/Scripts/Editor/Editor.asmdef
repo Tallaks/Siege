@@ -1,7 +1,9 @@
 {
     "name": "Editor",
     "rootNamespace": "Kulinaria.Siege",
-    "references": [],
+    "references": [
+        "GUID:f04f1b844c33595499262ab668726ea2"
+    ],
     "includePlatforms": [
         "Editor"
     ],
