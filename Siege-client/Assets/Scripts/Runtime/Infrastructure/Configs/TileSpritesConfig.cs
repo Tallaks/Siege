@@ -9,7 +9,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 	{
 		[BoxGroup("Tiles"), LabelText("Тайлы для установки правил")]
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/8_0_0")]
-		public Sprite Tile8_0_0;
+		public Texture2D Tile8_0_0;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/8_0_0")]
@@ -21,7 +21,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/6_2_0a")]
-		public Sprite Tile6_2_0a;
+		public Texture2D Tile6_2_0a;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/6_2_0a")]
@@ -33,7 +33,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/6_2_0b")]
-		public Sprite Tile6_2_0b;
+		public Texture2D Tile6_2_0b;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/6_2_0b")]
@@ -45,7 +45,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/0_4_4")]
-		public Sprite Tile0_4_4;
+		public Texture2D Tile0_4_4;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/0_4_4")]
@@ -58,7 +58,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/5_3_0")]
-		public Sprite Tile5_3_0;
+		public Texture2D Tile5_3_0;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/5_3_0")]
@@ -70,7 +70,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/7_1_0")]
-		public Sprite Tile7_1_0;
+		public Texture2D Tile7_1_0;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/7_1_0")]
@@ -82,7 +82,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/2_2_4")]
-		public Sprite Tile2_2_4;
+		public Texture2D Tile2_2_4;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/2_2_4")]
@@ -94,7 +94,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/4_2_2a")]
-		public Sprite Tile4_2_2a;
+		public Texture2D Tile4_2_2a;
 
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/4_2_2a")]
@@ -106,7 +106,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/4_2_2b")]
-		public Sprite Tile4_2_2b;
+		public Texture2D Tile4_2_2b;
 
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/4_2_2b")]
@@ -118,7 +118,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/3_3_2")]
-		public Sprite Tile3_3_2;
+		public Texture2D Tile3_3_2;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/3_3_2")]
@@ -130,7 +130,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/5_1_2")]
-		public Sprite Tile5_1_2;
+		public Texture2D Tile5_1_2;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/5_1_2")]
@@ -142,7 +142,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/2_3_3")]
-		public Sprite Tile2_3_3;
+		public Texture2D Tile2_3_3;
 
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/2_3_3")]
@@ -154,7 +154,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/3_2_3")]
-		public Sprite Tile3_2_3;
+		public Texture2D Tile3_2_3;
 
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/3_2_3")]
@@ -166,7 +166,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/4_4_0")]
-		public Sprite Tile4_4_0;
+		public Texture2D Tile4_4_0;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/4_4_0")]
@@ -178,7 +178,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 		}
 		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/1_3_4")]
-		public Sprite Tile1_3_4;
+		public Texture2D Tile1_3_4;
 		
 		[OnInspectorGUI]
 		[PropertyOrder(-10), HorizontalGroup("Tiles/1_3_4")]

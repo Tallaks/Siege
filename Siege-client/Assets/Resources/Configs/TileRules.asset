@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: TileRules
   m_EditorClassIdentifier: 
   Tile8_0_0: {fileID: 0}
-  Tile6_2_0a: {fileID: 21300000, guid: da5d526a99a767c4da9ee022d67b890f, type: 3}
-  Tile6_2_0b: {fileID: 21300000, guid: 81164cedb1050e5459b01937f4e57c97, type: 3}
-  Tile0_4_4: {fileID: 21300000, guid: ad2b0a25f05faf54a9059baf14c128a0, type: 3}
-  Tile5_3_0: {fileID: 21300000, guid: 743375a3384d4414bb1c18e5ae587f88, type: 3}
-  Tile7_1_0: {fileID: 21300000, guid: 4a621c30eeef4c54f9ae963fae76fbdc, type: 3}
-  Tile2_2_4: {fileID: 21300000, guid: 25dabb7ca9621f4408aad8e546fe5132, type: 3}
-  Tile4_2_2a: {fileID: 21300000, guid: d92c9f9ad0216984399791143d38f449, type: 3}
-  Tile4_2_2b: {fileID: 21300000, guid: 4c3a655ef5ad75a44a576e74dfda7042, type: 3}
-  Tile3_3_2: {fileID: 21300000, guid: 4a514fce655441f4395914c87f279796, type: 3}
-  Tile5_1_2: {fileID: 21300000, guid: f3a4e01e1ec42bf4ea8119dc5d514f47, type: 3}
-  Tile2_3_3: {fileID: 21300000, guid: e9850eecee06b554ea0a44e173746983, type: 3}
-  Tile3_2_3: {fileID: 21300000, guid: f6b9e11ea5b9c234b99b0260773fe8c4, type: 3}
-  Tile4_4_0: {fileID: 21300000, guid: af3ef12ff9a3cf845b73ccab46b93f10, type: 3}
-  Tile1_3_4: {fileID: 21300000, guid: b171012ff143fb24db9f444254820ba2, type: 3}
+  Tile6_2_0a: {fileID: 2800000, guid: da5d526a99a767c4da9ee022d67b890f, type: 3}
+  Tile6_2_0b: {fileID: 2800000, guid: 81164cedb1050e5459b01937f4e57c97, type: 3}
+  Tile0_4_4: {fileID: 2800000, guid: ad2b0a25f05faf54a9059baf14c128a0, type: 3}
+  Tile5_3_0: {fileID: 2800000, guid: 743375a3384d4414bb1c18e5ae587f88, type: 3}
+  Tile7_1_0: {fileID: 2800000, guid: 4a621c30eeef4c54f9ae963fae76fbdc, type: 3}
+  Tile2_2_4: {fileID: 2800000, guid: 25dabb7ca9621f4408aad8e546fe5132, type: 3}
+  Tile4_2_2a: {fileID: 2800000, guid: d92c9f9ad0216984399791143d38f449, type: 3}
+  Tile4_2_2b: {fileID: 2800000, guid: 4c3a655ef5ad75a44a576e74dfda7042, type: 3}
+  Tile3_3_2: {fileID: 2800000, guid: 4a514fce655441f4395914c87f279796, type: 3}
+  Tile5_1_2: {fileID: 2800000, guid: f3a4e01e1ec42bf4ea8119dc5d514f47, type: 3}
+  Tile2_3_3: {fileID: 2800000, guid: e9850eecee06b554ea0a44e173746983, type: 3}
+  Tile3_2_3: {fileID: 2800000, guid: f6b9e11ea5b9c234b99b0260773fe8c4, type: 3}
+  Tile4_4_0: {fileID: 2800000, guid: af3ef12ff9a3cf845b73ccab46b93f10, type: 3}
+  Tile1_3_4: {fileID: 2800000, guid: b171012ff143fb24db9f444254820ba2, type: 3}
