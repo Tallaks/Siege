@@ -1,6 +1,8 @@
 using System.Collections;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
+using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -16,6 +18,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 		[UnityTest]
 		public IEnumerator WhenUserClicksOnTile_ThenTileSelected()
 		{
+			GameInstaller.Testing = true;
+			
 			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
 			{
 				{ 1 }
@@ -40,6 +44,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			CustomTile tile0 = _gridMap.GetTile(0, 0);
 
+			tile0.gameObject.SetActive(true);
+			
 			var success = false;
 
 			_gridMap.OnTileSelection += tile =>

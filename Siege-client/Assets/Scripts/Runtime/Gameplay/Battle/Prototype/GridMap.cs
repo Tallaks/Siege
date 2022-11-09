@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
 using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
