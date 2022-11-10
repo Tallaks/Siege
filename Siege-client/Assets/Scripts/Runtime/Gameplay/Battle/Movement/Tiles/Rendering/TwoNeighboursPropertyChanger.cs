@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 {
-	public class TwoNeighbourPropertyChanger : IMaterialPropertyChanger
+	public class TwoNeighboursPropertyChanger : IMaterialPropertyChanger
 	{
 		private readonly TileSpritesConfig _config;
 
-		public TwoNeighbourPropertyChanger(TileSpritesConfig config) =>
+		public TwoNeighboursPropertyChanger(TileSpritesConfig config) =>
 			_config = config;
 
 		public void ChangeMaterial(CustomTile sourceTile, Material material)

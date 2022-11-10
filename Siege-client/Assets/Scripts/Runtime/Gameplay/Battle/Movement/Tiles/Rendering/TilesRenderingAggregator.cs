@@ -21,7 +21,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 			{
 				[0] = new NoNeighboursPropertyChanger(_config),
 				[1] = new OneNeighbourPropertyChanger(_config),
-				[2] = new TwoNeighbourPropertyChanger(_config),
+				[2] = new TwoNeighboursPropertyChanger(_config),
+				[3] = new ThreeNeighboursPropertyChanger(_config),
 				[7] = new SevenNeighboursPropertyChanger(_config),
 				[8] = new EightNeighboursPropertyChanger(_config)
 			};
