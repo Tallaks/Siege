@@ -18,31 +18,23 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 
 			if (tilePos.IsDiagonalPositionTo(sourceTile.CellPosition).HasValue)
 				if (tilePos.IsDiagonalPositionTo(sourceTile.CellPosition).Value)
+				{
 					material.SetTexture(TileRenderer.TileTex, _config.Tile0_4_4);
+					return;
+				}
 
+			material.SetTexture(TileRenderer.TileTex, _config.Tile1_3_4);
 			if (sourceTile[0, 1] == tilePos)
-			{
-				material.SetTexture(TileRenderer.TileTex, _config.Tile1_3_4);
 				material.SetFloat(TileRenderer.AngleProperty, 180f);
-			}
 
 			if (sourceTile[0, -1] == tilePos)
-			{
-				material.SetTexture(TileRenderer.TileTex, _config.Tile1_3_4);
 				material.SetFloat(TileRenderer.AngleProperty, 0f);
-			}
 
 			if (sourceTile[-1, 0] == tilePos)
-			{
-				material.SetTexture(TileRenderer.TileTex, _config.Tile1_3_4);
 				material.SetFloat(TileRenderer.AngleProperty, 270f);
-			}
 
 			if (sourceTile[1, 0] == tilePos)
-			{
-				material.SetTexture(TileRenderer.TileTex, _config.Tile1_3_4);
 				material.SetFloat(TileRenderer.AngleProperty, 90f);
-			}
 		}
 	}
 }

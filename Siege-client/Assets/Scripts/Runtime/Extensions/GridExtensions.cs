@@ -41,5 +41,17 @@ namespace Kulinaria.Siege.Runtime.Extensions
 			
 			return deltaX + deltaY == 2;
 		}
+		
+		public static bool? IsDiagonalPositionTo(this CustomTile a, CustomTile b)
+		{
+			int deltaX = Mathf.Abs(a.CellPosition.x - b.CellPosition.x);
+			int deltaY = Mathf.Abs(a.CellPosition.y - b.CellPosition.y);
+
+			if (deltaX + deltaY > 2)
+				return null;
+			
+			return deltaX + deltaY == 2;
+		}
+
 	}
 }
