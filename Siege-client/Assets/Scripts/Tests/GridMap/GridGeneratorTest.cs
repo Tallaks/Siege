@@ -41,7 +41,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenBattleSceneLoaded_ThenCustomTilesAreInstantiated()
 		{
-			CustomTile[] tiles = Object.FindObjectsOfType<CustomTile>();
+			CustomTile[] tiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
 			Assert.NotZero(tiles.Length);
 			yield break;
 		}

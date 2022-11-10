@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
@@ -20,6 +19,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 
 		public Vector2Int CellPosition { get; private set; }
 
+		public bool Active
+		{
+			get => gameObject.activeInHierarchy;
+			set => gameObject.SetActive(value);
+		}
+
 		private void OnEnable() => 
 			_inputService.OnClick += Select;
 
@@ -32,6 +37,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 			_camera = camera;
 			_inputService = inputService;
 			_map = map;
+			Debug.Log(inputService);
 		}
 
 		public void Initialize(Vector2Int cellPos)

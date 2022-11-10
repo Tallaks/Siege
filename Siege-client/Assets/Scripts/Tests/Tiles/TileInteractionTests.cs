@@ -25,11 +25,11 @@ namespace Kulinaria.Siege.Tests.Tiles
 				{ 1 }
 			};
 
-			var camera = new GameObject().AddComponent<Camera>();
+			var camera = new GameObject("Camera").AddComponent<Camera>();
 			camera.orthographic = true;
 			camera.transform.eulerAngles = new Vector3(90, 0, 0);
 			camera.transform.position = new Vector3(0, 5, 0);
-
+			
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
@@ -43,11 +43,11 @@ namespace Kulinaria.Siege.Tests.Tiles
 			_gridMap.GenerateMap();
 
 			CustomTile tile0 = _gridMap.GetTile(0, 0);
-
-			tile0.gameObject.SetActive(true);
+			tile0.Active = true;
+			
+			yield return new WaitForSeconds(0.1f);
 			
 			var success = false;
-
 			_gridMap.OnTileSelection += tile =>
 			{
 				if (tile.Equals(tile0))
@@ -57,7 +57,10 @@ namespace Kulinaria.Siege.Tests.Tiles
 			while (true)
 			{
 				if (success)
+				{
 					Assert.Pass();
+					break;
+				}
 				yield return null;
 			}
 		}
