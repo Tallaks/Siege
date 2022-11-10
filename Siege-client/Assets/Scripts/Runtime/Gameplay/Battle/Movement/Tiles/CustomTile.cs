@@ -87,7 +87,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 			}
 		}
 
-		public Vector2Int this[int x, int y] => 
-			new Vector2Int(CellPosition.x + x, CellPosition.x + y);
+		public Vector2Int this[int x, int y]
+			=> new Vector2Int(CellPosition.x + x, CellPosition.y + y);
 	}
 }
