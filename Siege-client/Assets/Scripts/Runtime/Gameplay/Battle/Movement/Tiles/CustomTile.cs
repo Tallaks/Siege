@@ -37,7 +37,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 			_camera = camera;
 			_inputService = inputService;
 			_map = map;
-			Debug.Log(inputService);
 		}
 
 		public void Initialize(Vector2Int cellPos)
@@ -87,5 +86,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 				b._neighboursWithDistances[a] = 3;
 			}
 		}
+
+		public Vector2Int this[int x, int y] => 
+			new Vector2Int(CellPosition.x + x, CellPosition.x + y);
 	}
 }

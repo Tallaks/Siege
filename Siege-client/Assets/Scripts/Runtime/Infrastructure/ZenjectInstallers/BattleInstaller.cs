@@ -1,5 +1,6 @@
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using Zenject;
 
@@ -30,6 +31,8 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 			Container.Bind<IGridMap>().To<GridMap>().FromNew().AsSingle();
 
 			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
+
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 		}
 	}
 }
