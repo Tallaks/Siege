@@ -1,5 +1,6 @@
 using System.Linq;
 using Kulinaria.Siege.Runtime.Extensions;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering.UvRotators;
 using Kulinaria.Siege.Runtime.Infrastructure.Configs;
 using UnityEngine;
 
@@ -24,17 +25,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 				}
 
 			material.SetTexture(TileRenderer.TileTex, _config.Tile1_3_4);
-			if (sourceTile[0, 1] == tilePos)
-				material.SetFloat(TileRenderer.AngleProperty, 180f);
 
-			if (sourceTile[0, -1] == tilePos)
-				material.SetFloat(TileRenderer.AngleProperty, 0f);
-
-			if (sourceTile[-1, 0] == tilePos)
-				material.SetFloat(TileRenderer.AngleProperty, 270f);
-
-			if (sourceTile[1, 0] == tilePos)
-				material.SetFloat(TileRenderer.AngleProperty, 90f);
+			var rotator = new Uv1_3_4Rotator(tilePos);
+			material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
 		}
 	}
 }
