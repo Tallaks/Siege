@@ -63,10 +63,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 				if ((neighbour1.CellPosition - neighbour2.CellPosition).magnitude == 2)
 				{
 					material.SetTexture(TileRenderer.TileTex, _config.Tile2_2_4);
-					if (neighbour1.CellPosition.x == sourceTile.CellPosition.x)
-						material.SetFloat(TileRenderer.AngleProperty, 0f);
-					else
-						material.SetFloat(TileRenderer.AngleProperty, 90f);
+					var rotator = new Uv2_2_4Rotator(neighbour1.CellPosition);
+					material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
 					return;
 				}
 
@@ -87,18 +85,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 					return;
 				}
 
-				Vector2Int missingBetweenTilesPosition =
-					neighbour1.CellPosition + neighbour2.CellPosition - sourceTile.CellPosition;
 				material.SetTexture(TileRenderer.TileTex, _config.Tile2_3_3);
-
-				if (missingBetweenTilesPosition == sourceTile[-1, -1])
-					material.SetFloat(TileRenderer.AngleProperty, 0f);
-				if (missingBetweenTilesPosition == sourceTile[1, -1])
-					material.SetFloat(TileRenderer.AngleProperty, 90f);
-				if (missingBetweenTilesPosition == sourceTile[1, 1])
-					material.SetFloat(TileRenderer.AngleProperty, 180f);
-				if (missingBetweenTilesPosition == sourceTile[-1, 1])
-					material.SetFloat(TileRenderer.AngleProperty, 270f);
+				var uvRotator = new Uv2_3_3Rotator(neighbour1.CellPosition, neighbour2.CellPosition);
+				material.SetFloat(TileRenderer.AngleProperty, uvRotator.AngleDeg(sourceTile));
 			}
 		}
 	}
