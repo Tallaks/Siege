@@ -16,7 +16,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering.UvRot
 		{
 			_missingDiagonal = missingDiagonal;
 			_missingSide = missingSide;
-
+			
 			_angleCalculationMade = false;
 		}
 		
