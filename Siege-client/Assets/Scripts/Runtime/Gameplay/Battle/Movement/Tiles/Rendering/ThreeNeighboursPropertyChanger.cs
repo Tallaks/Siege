@@ -28,29 +28,17 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 			if (allNeighbours.All(k => !k.IsDiagonalPositionTo(sourceTile).Value))
 			{
 				material.SetTexture(TileRenderer.TileTex, _config.Tile3_3_2);
-				Vector2Int sum = allNeighbours.Aggregate(Vector2Int.zero,
-					(current, tile) => current + tile.CellPosition - sourceTile.CellPosition);
-				if (sum.y == 0)
-				{
-					material.SetFloat(TileRenderer.AngleProperty, sum.x == 1 ? 0f : 180f);
-					return;
-				}
-
-				if (sum.x == 0)
-				{
-					material.SetFloat(TileRenderer.AngleProperty, sum.y == 1 ? 90f : 270f);
-					return;
-				}
+				var rotator = new Uv3_3_2Rotator(allNeighbours);
+				material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
+				return;
 			}
 
 			if (nonDiagonalNeighbours.Length == 1)
 			{
 				material.SetTexture(TileRenderer.TileTex, _config.Tile1_3_4);
 				Vector2Int tilePos = nonDiagonalNeighbours[0].CellPosition;
-
 				var rotator = new Uv1_3_4Rotator(tilePos);
 				material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
-
 				return;
 			}
 
@@ -72,16 +60,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 				if (diagonalCellPosition == neighbour1.CellPosition + neighbour2.CellPosition - sourceTile.CellPosition)
 				{
 					material.SetTexture(TileRenderer.TileTex, _config.Tile3_2_3);
-
-					if (diagonalCellPosition == sourceTile[-1, -1])
-						material.SetFloat(TileRenderer.AngleProperty, 0f);
-					if (diagonalCellPosition == sourceTile[1, -1])
-						material.SetFloat(TileRenderer.AngleProperty, 90f);
-					if (diagonalCellPosition == sourceTile[1, 1])
-						material.SetFloat(TileRenderer.AngleProperty, 180f);
-					if (diagonalCellPosition == sourceTile[-1, 1])
-						material.SetFloat(TileRenderer.AngleProperty, 270f);
-
+					var rotator = new Uv3_2_3Rotator(diagonalCellPosition);
+					material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
 					return;
 				}
 
