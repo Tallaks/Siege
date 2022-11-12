@@ -61,7 +61,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			yield break;
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenOneTileGeneratedAndActive_ThenItHas0_4_4()
 		{
@@ -69,7 +69,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1 }
 			};
-			
+
 			PrepareTiles();
 			_gridMap.GenerateMap();
 
@@ -83,7 +83,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			var tileRenderer = targetTile.GetComponent<TileRenderer>();
 			Assert.AreEqual(TilesRenderingAggregator.ConfigForTests.Tile0_4_4, tileRenderer.CurrentTexture);
 		}
-		
+
 		private IEnumerator AssertTileTextureAndAngleFor(
 			int[,] gridArray, float angle, Texture2D targetTexture)
 		{
@@ -104,7 +104,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			_gridMap.Clear();
 		}
-		
+
 		private IEnumerator AssertTileTextureAndAngleAndFlipFor(
 			int[,] gridArray, float angle, Texture2D targetTexture, int flip)
 		{

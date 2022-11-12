@@ -45,9 +45,11 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 				material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
 				return;
 			}
-
+			
+			Vector2Int diagonalBetweenSidesPos = 
+				neighbour1.CellPosition + neighbour2.CellPosition - sourceTile.CellPosition;
 			material.SetTexture(TileRenderer.TileTex, _config.Tile2_3_3);
-			var uvRotator = new Uv2_3_3Rotator(neighbour1.CellPosition, neighbour2.CellPosition);
+			var uvRotator = new Uv2_3_3Rotator(diagonalBetweenSidesPos);
 			material.SetFloat(TileRenderer.AngleProperty, uvRotator.AngleDeg(sourceTile));
 		}
 	}

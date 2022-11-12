@@ -10,7 +10,7 @@ namespace Kulinaria.Siege.Runtime.Extensions
 		public static Vector3 ToWorld(this Vector2Int cellPosition) =>
 			new(0.5f + cellPosition.x, 0.1f, 0.5f + cellPosition.y);
 
-		public static IEnumerable<Vector2Int> OfMissingNeighboursPositions(this CustomTile tile)
+		public static IEnumerable<Vector2Int> MissingNeighboursPositions(this CustomTile tile)
 		{
 			Vector2Int[] allPositions =
 			{
@@ -36,7 +36,7 @@ namespace Kulinaria.Siege.Runtime.Extensions
 			int deltaX = Mathf.Abs(point.x - target.x);
 			int deltaY = Mathf.Abs(point.y - target.y);
 
-			if (deltaX + deltaY > 2)
+			if (deltaX > 1 || deltaY > 1)
 				return null;
 			
 			return deltaX + deltaY == 2;
@@ -47,7 +47,7 @@ namespace Kulinaria.Siege.Runtime.Extensions
 			int deltaX = Mathf.Abs(a.CellPosition.x - b.CellPosition.x);
 			int deltaY = Mathf.Abs(a.CellPosition.y - b.CellPosition.y);
 
-			if (deltaX + deltaY > 2)
+			if (deltaY > 1 || deltaX > 1)
 				return null;
 			
 			return deltaX + deltaY == 2;

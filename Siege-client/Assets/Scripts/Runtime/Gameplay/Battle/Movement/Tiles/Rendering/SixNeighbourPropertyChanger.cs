@@ -21,7 +21,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 
 			int diagonalCount = diagonalNeighbours.Count();
 
-			IEnumerable<Vector2Int> missingTilePositions = sourceTile.OfMissingNeighboursPositions();
+			IEnumerable<Vector2Int> missingTilePositions = sourceTile.MissingNeighboursPositions();
 			if (diagonalCount == 3)
 			{
 				Vector2Int missingSide = missingTilePositions.

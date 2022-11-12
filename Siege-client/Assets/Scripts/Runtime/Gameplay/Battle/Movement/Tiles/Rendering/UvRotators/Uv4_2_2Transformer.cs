@@ -25,29 +25,29 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering.UvRot
 			_angleCalculationMade = true;
 			
 			_flip = 0;
-			if (sourceTile[-1, 1] == _missingDiagonal && sourceTile[1, 0] == _missingSide)
+			if (sourceTile[1, -1] == _missingDiagonal && sourceTile[-1, 0] == _missingSide)
 				return 0f;
 
-			if (sourceTile[-1, -1] == _missingDiagonal && sourceTile[0, 1] == _missingSide)
+			if (sourceTile[1, 1] == _missingDiagonal && sourceTile[0, -1] == _missingSide)
 				return 90f;
 			
-			if (sourceTile[1, -1] == _missingDiagonal && sourceTile[-1, 0] == _missingSide)
+			if (sourceTile[-1, 1] == _missingDiagonal && sourceTile[1, 0] == _missingSide)
 				return 180f;
 			
-			if (sourceTile[1, 1] == _missingDiagonal && sourceTile[0, -1] == _missingSide)
+			if (sourceTile[-1, -1] == _missingDiagonal && sourceTile[0, 1] == _missingSide)
 				return 270f;
 
 			_flip = 1;
-			if (sourceTile[-1, -1] == _missingDiagonal && sourceTile[1, 0] == _missingSide)
+			if (sourceTile[1, 1] == _missingDiagonal && sourceTile[-1, 0] == _missingSide)
 				return 0f;
 
-			if (sourceTile[1, -1] == _missingDiagonal && sourceTile[0, 1] == _missingSide)
+			if (sourceTile[-1, 1] == _missingDiagonal && sourceTile[0, -1] == _missingSide)
 				return 90f;
 			
-			if (sourceTile[1, 1] == _missingDiagonal && sourceTile[-1, 0] == _missingSide)
+			if (sourceTile[-1, -1] == _missingDiagonal && sourceTile[1, 0] == _missingSide)
 				return 180f;
 			
-			if (sourceTile[-1, 1] == _missingDiagonal && sourceTile[0, -1] == _missingSide)
+			if (sourceTile[1, -1] == _missingDiagonal && sourceTile[0, 1] == _missingSide)
 				return 270f;
 			
 			throw new InvalidEnumArgumentException("Некорректный тайл для определения!");

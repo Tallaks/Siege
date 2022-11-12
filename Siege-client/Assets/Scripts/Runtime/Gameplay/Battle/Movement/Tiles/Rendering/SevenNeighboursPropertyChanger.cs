@@ -15,7 +15,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 
 		public void ChangeMaterial(CustomTile sourceTile, Material material)
 		{
-			Vector2Int missingTilePos = sourceTile.OfMissingNeighboursPositions().First();
+			Vector2Int missingTilePos = sourceTile.MissingNeighboursPositions().First();
 			if (missingTilePos.IsDiagonalPositionTo(sourceTile.CellPosition).HasValue)
 			{
 				if (missingTilePos.IsDiagonalPositionTo(sourceTile.CellPosition).Value)

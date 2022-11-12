@@ -208,31 +208,13 @@ namespace Kulinaria.Siege.Tests.Tiles
 				{ 1, 1, 1 },
 			};
 			
-			yield return AssertTileTextureAndAngleAndFlipFor(grid, 0, config.Tile4_2_2, 0);
+			yield return AssertTileTextureAndAngleAndFlipFor(grid, 180f, config.Tile4_2_2, 0);
 			
 			grid = new[,]
 			{
 				{ 1, 0, 1 },
 				{ 1, 1, 1 },
 				{ 0, 1, 1 },
-			};
-			
-			yield return AssertTileTextureAndAngleAndFlipFor(grid, 90f, config.Tile4_2_2, 0);
-			
-			grid = new[,]
-			{
-				{ 1, 1, 1 },
-				{ 0, 1, 1 },
-				{ 1, 1, 0 },
-			};
-			
-			yield return AssertTileTextureAndAngleAndFlipFor(grid, 180, config.Tile4_2_2, 0);
-			
-			grid = new[,]
-			{
-				{ 1, 1, 0 },
-				{ 1, 1, 1 },
-				{ 1, 0, 1 },
 			};
 			
 			yield return AssertTileTextureAndAngleAndFlipFor(grid, 270f, config.Tile4_2_2, 0);
@@ -240,38 +222,56 @@ namespace Kulinaria.Siege.Tests.Tiles
 			grid = new[,]
 			{
 				{ 1, 1, 1 },
+				{ 0, 1, 1 },
+				{ 1, 1, 0 },
+			};
+			
+			yield return AssertTileTextureAndAngleAndFlipFor(grid, 0, config.Tile4_2_2, 0);
+			
+			grid = new[,]
+			{
+				{ 1, 1, 0 },
+				{ 1, 1, 1 },
+				{ 1, 0, 1 },
+			};
+			
+			yield return AssertTileTextureAndAngleAndFlipFor(grid, 90, config.Tile4_2_2, 0);
+			
+			grid = new[,]
+			{
+				{ 1, 1, 1 },
 				{ 1, 1, 0 },
 				{ 0, 1, 1 },
+			};
+			
+			yield return AssertTileTextureAndAngleAndFlipFor(grid, 180f, config.Tile4_2_2, 1);
+			
+			grid = new[,]
+			{
+				{ 1, 0, 1 },
+				{ 1, 1, 1 },
+				{ 1, 1, 0 },
+			};
+			
+			yield return AssertTileTextureAndAngleAndFlipFor(grid, 270f, config.Tile4_2_2, 1);
+			
+			grid = new[,]
+			{
+				{ 1, 1, 0 },
+				{ 0, 1, 1 },
+				{ 1, 1, 1 },
 			};
 			
 			yield return AssertTileTextureAndAngleAndFlipFor(grid, 0, config.Tile4_2_2, 1);
 			
 			grid = new[,]
 			{
-				{ 1, 0, 1 },
+				{ 0, 1, 1 },
 				{ 1, 1, 1 },
-				{ 1, 1, 0 },
+				{ 1, 0, 1 },
 			};
 			
 			yield return AssertTileTextureAndAngleAndFlipFor(grid, 90f, config.Tile4_2_2, 1);
-			
-			grid = new[,]
-			{
-				{ 1, 1, 0 },
-				{ 0, 1, 1 },
-				{ 1, 1, 1 },
-			};
-			
-			yield return AssertTileTextureAndAngleAndFlipFor(grid, 180, config.Tile4_2_2, 1);
-			
-			grid = new[,]
-			{
-				{ 0, 1, 1 },
-				{ 1, 1, 1 },
-				{ 1, 0, 1 },
-			};
-			
-			yield return AssertTileTextureAndAngleAndFlipFor(grid, 270f, config.Tile4_2_2, 1);
 		}
 	}
 }

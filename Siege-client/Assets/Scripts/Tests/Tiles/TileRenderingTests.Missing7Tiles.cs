@@ -8,7 +8,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 	public partial class TileRenderingTests
 	{
 		[UnityTest]
-		public IEnumerator WhenOneNeighbourGeneratedIn3x3_ThenItHas0_4_4or1_3_4()
+		public IEnumerator When1TileGeneratedIn3x3_ThenItHas0_4_4or1_3_4()
 		{
 			var config = Resources.Load<TileSpritesConfig>("Configs/TileRules");
 			PrepareTiles();

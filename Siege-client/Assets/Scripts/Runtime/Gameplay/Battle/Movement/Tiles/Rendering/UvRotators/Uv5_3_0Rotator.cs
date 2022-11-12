@@ -3,24 +3,24 @@ using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering.UvRotators
 {
-	public class Uv3_3_2Rotator : IUvRotator
+	public class Uv5_3_0Rotator : IUvRotator
 	{
-		private readonly Vector2Int _missingSide;
+		private readonly Vector2Int _diagonalTilePos;
 
-		public  Uv3_3_2Rotator(Vector2Int missingSide) => 
-			_missingSide = missingSide;
+		public Uv5_3_0Rotator(Vector2Int diagonalTilePos) => 
+			_diagonalTilePos = diagonalTilePos;
 
 		public float AngleDeg(CustomTile sourceTile)
 		{
-			if (sourceTile[-1, 0] == _missingSide)
+			if (sourceTile[1, -1] == _diagonalTilePos)
 				return 0f;
-			if (sourceTile[0, -1] == _missingSide)
+			if (sourceTile[1, 1] == _diagonalTilePos)
 				return 90f;
-			if (sourceTile[1, 0] == _missingSide)
+			if (sourceTile[-1, 1] == _diagonalTilePos)
 				return 180f;
-			if (sourceTile[0, 1] == _missingSide)
+			if (sourceTile[-1, -1] == _diagonalTilePos)
 				return 270f;
-			
+
 			throw new InvalidEnumArgumentException("Некорректный тайл для определения!");
 		}
 	}

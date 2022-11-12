@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Siege.Runtime.Extensions;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering.UvRotators;
@@ -16,10 +17,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 		public void ChangeMaterial(CustomTile sourceTile, Material material)
 		{
 			CustomTile[] allNeighbours = sourceTile.NeighboursWithDistances.Keys.ToArray();
-			CustomTile[] nonDiagonalNeighbours =
+			CustomTile[] sideTiles =
 				allNeighbours.Where(k => !k.IsDiagonalPositionTo(sourceTile).Value).ToArray();
 
-			if (!nonDiagonalNeighbours.Any())
+			if (!sideTiles.Any())
 			{
 				material.SetTexture(TileRenderer.TileTex, _config.Tile0_4_4);
 				return;
@@ -27,26 +28,29 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 
 			if (allNeighbours.All(k => !k.IsDiagonalPositionTo(sourceTile).Value))
 			{
+				Vector2Int missingSide = sourceTile.MissingNeighboursPositions().
+					First(k => !k.IsDiagonalPositionTo(sourceTile.CellPosition).Value);
+
 				material.SetTexture(TileRenderer.TileTex, _config.Tile3_3_2);
-				var rotator = new Uv3_3_2Rotator(allNeighbours);
+				var rotator = new Uv3_3_2Rotator(missingSide);
 				material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
 				return;
 			}
 
-			if (nonDiagonalNeighbours.Length == 1)
+			if (sideTiles.Length == 1)
 			{
 				material.SetTexture(TileRenderer.TileTex, _config.Tile1_3_4);
-				Vector2Int tilePos = nonDiagonalNeighbours[0].CellPosition;
+				Vector2Int tilePos = sideTiles[0].CellPosition;
 				var rotator = new Uv1_3_4Rotator(tilePos);
 				material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
 				return;
 			}
 
-			if (nonDiagonalNeighbours.Length == 2)
+			if (sideTiles.Length == 2)
 			{
-				CustomTile neighbour1 = nonDiagonalNeighbours[0];
-				CustomTile neighbour2 = nonDiagonalNeighbours[1];
-				CustomTile diagonalNeighbour = allNeighbours.First(k => k != neighbour1 && k != neighbour2);
+				CustomTile neighbour1 = sideTiles[0];
+				CustomTile neighbour2 = sideTiles[1];
+				CustomTile diagonalTile = allNeighbours.First(k => k != neighbour1 && k != neighbour2);
 
 				if ((neighbour1.CellPosition + neighbour2.CellPosition - 2 * sourceTile.CellPosition).magnitude == 0)
 				{
@@ -56,7 +60,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 					return;
 				}
 
-				Vector2Int diagonalCellPosition = diagonalNeighbour.CellPosition;
+				Vector2Int diagonalCellPosition = diagonalTile.CellPosition;
 				if (diagonalCellPosition == neighbour1.CellPosition + neighbour2.CellPosition - sourceTile.CellPosition)
 				{
 					material.SetTexture(TileRenderer.TileTex, _config.Tile3_2_3);
@@ -66,7 +70,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 				}
 
 				material.SetTexture(TileRenderer.TileTex, _config.Tile2_3_3);
-				var uvRotator = new Uv2_3_3Rotator(neighbour1.CellPosition, neighbour2.CellPosition);
+				var uvRotator = new Uv2_3_3Rotator(neighbour1.CellPosition + neighbour2.CellPosition - sourceTile.CellPosition);
 				material.SetFloat(TileRenderer.AngleProperty, uvRotator.AngleDeg(sourceTile));
 			}
 		}
