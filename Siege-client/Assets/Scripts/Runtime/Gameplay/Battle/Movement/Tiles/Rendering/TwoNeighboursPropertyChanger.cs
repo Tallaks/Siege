@@ -38,7 +38,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 				return;
 			}
 
-			if ((neighbour1.CellPosition - neighbour2.CellPosition).magnitude == 2)
+			if ((neighbour1.CellPosition + neighbour2.CellPosition - 2 * sourceTile.CellPosition).magnitude == 0)
 			{
 				material.SetTexture(TileRenderer.TileTex, _config.Tile2_2_4);
 				var rotator = new Uv2_2_4Rotator(neighbour1.CellPosition);

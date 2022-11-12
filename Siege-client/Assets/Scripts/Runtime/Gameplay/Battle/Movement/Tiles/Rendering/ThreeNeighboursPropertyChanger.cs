@@ -48,7 +48,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 				CustomTile neighbour2 = nonDiagonalNeighbours[1];
 				CustomTile diagonalNeighbour = allNeighbours.First(k => k != neighbour1 && k != neighbour2);
 
-				if ((neighbour1.CellPosition - neighbour2.CellPosition).magnitude == 2)
+				if ((neighbour1.CellPosition + neighbour2.CellPosition - 2 * sourceTile.CellPosition).magnitude == 0)
 				{
 					material.SetTexture(TileRenderer.TileTex, _config.Tile2_2_4);
 					var rotator = new Uv2_2_4Rotator(neighbour1.CellPosition);

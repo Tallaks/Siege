@@ -93,30 +93,18 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Configs
 					"Assets/Art/EditorTools/TileRenderer/Sprites/TileTemplate2_2_4.png"));
 		}
 		
-		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/4_2_2a")]
-		public Texture2D Tile4_2_2a;
+		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/4_2_2")]
+		public Texture2D Tile4_2_2;
 
 		[OnInspectorGUI]
-		[PropertyOrder(-10), HorizontalGroup("Tiles/4_2_2a")]
+		[PropertyOrder(-10), HorizontalGroup("Tiles/4_2_2")]
 		private void ShowImage4_2_2a()
 		{
 			GUILayout.Label(
 				AssetDatabase.LoadAssetAtPath<Texture2D>(
-					"Assets/Art/EditorTools/TileRenderer/Sprites/TileTemplate4_2_2a.png"));
+					"Assets/Art/EditorTools/TileRenderer/Sprites/TileTemplate4_2_2.png"));
 		}
 
-		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/4_2_2b")]
-		public Texture2D Tile4_2_2b;
-
-		[OnInspectorGUI]
-		[PropertyOrder(-10), HorizontalGroup("Tiles/4_2_2b")]
-		private void ShowImage4_2_2b()
-		{
-			GUILayout.Label(
-				AssetDatabase.LoadAssetAtPath<Texture2D>(
-					"Assets/Art/EditorTools/TileRenderer/Sprites/TileTemplate4_2_2b.png"));
-		}
-		
 		[PreviewField(128), HideLabel, HorizontalGroup("Tiles/3_3_2")]
 		public Texture2D Tile3_3_2;
 		

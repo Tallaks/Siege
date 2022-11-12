@@ -7,11 +7,13 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 	public class TileRenderer : MonoBehaviour
 	{
 		public static readonly int TileTex = Shader.PropertyToID("_TileTex");
+		public static readonly int FlipProperty = Shader.PropertyToID("_Flip");
 		public static readonly int AngleProperty = Shader.PropertyToID("_Angle");
 
 #if UNITY_INCLUDE_TESTS
 		public Texture CurrentTexture => _material.GetTexture(TileTex);
 		public float TextureAngle => _material.GetFloat(AngleProperty);
+		public int Flip => _material.GetInt(FlipProperty);
 #endif
 		private CustomTile Tile => GetComponent<CustomTile>();
 		
@@ -28,6 +30,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering
 		private void Start()
 		{
 			int count = Tile.NeighboursWithDistances.Count;
+			_material.SetInt(FlipProperty, 0);
 			_renderingAggregator.ChangeMaterial(Tile, _material, count);
 		}
 	}
