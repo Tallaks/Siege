@@ -1,0 +1,74 @@
+using System.Collections;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Infrastructure.Configs;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+
+namespace Kulinaria.Siege.Tests.Tiles
+{
+	public partial class TileRenderingTests
+	{
+		private CustomTile _targetTile;
+		private TileRenderer Renderer => _targetTile.GetComponent<TileRenderer>();
+
+		[UnityTest]
+		public IEnumerator WhenBigMapGenerated_ThenTilesAreCorrect()
+		{
+			var config = Resources.Load<TileSpritesConfig>("Configs/TileRules");
+			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
+			{
+				{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0 },
+				{ 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1 },
+				{ 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0 },
+				{ 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0 },
+				{ 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0 },
+				{ 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0 },
+				{ 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1 },
+				{ 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0 },
+				{ 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1 },
+				{ 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 }
+			};
+
+			PrepareTiles();
+			_gridMap.GenerateMap();
+
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Active = true;
+
+			yield return AssertTileParams(new Vector2Int(2, 0), config.Tile3_2_3, 180f);
+			yield return AssertTileParams(new Vector2Int(3, 0), config.Tile3_2_3, 270f);
+			yield return AssertTileParams(new Vector2Int(12, 0), config.Tile1_3_4, 180f);
+			yield return AssertTileParams(new Vector2Int(14, 0), config.Tile1_3_4, 180f);
+			yield return AssertTileParams(new Vector2Int(1, 1), config.Tile1_3_4, 90f);
+			yield return AssertTileParams(new Vector2Int(2, 1), config.Tile6_2_0a, 90f);
+			yield return AssertTileParams(new Vector2Int(3, 1), config.Tile5_1_2, 180f);
+			yield return AssertTileParams(new Vector2Int(6, 1), config.Tile1_3_4, 180f);
+			yield return AssertTileParams(new Vector2Int(11, 1), config.Tile1_3_4, 90f);
+			yield return AssertTileParams(new Vector2Int(12, 1), config.Tile2_3_3);
+			yield return AssertTileParams(new Vector2Int(14, 1), config.Tile2_3_3, 90f);
+			yield return AssertTileParams(new Vector2Int(15, 1), config.Tile1_3_4, 270f);
+			yield return AssertTileParams(new Vector2Int(2, 2), config.Tile5_1_2);
+			yield return AssertTileParams(new Vector2Int(3, 2), config.Tile5_1_2, 180f);
+			yield return AssertTileParams(new Vector2Int(5, 2), config.Tile3_2_3, 180f);
+			yield return AssertTileParams(new Vector2Int(6, 2), config.Tile5_3_0, 180f);
+			yield return AssertTileParams(new Vector2Int(7, 2), config.Tile2_2_4, 90f);
+			yield return AssertTileParams(new Vector2Int(8, 2), config.Tile2_3_3, 270f);
+			yield return AssertTileParams(new Vector2Int(13, 2), config.Tile0_4_4);
+		}
+
+		private IEnumerator AssertTileParams(Vector2Int pos, Texture2D textureAssertion, float angleAssertion = 0f,
+			int flipAssertion = 0)
+		{
+			_targetTile = _gridMap.GetTile(pos.x, pos.y);
+			yield return new WaitForSeconds(0.1f);
+			Assert.AreEqual(textureAssertion, Renderer.CurrentTexture);
+			Assert.AreEqual(angleAssertion, Renderer.TextureAngle);
+			Assert.AreEqual(flipAssertion, Renderer.Flip);
+		}
+	}
+}

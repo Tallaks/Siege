@@ -25,15 +25,6 @@ namespace Kulinaria.Siege.Tests.Tiles
 			grid = new[,]
 			{
 				{ 1, 1, 1 },
-				{ 1, 1, 0 },
-				{ 1, 1, 0 },
-			};
-			
-			yield return AssertTileTextureAndAngleFor(grid, 180f, config.Tile5_1_2);
-			
-			grid = new[,]
-			{
-				{ 1, 1, 1 },
 				{ 1, 1, 1 },
 				{ 0, 0, 1 },
 			};
@@ -113,16 +104,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			};
 			
 			yield return AssertTileTextureAndAngleFor(grid, 180f, config.Tile6_2_0a);
-			
-			grid = new[,]
-			{
-				{ 0, 1, 1 },
-				{ 1, 1, 1 },
-				{ 0, 1, 1 },
-			};
-			
-			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile6_2_0a);
-			
+
 			grid = new[,]
 			{
 				{ 0, 1, 1 },

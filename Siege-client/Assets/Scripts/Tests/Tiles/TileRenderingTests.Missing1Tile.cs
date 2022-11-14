@@ -66,16 +66,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 270f, config.Tile5_1_2);
-			
-			grid = new[,]
-			{
-				{ 1, 1, 1 },
-				{ 0, 1, 1 },
-				{ 1, 1, 1 },
-			};
 
-			yield return AssertTileTextureAndAngleFor(grid, 0f, config.Tile5_1_2);
-			
 			grid = new[,]
 			{
 				{ 1, 1, 1 },
