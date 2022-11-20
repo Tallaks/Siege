@@ -62,28 +62,6 @@ namespace Kulinaria.Siege.Tests.Tiles
 			yield break;
 		}
 
-		[UnityTest]
-		public IEnumerator WhenOneTileGeneratedAndActive_ThenItHas0_4_4()
-		{
-			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
-			{
-				{ 1 }
-			};
-
-			PrepareTiles();
-			_gridMap.GenerateMap();
-
-			CustomTile targetTile = _gridMap.GetTile(0, 0);
-
-			_gridMap.OnTileSelection?.Invoke(targetTile);
-			targetTile.Active = true;
-
-			yield return new WaitForSeconds(0.1f);
-
-			var tileRenderer = targetTile.GetComponent<TileRenderer>();
-			Assert.AreEqual(TilesRenderingAggregator.ConfigForTests.Tile0_4_4, tileRenderer.CurrentTexture);
-		}
-
 		private IEnumerator AssertTileTextureAndAngleFor(
 			int[,] gridArray, float angle, Texture2D targetTexture)
 		{
@@ -93,7 +71,9 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
 			_gridMap.OnTileSelection?.Invoke(targetTile);
-			targetTile.Active = true;
+			
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Active = true;
 
 			yield return new WaitForSeconds(1f);
 
@@ -114,7 +94,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
 			_gridMap.OnTileSelection?.Invoke(targetTile);
-			targetTile.Active = true;
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Active = true;
 
 			yield return new WaitForSeconds(1f);
 
@@ -136,7 +117,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
 			_gridMap.OnTileSelection?.Invoke(targetTile);
-			targetTile.Active = true;
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Active = true;
 
 			yield return new WaitForSeconds(1f);
 
