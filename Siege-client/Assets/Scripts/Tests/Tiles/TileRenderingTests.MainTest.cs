@@ -112,6 +112,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			yield return AssertTileParams(new Vector2Int(4 , 11), config.Tile3_2_3,   90f);
 			yield return AssertTileParams(new Vector2Int(5 , 11), config.Tile7_1_0                  );
 			yield return AssertTileParams(new Vector2Int(7 , 11), config.Tile3_2_3,  270f);
+			yield return AssertTileParams(new Vector2Int(6 , 12), config.Tile5_1_2,  270f);
 			
 		}
 
