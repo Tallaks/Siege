@@ -102,6 +102,17 @@ namespace Kulinaria.Siege.Tests.Tiles
 			yield return AssertTileParams(new Vector2Int(5 , 9 ), config.Tile5_1_2,   90f);
 			yield return AssertTileParams(new Vector2Int(1 , 10), config.Tile1_3_4,   90f);
 			yield return AssertTileParams(new Vector2Int(2 , 10), config.Tile1_3_4,  270f);
+			yield return AssertTileParams(new Vector2Int(4 , 10), config.Tile5_1_2                  );
+			yield return AssertTileParams(new Vector2Int(5 , 10), config.Tile8_0_0                  );
+			yield return AssertTileParams(new Vector2Int(10, 10), config.Tile2_2_4,   90f);
+			yield return AssertTileParams(new Vector2Int(11, 10), config.Tile4_2_2,  270f);
+			yield return AssertTileParams(new Vector2Int(12, 10), config.Tile4_2_2,  180f);
+			yield return AssertTileParams(new Vector2Int(14, 10), config.Tile4_2_2,    0f, 1);
+			yield return AssertTileParams(new Vector2Int(15, 10), config.Tile3_2_3                  );
+			yield return AssertTileParams(new Vector2Int(4 , 11), config.Tile3_2_3,   90f);
+			yield return AssertTileParams(new Vector2Int(5 , 11), config.Tile7_1_0                  );
+			yield return AssertTileParams(new Vector2Int(7 , 11), config.Tile3_2_3,  270f);
+			
 		}
 
 		private IEnumerator AssertTileParams(Vector2Int pos, Texture2D textureAssertion, float angleAssertion = 0f,

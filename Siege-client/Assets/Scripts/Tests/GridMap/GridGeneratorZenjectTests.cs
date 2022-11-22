@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using NUnit.Framework;
 using UnityEngine;
@@ -36,6 +37,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 
@@ -60,6 +62,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 
@@ -88,6 +91,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 
@@ -116,6 +120,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 
