@@ -18,8 +18,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 		private float _xDeg;
 		private float _yDeg;
 
-		private void Awake() => 
+		private void Awake()
+		{
 			_camera = GetComponentInChildren<Camera>();
+			_xDeg = transform.eulerAngles.y;
+			_yDeg = transform.eulerAngles.x;
+		}
 
 		private void Start()
 		{
