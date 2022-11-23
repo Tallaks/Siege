@@ -1,6 +1,10 @@
 fileFormatVersion: 2
-guid: 4ccf3c1c06ea99849806191ccb1d67ba
+<<<<<<<< HEAD:Siege-client/Assets/Plugins/Zenject/OptionalExtras/Signals/Zenject-Signals.csproj.meta
+guid: aebd7ef925dd4fe4690c3238e879f914
+========
+guid: 3612507d1e9718c4fba8eb1d78685a50
 folderAsset: yes
+>>>>>>>> main:Siege-client/Assets/Art/Textures.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
