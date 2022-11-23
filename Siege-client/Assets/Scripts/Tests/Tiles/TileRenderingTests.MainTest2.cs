@@ -14,27 +14,27 @@ namespace Kulinaria.Siege.Tests.Tiles
 			var config = Resources.Load<TileSpritesConfig>("Configs/TileRules");
 			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
 			{
-				{ 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1 },
-				{ 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
-				{ 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1 },
-				{ 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 },
-				{ 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0 },
-				{ 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1 },
-				{ 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1 },
-				{ 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0 },
-				{ 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0 },
-				{ 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1 },
-				{ 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1 },
-				{ 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0 },
-				{ 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1 },
-				{ 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0 },
-				{ 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1 },
-				{ 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0 },
-				{ 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1 },
-				{ 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1 },
-				{ 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0 },
-				{ 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0 },
-				{ 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1 }
+				{ 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1 },
+				{ 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1 },
+				{ 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0 },
+				{ 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1 },
+				{ 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0 },
+				{ 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0 },
+				{ 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1 },
+				{ 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1 },
+				{ 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1 },
+				{ 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0 },
+				{ 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0 },
+				{ 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1 },
+				{ 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0 },
+				{ 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1 },
+				{ 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0 },
+				{ 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0 },
+				{ 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0 },
+				{ 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1 },
+				{ 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1 },
+				{ 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0 },
+				{ 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1 }
 			};
 
 			PrepareTiles();
@@ -77,7 +77,6 @@ namespace Kulinaria.Siege.Tests.Tiles
 			yield return AssertTileParams(new Vector2Int(18, 8 ), config.Tile4_2_2,  180f);
 			yield return AssertTileParams(new Vector2Int(10, 6 ), config.Tile4_2_2,  270f);
 			yield return AssertTileParams(new Vector2Int(20, 7 ), config.Tile4_2_2,    0f, 1);
-			yield return AssertTileParams(new Vector2Int(15, 8 ), config.Tile4_2_2,   90f, 1);
 			yield return AssertTileParams(new Vector2Int(16, 6 ), config.Tile4_2_2,   90f, 1);
 			yield return AssertTileParams(new Vector2Int(22, 9 ), config.Tile4_2_2,  180f, 1);
 			yield return AssertTileParams(new Vector2Int(21, 11), config.Tile4_2_2,  180f, 1);
@@ -103,6 +102,63 @@ namespace Kulinaria.Siege.Tests.Tiles
 			yield return AssertTileParams(new Vector2Int(6 , 16), config.Tile3_2_3,  270f);
 			yield return AssertTileParams(new Vector2Int(18, 7 ), config.Tile3_2_3,  270f);
 			yield return AssertTileParams(new Vector2Int(17, 6 ), config.Tile3_2_3,  270f);
+			yield return AssertTileParams(new Vector2Int(16, 4 ), config.Tile1_3_4                  );
+			yield return AssertTileParams(new Vector2Int(14, 4 ), config.Tile1_3_4                  );
+			yield return AssertTileParams(new Vector2Int(24, 9 ), config.Tile1_3_4                  );
+			yield return AssertTileParams(new Vector2Int(9 , 4 ), config.Tile1_3_4                  );
+			yield return AssertTileParams(new Vector2Int(16, 17), config.Tile1_3_4,  270f);
+			yield return AssertTileParams(new Vector2Int(9 , 17), config.Tile1_3_4,  270f);
+			yield return AssertTileParams(new Vector2Int(20, 4 ), config.Tile1_3_4,  270f);
+			yield return AssertTileParams(new Vector2Int(20, 14), config.Tile1_3_4,  270f);
+			yield return AssertTileParams(new Vector2Int(20, 16), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(8 , 5 ), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(24, 16), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(26, 1 ), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(10, 16), config.Tile1_3_4,   90f);
+			yield return AssertTileParams(new Vector2Int(22, 4 ), config.Tile1_3_4,   90f);
+			yield return AssertTileParams(new Vector2Int(1 , 15), config.Tile1_3_4,   90f);
+			yield return AssertTileParams(new Vector2Int(26, 13), config.Tile1_3_4,   90f);
+			yield return AssertTileParams(new Vector2Int(1 , 18), config.Tile4_2_2                  );
+			yield return AssertTileParams(new Vector2Int(4 , 17), config.Tile4_2_2,  270f);
+			yield return AssertTileParams(new Vector2Int(4 , 19), config.Tile4_2_2,   90f, 1);
+			yield return AssertTileParams(new Vector2Int(6 , 19), config.Tile4_2_2,  180f, 1);
+			yield return AssertTileParams(new Vector2Int(2 , 19), config.Tile4_2_2,  270f, 1);
+			yield return AssertTileParams(new Vector2Int(26, 17), config.Tile3_3_2                  );
+			yield return AssertTileParams(new Vector2Int(15, 17), config.Tile3_3_2                  );
+			yield return AssertTileParams(new Vector2Int(16, 3 ), config.Tile3_3_2,   90f);
+			yield return AssertTileParams(new Vector2Int(14, 3 ), config.Tile3_3_2,   90f);
+			yield return AssertTileParams(new Vector2Int(7 , 8 ), config.Tile3_3_2,  180f);
+			yield return AssertTileParams(new Vector2Int(9 , 3 ), config.Tile3_3_2,  180f);
+			yield return AssertTileParams(new Vector2Int(6 , 6 ), config.Tile3_3_2,  270f);
+			yield return AssertTileParams(new Vector2Int(7 , 1 ), config.Tile3_3_2,  270f);
+			yield return AssertTileParams(new Vector2Int(6 , 5 ), config.Tile2_2_4                  );
+			yield return AssertTileParams(new Vector2Int(4 , 4 ), config.Tile2_2_4                  );
+			yield return AssertTileParams(new Vector2Int(2 , 3 ), config.Tile2_2_4                  );
+			yield return AssertTileParams(new Vector2Int(24, 7 ), config.Tile2_2_4                  );
+			yield return AssertTileParams(new Vector2Int(4 , 1 ), config.Tile2_2_4                  );
+			yield return AssertTileParams(new Vector2Int(24, 13), config.Tile2_2_4                  );
+			yield return AssertTileParams(new Vector2Int(9 , 19), config.Tile2_2_4,   90f);
+			yield return AssertTileParams(new Vector2Int(13, 3 ), config.Tile2_2_4,   90f);
+			yield return AssertTileParams(new Vector2Int(14, 6 ), config.Tile2_2_4,   90f);
+			yield return AssertTileParams(new Vector2Int(7 , 3 ), config.Tile2_2_4,   90f);
+			yield return AssertTileParams(new Vector2Int(8 , 3 ), config.Tile2_2_4,   90f);
+			yield return AssertTileParams(new Vector2Int(12, 1 ), config.Tile2_3_3                  );
+			yield return AssertTileParams(new Vector2Int(15, 19), config.Tile2_3_3                  );
+			yield return AssertTileParams(new Vector2Int(11, 16), config.Tile2_3_3                  );
+			yield return AssertTileParams(new Vector2Int(26, 19), config.Tile2_3_3,   90f);
+			yield return AssertTileParams(new Vector2Int(26, 2 ), config.Tile2_3_3,   90f);
+			yield return AssertTileParams(new Vector2Int(19, 4 ), config.Tile2_3_3,   90f);
+			yield return AssertTileParams(new Vector2Int(26, 7 ), config.Tile2_3_3,  180f);
+			yield return AssertTileParams(new Vector2Int(11, 1 ), config.Tile2_3_3,  180f);
+			yield return AssertTileParams(new Vector2Int(24, 6 ), config.Tile2_3_3,  180f);
+			yield return AssertTileParams(new Vector2Int(19, 3 ), config.Tile2_3_3,  270f);
+			yield return AssertTileParams(new Vector2Int(22, 1 ), config.Tile2_3_3,  270f);
+			yield return AssertTileParams(new Vector2Int(21, 19), config.Tile2_3_3,  270f);
+			yield return AssertTileParams(new Vector2Int(17, 1 ), config.Tile3_2_3                  );
+			yield return AssertTileParams(new Vector2Int(19, 1 ), config.Tile3_2_3,   90f);
+			yield return AssertTileParams(new Vector2Int(1 , 1 ), config.Tile3_2_3,  180f);
+			yield return AssertTileParams(new Vector2Int(20, 0 ), config.Tile3_2_3,  270f);
+			yield return AssertTileParams(new Vector2Int(26, 10), config.Tile3_2_3,  270f);
 			
 		}
 	}
