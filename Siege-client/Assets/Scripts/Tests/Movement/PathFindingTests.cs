@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
@@ -25,13 +27,13 @@ namespace Kulinaria.Siege.Tests.Movement
 			_gridMap.OnTileSelection?.Invoke(tile04);
 
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile04);
-			
+
 			Assert.AreEqual(0, _pathFinder.Distance(tile04));
 			Assert.AreEqual(0, path.Count);
-			
+
 			yield break;
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenTileSelected_ThenDistancesToChosenTileAreCorrect()
 		{
@@ -146,6 +148,7 @@ namespace Kulinaria.Siege.Tests.Movement
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 

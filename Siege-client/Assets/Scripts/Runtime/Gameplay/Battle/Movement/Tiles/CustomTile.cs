@@ -4,7 +4,7 @@ using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using UnityEngine;
 using Zenject;
 
-namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
+namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 {
 	public class CustomTile : MonoBehaviour
 	{
@@ -18,6 +18,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			_neighboursWithDistances;
 
 		public Vector2Int CellPosition { get; private set; }
+
+		public bool Active
+		{
+			get => gameObject.activeInHierarchy;
+			set => gameObject.SetActive(value);
+		}
 
 		private void OnEnable() => 
 			_inputService.OnClick += Select;
@@ -38,6 +44,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 			CellPosition = cellPos;
 
 			AddNeighbours(cellPos);
+			gameObject.SetActive(false);
 		}
 
 		private void Select(Vector2 screenPosition)
@@ -79,5 +86,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
 				b._neighboursWithDistances[a] = 3;
 			}
 		}
+
+		public Vector2Int this[int x, int y]
+			=> new Vector2Int(CellPosition.x + x, CellPosition.y + y);
 	}
 }

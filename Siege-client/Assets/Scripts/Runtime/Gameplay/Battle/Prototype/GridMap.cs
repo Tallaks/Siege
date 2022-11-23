@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 {
@@ -11,7 +12,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 		public static int[,] GridArray;
 
 		private readonly TilemapFactory _tilemapFactory;
-		private readonly List<CustomTile> _tiles = new();
+		private List<CustomTile> _tiles = new();
 
 		public GridMap(TilemapFactory tilemapFactory) => _tilemapFactory = tilemapFactory;
 
@@ -30,6 +31,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 					var cellPosition = new Vector2Int(j, upperBound0 - i);
 					_tiles.Add(_tilemapFactory.Create(cellPosition));
 				}
+		}
+
+		public void Clear()
+		{
+			foreach (CustomTile tile in _tiles)
+				Object.Destroy(tile.gameObject);
+
+			_tiles = new List<CustomTile>();
 		}
 
 		public CustomTile GetTile(int x, int y)

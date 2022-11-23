@@ -46,7 +46,12 @@ namespace Kulinaria.Siege.Tests.InputService
 			{
 				yield return new WaitForSeconds(0.5f);
 				if (clicked && rotated && zoomed)
+				{
+					InputService.OnClick = null;
+					InputService.OnRotate = null;
+					InputService.OnZoom = null;
 					Assert.Pass();
+				}
 			}
 		}
 
@@ -74,7 +79,10 @@ namespace Kulinaria.Siege.Tests.InputService
 			{
 				yield return new WaitForSeconds(0.5f);
 				if (movedDown && movedLeft && movedRight && movedUp)
+				{
+					InputService.OnMove = null;
 					Assert.Pass();
+				}
 			}
 		}
 	}

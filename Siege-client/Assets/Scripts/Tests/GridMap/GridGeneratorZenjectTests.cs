@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using NUnit.Framework;
 using UnityEngine;
@@ -35,13 +37,14 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 
 			Container.Resolve<IGridMap>().GenerateMap();
 
-			Assert.NotZero(Object.FindObjectsOfType<CustomTile>().Length);
-			Assert.AreEqual(4, Object.FindObjectsOfType<CustomTile>().Length);
+			Assert.NotZero(Object.FindObjectsOfType<CustomTile>(includeInactive: true).Length);
+			Assert.AreEqual(4, Object.FindObjectsOfType<CustomTile>(includeInactive: true).Length);
 			Assert.AreEqual(4, Container.Resolve<IGridMap>().AllTiles.Count());
 			yield break;
 		}
@@ -59,12 +62,13 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 
 			Container.Resolve<IGridMap>().GenerateMap();
 
-			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>();
+			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
 			Assert.NotZero(customTiles.Length);
 			Assert.AreEqual(2, customTiles.Length);
 			Assert.AreEqual(
@@ -87,12 +91,13 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 
 			Container.Resolve<IGridMap>().GenerateMap();
 
-			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>();
+			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
 			Assert.NotZero(customTiles.Length);
 			Assert.AreEqual(5, customTiles.Length);
 			Assert.AreEqual(
@@ -115,12 +120,13 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
 
 			Container.Resolve<IGridMap>().GenerateMap();
 
-			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>();
+			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
 			Assert.IsFalse(customTiles[0].CellPosition == customTiles[1].CellPosition);
 			Assert.IsFalse(customTiles[0].CellPosition == customTiles[2].CellPosition);
 			Assert.IsFalse(customTiles[0].CellPosition == customTiles[3].CellPosition);

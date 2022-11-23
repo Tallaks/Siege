@@ -2,7 +2,7 @@ using Kulinaria.Siege.Runtime.Extensions;
 using UnityEngine;
 using Zenject;
 
-namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement
+namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 {
 	public class TilemapFactory : PlaceholderFactory<CustomTile>
 	{

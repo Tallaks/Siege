@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 {
@@ -9,6 +9,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 		IEnumerable<CustomTile> AllTiles { get; }
 		Action<CustomTile> OnTileSelection { get; set; }
 		void GenerateMap();
+		void Clear();
 		CustomTile GetTile(int x, int y);
 	}
 }
