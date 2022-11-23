@@ -9,13 +9,13 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 		private const string TilePrefabPath = "Prefabs/Battle/Tile";
 
 		private readonly DiContainer _container;
-		private readonly Transform _parent;
+		private Transform _parent;
 
-		public TilemapFactory(DiContainer container)
-		{
+		public TilemapFactory(DiContainer container) => 
 			_container = container;
-			_parent = new GameObject("Tilemap").transform;
-		}
+
+		public void Initialize(Transform parent) => 
+			_parent = parent;
 
 		public CustomTile Create(Vector2Int cellPosition)
 		{
@@ -23,7 +23,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles
 				TilePrefabPath,
 				cellPosition.ToWorld(),
 				Quaternion.identity,
-				_parent);
+				null);
+			tile.transform.SetParent(_parent, false);
 
 			tile.Initialize(cellPosition);
 			return tile;

@@ -14,7 +14,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 		private readonly TilemapFactory _tilemapFactory;
 		private List<CustomTile> _tiles = new();
 
-		public GridMap(TilemapFactory tilemapFactory) => _tilemapFactory = tilemapFactory;
+		public GridMap(TilemapFactory tilemapFactory) => 
+			_tilemapFactory = tilemapFactory;
 
 		public IEnumerable<CustomTile> AllTiles => _tiles;
 		public Action<CustomTile> OnTileSelection { get; set; }
