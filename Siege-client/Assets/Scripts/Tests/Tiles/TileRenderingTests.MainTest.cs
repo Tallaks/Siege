@@ -120,7 +120,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			int flipAssertion = 0)
 		{
 			_targetTile = _gridMap.GetTile(pos.x, pos.y);
-			yield return new WaitForSeconds(0.1f);
+			yield return new WaitForSeconds(0.01f);
 			Assert.AreEqual(textureAssertion, Renderer.CurrentTexture, $"{pos}");
 			Assert.AreEqual(angleAssertion, Renderer.TextureAngle, $"{pos}");
 			Assert.AreEqual(flipAssertion, Renderer.Flip, $"{pos}");

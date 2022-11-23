@@ -75,35 +75,12 @@ namespace Kulinaria.Siege.Tests.Tiles
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
 
-			yield return new WaitForSeconds(1f);
+			yield return new WaitForSeconds(0.01f);
 
 			var tileRenderer = targetTile.GetComponent<TileRenderer>();
 
 			Assert.AreEqual(targetTexture, tileRenderer.CurrentTexture);
 			Assert.AreEqual(angle, tileRenderer.TextureAngle);
-
-			_gridMap.Clear();
-		}
-
-		private IEnumerator AssertTileTextureAndAngleAndFlipFor(
-			int[,] gridArray, float angle, Texture2D targetTexture, int flip)
-		{
-			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = gridArray;
-
-			_gridMap.GenerateMap();
-
-			CustomTile targetTile = _gridMap.GetTile(1, 1);
-			_gridMap.OnTileSelection?.Invoke(targetTile);
-			foreach (CustomTile tile in _gridMap.AllTiles)
-				tile.Active = true;
-
-			yield return new WaitForSeconds(1f);
-
-			var tileRenderer = targetTile.GetComponent<TileRenderer>();
-
-			Assert.AreEqual(targetTexture, tileRenderer.CurrentTexture);
-			Assert.AreEqual(angle, tileRenderer.TextureAngle);
-			Assert.AreEqual(flip, tileRenderer.Flip);
 
 			_gridMap.Clear();
 		}
@@ -120,7 +97,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
 
-			yield return new WaitForSeconds(1f);
+			yield return new WaitForSeconds(0.01f);
 
 			var tileRenderer = targetTile.GetComponent<TileRenderer>();
 

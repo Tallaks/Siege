@@ -159,6 +159,18 @@ namespace Kulinaria.Siege.Tests.Tiles
 			yield return AssertTileParams(new Vector2Int(1 , 1 ), config.Tile3_2_3,  180f);
 			yield return AssertTileParams(new Vector2Int(20, 0 ), config.Tile3_2_3,  270f);
 			yield return AssertTileParams(new Vector2Int(26, 10), config.Tile3_2_3,  270f);
+			yield return AssertTileParams(new Vector2Int(24, 1 ), config.Tile0_4_4                  );
+			yield return AssertTileParams(new Vector2Int(18, 5 ), config.Tile0_4_4                  );
+			yield return AssertTileParams(new Vector2Int(25, 3 ), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(10, 18), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(1 , 17), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(26, 16), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(5 , 14), config.Tile1_3_4,  180f);
+			yield return AssertTileParams(new Vector2Int(3 , 0 ), config.Tile1_3_4,   90f);
+			yield return AssertTileParams(new Vector2Int(14, 1 ), config.Tile1_3_4,   90f);
+			yield return AssertTileParams(new Vector2Int(17, 18), config.Tile1_3_4,   90f);
+			yield return AssertTileParams(new Vector2Int(1 , 7 ), config.Tile1_3_4                  );
+			yield return AssertTileParams(new Vector2Int(13, 0 ), config.Tile1_3_4,  270f);
 			
 		}
 	}
