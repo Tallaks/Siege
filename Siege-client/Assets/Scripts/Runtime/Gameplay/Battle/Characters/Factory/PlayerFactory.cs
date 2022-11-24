@@ -7,7 +7,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 {
 	public class PlayerFactory : PrefabFactory<BasePlayer>
 	{
-		private const string PathForPlayerPrefab = "Prefabs/Characters/Players/Stanley_Player";
+		private const string PathForPlayerPrefab = "Prefabs/Battle/Characters/Players/Stanley_Player";
 		
 		private IAssetsProvider _assetsProvider;
 		private DiContainer _container;

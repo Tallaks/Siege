@@ -1,3 +1,4 @@
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Enemies;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Registry;
@@ -23,6 +24,11 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.Bind<Setup>()
 				.FromInstance(_spawnSetup)
 				.AsSingle();
+
+			Container
+				.Bind<EnemyFactory>()
+				.FromNew()
+				.AsSingle();
 			
 			Container
 				.Bind<PlayerFactory>()
@@ -42,6 +48,12 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 			{
 				BasePlayer player = Container.Resolve<PlayerFactory>().Create(playerSlot);
 				Container.Resolve<ICharacterRegistry>().RegisterPlayer(player);
+			}
+
+			foreach (EnemySlot enemySlot in Container.Resolve<Setup>().EnemySlots)
+			{
+				BaseEnemy enemy = Container.Resolve<EnemyFactory>().Create(enemySlot);
+				Container.Resolve<ICharacterRegistry>().RegisterEnemy(enemy);
 			}
 		}
 	}
