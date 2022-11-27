@@ -1,3 +1,4 @@
+using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Enemies;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players;
@@ -12,6 +13,12 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 	{
 		[SerializeField] private Setup _spawnSetup;
 		
+		private ILoggerService _loggerService;
+
+		[Inject]
+		private void Construct(ILoggerService loggerService) => 
+			_loggerService = loggerService;
+
 		public override void InstallBindings()
 		{
 			Container
@@ -44,6 +51,8 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 
 		public void Initialize()
 		{
+			_loggerService.Log("Characters Initialization", LoggerLevel.Battle);
+			
 			foreach (PlayerSlot playerSlot in Container.Resolve<Setup>().PlayerSlots)
 			{
 				BasePlayer player = Container.Resolve<PlayerFactory>().Create(playerSlot);

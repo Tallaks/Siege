@@ -1,3 +1,4 @@
+using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Infrastructure.Assets;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
 using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
@@ -14,8 +15,11 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 
 		public void Initialize()
 		{
+			UnityLoggerService.DefaultPriority = 10;
+			Container.Resolve<ILoggerService>().Log("Game Services Initialized", LoggerLevel.Application);
 			if (!Testing)
-				Container.Resolve<ISceneLoader>().LoadSceneAsync(SceneNames.BattleScene);
+				Container.Resolve<ISceneLoader>().LoadSceneAsync(SceneNames.BattleScene, () =>
+					Container.Resolve<ILoggerService>().Log("Battle scene loaded", LoggerLevel.Application));
 		}
 
 		public override void InstallBindings()
@@ -26,6 +30,12 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.FromInstance(this)
 				.AsSingle();
 
+			Container
+				.Bind<ILoggerService>()
+				.To<UnityLoggerService>()
+				.FromNew()
+				.AsSingle();
+			
 			Container
 				.Bind<ICoroutineRunner>()
 				.To<CoroutineRunner>()

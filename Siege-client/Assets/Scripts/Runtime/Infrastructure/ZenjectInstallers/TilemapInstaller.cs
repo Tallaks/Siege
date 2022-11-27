@@ -1,3 +1,4 @@
+using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
@@ -11,9 +12,17 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 	{
 		[SerializeField] 
 		private Transform _tilemapTransform;
-		
+
+		private ILoggerService _loggerService;
+
+		[Inject]
+		private void Construct(ILoggerService loggerService) => 
+			_loggerService = loggerService;
+
 		public void Initialize()
 		{
+			_loggerService.Log("Tilemap Initialization", LoggerLevel.Battle);
+			
 			GridMap.GridArray = new[,]
 			{
 				{ 1, 1, 1, 1, 1, 1, 1, 1 },
