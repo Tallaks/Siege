@@ -1,7 +1,7 @@
 using Kulinaria.Siege.Runtime.Debugging.Logging;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using UnityEngine;
 using Zenject;
@@ -23,7 +23,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 		{
 			_loggerService.Log("Tilemap Initialization", LoggerLevel.Battle);
 			
-			GridMap.GridArray = new[,]
+			ArrayGridMap.GridArray = new[,]
 			{
 				{ 1, 1, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -60,7 +60,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 
 			Container
 				.Bind<IGridMap>()
-				.To<GridMap>()
+				.To<ArrayGridMap>()
 				.FromNew()
 				.AsSingle();
 

@@ -1,6 +1,6 @@
 using System.Collections;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Infrastructure.Configs;
 using NUnit.Framework;
 using UnityEngine;
@@ -17,7 +17,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 		public IEnumerator WhenBigMapGenerated_ThenTilesAreCorrect()
 		{
 			var config = Resources.Load<TileSpritesConfig>("Configs/TileRules");
-			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
+			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
 			{
 				{ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0 },

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
 using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Extensions

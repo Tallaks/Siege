@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 {
