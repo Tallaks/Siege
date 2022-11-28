@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -8,6 +8,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles
 {
 	public class CustomTile : MonoBehaviour
 	{
+		[ShowInInspector]
 		private readonly Dictionary<CustomTile, int> _neighboursWithDistances = new();
 		private Camera _camera;
 		private IInputService _inputService;
@@ -17,7 +18,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles
 		public IReadOnlyDictionary<CustomTile, int> NeighboursWithDistances =>
 			_neighboursWithDistances;
 
-		public Vector2Int CellPosition { get; private set; }
+		[ShowInInspector] public Vector2Int CellPosition { get; private set; }
 
 		public bool Active
 		{
@@ -25,10 +26,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles
 			set => gameObject.SetActive(value);
 		}
 
-		private void OnEnable() => 
+		private void OnEnable() =>
 			_inputService.OnClick += Select;
 
-		private void OnDisable() => 
+		private void OnDisable() =>
 			_inputService.OnClick -= Select;
 
 		[Inject]
@@ -88,6 +89,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles
 		}
 
 		public Vector2Int this[int x, int y]
-			=> new Vector2Int(CellPosition.x + x, CellPosition.y + y);
+			=> new(CellPosition.x + x, CellPosition.y + y);
 	}
 }

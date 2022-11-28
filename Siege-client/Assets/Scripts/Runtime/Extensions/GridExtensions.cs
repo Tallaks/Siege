@@ -9,7 +9,10 @@ namespace Kulinaria.Siege.Runtime.Extensions
 	{
 		public static Vector3 ToWorld(this Vector2Int cellPosition) =>
 			new(0.5f + cellPosition.x, 0.1f, 0.5f + cellPosition.y);
-
+		
+		public static Vector2Int ToCell(this Vector3 worldPosition) =>
+			new(Mathf.RoundToInt(worldPosition.x - 0.1f), Mathf.RoundToInt(worldPosition.z  - 0.1f));
+		
 		public static IEnumerable<Vector2Int> MissingNeighboursPositions(this CustomTile tile)
 		{
 			Vector2Int[] allPositions =
