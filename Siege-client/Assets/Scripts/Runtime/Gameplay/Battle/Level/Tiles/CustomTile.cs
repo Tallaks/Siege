@@ -37,9 +37,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles
 			_inputService.OnClick -= Select;
 
 		[Inject]
-		private void Construct(IInputService inputService, IGridMap map, Camera camera)
+		private void Construct(IInputService inputService, IGridMap map, CameraMover cameraMover)
 		{
-			_camera = camera;
+			_camera = cameraMover.Camera;
 			_inputService = inputService;
 			_map = map;
 		}

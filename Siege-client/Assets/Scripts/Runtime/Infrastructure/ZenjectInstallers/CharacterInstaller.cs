@@ -4,6 +4,7 @@ using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Registry;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -11,7 +12,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 {
 	public class CharacterInstaller : MonoInstaller, IInitializable
 	{
-		[SerializeField] private Setup _spawnSetup;
+		[SerializeField, Required] private Setup _spawnSetup;
 		
 		private ILoggerService _loggerService;
 
