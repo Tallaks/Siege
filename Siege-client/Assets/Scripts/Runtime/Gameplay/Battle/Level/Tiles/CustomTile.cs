@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -17,6 +18,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles
 
 		public IReadOnlyDictionary<CustomTile, int> NeighboursWithDistances =>
 			_neighboursWithDistances;
+
+		public IEnumerable<CustomTile> ActiveNeighbours => 
+			_neighboursWithDistances.Keys.Where(k => k.Active);
 
 		[ShowInInspector] public Vector2Int CellPosition { get; private set; }
 

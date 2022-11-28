@@ -15,7 +15,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering
 
 		public void ChangeMaterial(CustomTile sourceTile, Material material)
 		{
-			CustomTile[] allNeighbours = sourceTile.NeighboursWithDistances.Keys.ToArray();
+			CustomTile[] allNeighbours = sourceTile.ActiveNeighbours.ToArray();
 			CustomTile[] sideTiles =
 				allNeighbours.Where(k => !k.IsDiagonalPositionTo(sourceTile).Value).ToArray();
 

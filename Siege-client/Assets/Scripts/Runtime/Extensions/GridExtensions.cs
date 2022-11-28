@@ -29,7 +29,7 @@ namespace Kulinaria.Siege.Runtime.Extensions
 
 			return 
 				from position in allPositions
-					let neighbourPositions = tile.NeighboursWithDistances.Keys.Select(k => k.CellPosition) 
+					let neighbourPositions = tile.ActiveNeighbours.Select(k => k.CellPosition) 
 					where !neighbourPositions.Contains(position) 
 					select position;
 		}

@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -29,7 +30,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering
 
 		private void Start()
 		{
-			int count = Tile.NeighboursWithDistances.Count;
+			int count = Tile.ActiveNeighbours.Count();
 			_material.SetInt(FlipProperty, 0);
 			_renderingAggregator.ChangeMaterial(Tile, _material, count);
 		}

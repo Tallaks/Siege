@@ -17,10 +17,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering
 		public void ChangeMaterial(CustomTile sourceTile, Material material)
 		{
 			IEnumerable<CustomTile> diagonalNeighbours =
-				sourceTile.NeighboursWithDistances.Keys.Where(k => k.IsDiagonalPositionTo(sourceTile).Value);
+				sourceTile.ActiveNeighbours.Where(k => k.IsDiagonalPositionTo(sourceTile).Value);
 
 			IEnumerable<CustomTile> sideNeighbours =
-				sourceTile.NeighboursWithDistances.Keys.Where(k => !k.IsDiagonalPositionTo(sourceTile).Value);
+				sourceTile.ActiveNeighbours.Where(k => !k.IsDiagonalPositionTo(sourceTile).Value);
 
 			if (diagonalNeighbours.Count() == 1)
 			{

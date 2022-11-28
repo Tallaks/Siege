@@ -15,7 +15,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering
 
 		public void ChangeMaterial(CustomTile sourceTile, Material material)
 		{
-			Vector2Int tilePos = sourceTile.NeighboursWithDistances.Keys.First().CellPosition;
+			Vector2Int tilePos = sourceTile.ActiveNeighbours.First().CellPosition;
 
 			if (tilePos.IsDiagonalPositionTo(sourceTile.CellPosition).HasValue)
 				if (tilePos.IsDiagonalPositionTo(sourceTile.CellPosition).Value)

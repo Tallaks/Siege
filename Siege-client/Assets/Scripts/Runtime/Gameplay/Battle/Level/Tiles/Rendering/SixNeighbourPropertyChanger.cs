@@ -17,7 +17,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering
 		public void ChangeMaterial(CustomTile sourceTile, Material material)
 		{
 			IEnumerable<CustomTile> diagonalNeighbours =
-				sourceTile.NeighboursWithDistances.Keys.Where(k => k.IsDiagonalPositionTo(sourceTile).Value);
+				sourceTile.ActiveNeighbours.Where(k => k.IsDiagonalPositionTo(sourceTile).Value);
 
 			int diagonalCount = diagonalNeighbours.Count();
 
@@ -80,7 +80,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering
 				if (missingNeighbourPosSum.magnitude == 0)
 				{
 					CustomTile nonDiagonalNeighbour =
-						sourceTile.NeighboursWithDistances.Keys.First(k => !k.IsDiagonalPositionTo(sourceTile).Value);
+						sourceTile.ActiveNeighbours.First(k => !k.IsDiagonalPositionTo(sourceTile).Value);
 					
 					material.SetTexture(TileRenderer.TileTex, _config.Tile2_2_4);
 					var rotator = new Uv2_2_4Rotator(nonDiagonalNeighbour.CellPosition);

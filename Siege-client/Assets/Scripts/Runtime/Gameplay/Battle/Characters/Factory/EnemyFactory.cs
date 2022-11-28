@@ -1,6 +1,7 @@
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Enemies;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn;
 using Kulinaria.Siege.Runtime.Infrastructure.Assets;
+using UnityEngine;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
@@ -18,9 +19,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 			_assetsProvider = assetsProvider;
 		}
 
-		public BaseEnemy Create(EnemySlot slot) =>
-			_container.InstantiatePrefabForComponent<BaseEnemy>(
+		public BaseEnemy Create(EnemySlot slot)
+		{
+			slot.Tile.Active = true;
+			return _container.InstantiatePrefabForComponent<BaseEnemy>(
 				_assetsProvider.LoadAsset<BaseEnemy>(PathForEnemyPrefab),
-				slot.transform);
+				slot.transform.position,
+				Quaternion.Euler(0, 180f,0), 
+				null);
+		}
 	}
 }
