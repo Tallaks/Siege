@@ -4,7 +4,6 @@ using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
@@ -21,6 +20,8 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 		{
 			_loggerService.Log("Tilemap Initialization", LoggerLevel.Battle);
 			Container.Resolve<IGridMap>().GenerateMap();
+			
+			Container.Resolve<ITileSelector>().Initialize();
 		}
 
 		public override void InstallBindings()
@@ -56,8 +57,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.AsSingle();
 			
 			Container
-				.Bind<ITileSelector>()
-				.To<CustomTileSelector>()
+				.BindInterfacesTo<CustomTileSelector>()
 				.FromNew()
 				.AsSingle();
 		}

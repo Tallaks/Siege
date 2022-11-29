@@ -4,7 +4,6 @@ using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
-using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
@@ -34,26 +33,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 		public TileRenderer Renderer => GetComponent<TileRenderer>();
 
 		private readonly Dictionary<CustomTile, int> _neighboursWithDistances = new();
-		
-		private Camera _camera;
-		private IInputService _inputService;
+
 		private IGridMap _map;
-		private ITileSelector _selector;
 		private ILoggerService _logger;
 
-		private void OnEnable() =>
-			_inputService.OnClick += Select;
-
-		private void OnDisable() =>
-			_inputService.OnClick -= Select;
-
 		[Inject]
-		private void Construct(ILoggerService logger, IInputService inputService, IGridMap map, ITileSelector selector, CameraMover cameraMover)
+		private void Construct(ILoggerService logger, IGridMap map, ITileSelector selector)
 		{
 			_logger = logger;
-			_selector = selector;
-			_camera = cameraMover.Camera;
-			_inputService = inputService;
 			_map = map;
 		}
 
@@ -62,14 +49,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 			CellPosition = cellPos;
 			AddNeighbours(cellPos);
 			Active = false;
-		}
-
-		private void Select(Vector2 screenPosition)
-		{
-			Ray ray = _camera.ScreenPointToRay(screenPosition);
-			if (Physics.Raycast(ray, out RaycastHit hit))
-				if (hit.transform.GetComponent<CustomTile>() == this)
-					_selector.Select(this, 10);
 		}
 
 		private void AddNeighbours(Vector2Int cellPos)
