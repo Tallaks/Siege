@@ -4,8 +4,6 @@ using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Level;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
 using UnityEngine.TestTools;

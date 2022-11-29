@@ -3,7 +3,6 @@ using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Level;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using NUnit.Framework;
 using UnityEngine;
@@ -20,7 +19,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
+			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
 
 			PostInstall();
 
@@ -32,12 +31,12 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenTilemapInitializedWith2DArray_ThenItGeneratesGridWithFourTilesAsSquare2x2()
 		{
-			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
+			ArrayGridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
 
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
+			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
@@ -53,7 +52,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenTilemapInitializedWith2DArray_ThenItGeneratesGridWithFourTilesAsDiagonal()
 		{
-			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
+			ArrayGridMap.GridArray = new[,]
 			{
 				{ 0, 1 },
 				{ 1, 0 }
@@ -62,7 +61,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
+			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
@@ -82,7 +81,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenTilemapInitializedWith2DArray_ThenItGeneratesGridWithOneLineOf5()
 		{
-			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
+			ArrayGridMap.GridArray = new[,]
 			{
 				{ 1, 1, 1, 1, 0 },
 				{ 0, 0, 0, 0, 1 }
@@ -91,7 +90,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
+			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
@@ -115,12 +114,12 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenTTilemapInitialized_ThenAllTilesHaveRightCellPositions()
 		{
-			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
+			ArrayGridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
 
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
+			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 
 			PostInstall();
