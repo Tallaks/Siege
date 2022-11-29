@@ -42,6 +42,9 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
+			
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Renderer.Repaint();
 
 			yield return AssertTileParams(new Vector2Int(13, 11), config.Tile7_1_0,   90f);
 			yield return AssertTileParams(new Vector2Int(14, 10), config.Tile5_1_2,   90f);

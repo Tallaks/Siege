@@ -1,10 +1,14 @@
 using System.Collections;
+using Kulinaria.Siege.Runtime.Gameplay.Battle;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Zenject;
@@ -26,19 +30,20 @@ namespace Kulinaria.Siege.Tests.Tiles
 				{ 1 }
 			};
 
-			var camera = new GameObject("Camera").AddComponent<Camera>();
-			camera.orthographic = true;
-			camera.transform.eulerAngles = new Vector3(90, 0, 0);
-			camera.transform.position = new Vector3(0, 5, 0);
+			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+			var cube = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Cube.prefab");
+			Object.Instantiate(cube);
 			
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
 			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
-			Container.Bind<Camera>().FromInstance(camera).AsSingle();
+			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-
+			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
+			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
+			
 			PostInstall();
 
 			_gridMap = Container.Resolve<IGridMap>();
