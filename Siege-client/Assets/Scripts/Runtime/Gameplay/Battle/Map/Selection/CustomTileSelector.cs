@@ -47,15 +47,28 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 				customTile.Renderer.Repaint();
 		}
 
+		public void Deselect()
+		{
+			foreach (CustomTile customTile in _map.AllTiles)
+				customTile.Active = false;
+			
+			foreach (CustomTile customTile in _map.AllTiles.Where(k => k.Active))
+				customTile.Renderer.Repaint();
+		}
+
 		private void RegisterClick(Vector2 clickPos)
 		{
 			Ray ray = _cameraMover.Camera.ScreenPointToRay(clickPos);
 			if (Physics.Raycast(ray, out RaycastHit hit))
 			{
 				var tileSelectable = hit.transform.GetComponent<ITileSelectable>();
-				if (tileSelectable != null && tileSelectable.Visitor != null)
+				if (tileSelectable != null && tileSelectable.Tile.HasVisitor)
 					Select(tileSelectable.Tile, tileSelectable.Visitor.ActionPoints);
+				else
+					Deselect();
 			}
+			else
+				Deselect();
 		}
 	}
 }
