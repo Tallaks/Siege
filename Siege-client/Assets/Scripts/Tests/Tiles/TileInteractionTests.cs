@@ -1,7 +1,7 @@
 using System.Collections;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
@@ -45,20 +45,12 @@ namespace Kulinaria.Siege.Tests.Tiles
 			_gridMap.GenerateMap();
 
 			CustomTile tile0 = _gridMap.GetTile(0, 0);
-			tile0.Active = true;
-			
+
 			yield return new WaitForSeconds(0.1f);
-			
-			var success = false;
-			_gridMap.OnTileSelection += tile =>
-			{
-				if (tile.Equals(tile0))
-					success = true;
-			};
 
 			while (true)
 			{
-				if (success)
+				if (tile0.Active)
 				{
 					Assert.Pass();
 					break;

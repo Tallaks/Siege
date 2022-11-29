@@ -1,5 +1,5 @@
 using System.Collections;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Infrastructure.Configs;
 using UnityEngine;
 using UnityEngine.TestTools;

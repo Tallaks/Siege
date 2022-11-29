@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -19,7 +18,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 			_tilemapFactory = tilemapFactory;
 
 		public IEnumerable<CustomTile> AllTiles => _tiles;
-		public Action<CustomTile> OnTileSelection { get; set; }
 
 		public void GenerateMap()
 		{

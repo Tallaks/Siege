@@ -27,7 +27,7 @@ namespace Kulinaria.Siege.Runtime.Debugging.Logging
 				case LoggerLevel.Battle:
 					return "<color=green>Battle</color>";
 				case LoggerLevel.None:
-					return string.Empty;
+					return "Other";
 			}
 
 			return string.Empty;

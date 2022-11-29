@@ -1,7 +1,8 @@
 using Kulinaria.Siege.Runtime.Debugging.Logging;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using Zenject;
@@ -45,6 +46,18 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 			Container
 				.Bind<ITilesRenderingAggregator>()
 				.To<TilesRenderingAggregator>()
+				.FromNew()
+				.AsSingle();
+			
+			Container
+				.Bind<IPathFinder>()
+				.To<BellmanFordPathFinder>()
+				.FromNew()
+				.AsSingle();
+			
+			Container
+				.Bind<ITileSelector>()
+				.To<CustomTileSelector>()
 				.FromNew()
 				.AsSingle();
 		}

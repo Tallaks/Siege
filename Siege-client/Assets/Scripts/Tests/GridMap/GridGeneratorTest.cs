@@ -1,6 +1,6 @@
 using System.Collections;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
 using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;

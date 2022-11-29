@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
@@ -15,6 +17,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 	public partial class TileRenderingTests : ZenjectIntegrationTestFixture
 	{
 		private IGridMap _gridMap;
+		private ITileSelector _selector;
 
 		[UnityTest]
 		public IEnumerator WhenTilesGenerated_ThenTheyHaveRenderingComponent()
@@ -70,8 +73,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 			_gridMap.GenerateMap();
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
-			_gridMap.OnTileSelection?.Invoke(targetTile);
-			
+			_selector.Select(targetTile, 1000);
+
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
 
@@ -93,7 +96,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			_gridMap.GenerateMap();
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
-			_gridMap.OnTileSelection?.Invoke(targetTile);
+			_selector.Select(targetTile, 1000);
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
 
@@ -123,10 +126,12 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<Camera>().FromInstance(camera).AsSingle();
+			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
 
 			PostInstall();
 
 			_gridMap = Container.Resolve<IGridMap>();
+			_selector = Container.Resolve<ITileSelector>();
 		}
 	}
 }

@@ -1,4 +1,4 @@
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn

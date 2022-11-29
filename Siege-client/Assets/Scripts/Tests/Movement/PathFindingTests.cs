@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Level.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
 using UnityEngine.TestTools;
@@ -15,7 +17,8 @@ namespace Kulinaria.Siege.Tests.Movement
 	{
 		private IGridMap _gridMap;
 		private IPathFinder _pathFinder;
-
+		private ITileSelector _selector;
+		
 		[UnityTest]
 		public IEnumerator WhenTileSelected_ThenDistanceAndPathToSameTileIsZero()
 		{
@@ -23,7 +26,7 @@ namespace Kulinaria.Siege.Tests.Movement
 
 			CustomTile tile04 = _gridMap.GetTile(0, 4);
 
-			_gridMap.OnTileSelection?.Invoke(tile04);
+			_selector.Select(tile04, 100);
 
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile04);
 
@@ -44,7 +47,7 @@ namespace Kulinaria.Siege.Tests.Movement
 			CustomTile tile14 = _gridMap.GetTile(1, 4);
 			CustomTile tile07 = _gridMap.GetTile(0, 7);
 
-			_gridMap.OnTileSelection?.Invoke(tile04);
+			_selector.Select(tile04, 100);
 
 			Assert.AreEqual(12, _pathFinder.Distance(tile32));
 			Assert.AreEqual(int.MaxValue, _pathFinder.Distance(tile00));
@@ -64,7 +67,7 @@ namespace Kulinaria.Siege.Tests.Movement
 			CustomTile tile24 = _gridMap.GetTile(2, 4);
 			CustomTile tile00 = _gridMap.GetTile(0, 0);
 
-			_gridMap.OnTileSelection?.Invoke(tile04);
+			_selector.Select(tile04, 100);
 
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile34);
 			LinkedListNode<CustomTile> currentNode = path.First;
@@ -104,7 +107,7 @@ namespace Kulinaria.Siege.Tests.Movement
 			CustomTile tile43 = _gridMap.GetTile(4, 3);
 			CustomTile tile36 = _gridMap.GetTile(3, 6);
 
-			_gridMap.OnTileSelection?.Invoke(tile04);
+			_selector.Select(tile04, 100);
 			IEnumerable<CustomTile> nearestTiles = _pathFinder.GetAvailableTilesByDistance(9);
 
 			Assert.AreEqual(10, nearestTiles.Count());
@@ -148,9 +151,11 @@ namespace Kulinaria.Siege.Tests.Movement
 			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-
+			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
+			
 			PostInstall();
 
+			_selector = Container.Resolve<ITileSelector>();
 			_gridMap = Container.Resolve<IGridMap>();
 			_gridMap.GenerateMap();
 
