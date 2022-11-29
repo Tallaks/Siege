@@ -21,12 +21,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 
 		public BaseEnemy Create(EnemySlot slot)
 		{
-			slot.Tile.Active = true;
-			return _container.InstantiatePrefabForComponent<BaseEnemy>(
+			var enemy = _container.InstantiatePrefabForComponent<BaseEnemy>(
 				_assetsProvider.LoadAsset<BaseEnemy>(PathForEnemyPrefab),
 				slot.transform.position,
 				Quaternion.Euler(0, 180f,0), 
 				null);
+			
+			slot.Tile.RegisterVisitor(enemy);
+			return enemy;
 		}
 	}
 }

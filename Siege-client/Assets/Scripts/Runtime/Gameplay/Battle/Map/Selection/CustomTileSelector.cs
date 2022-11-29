@@ -37,7 +37,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 			_pathFinder.FindDistancesToAllTilesFrom(tile);
 			IEnumerable<CustomTile> availableTiles = _pathFinder.GetAvailableTilesByDistance(distancePoints);
 
-			foreach (CustomTile customTile in _map.AllTiles)
+			foreach (CustomTile customTile in _map.AllTiles.Where(k => _map.EmptyTiles.Contains(k)))
 				customTile.Active = false;
 
 			foreach (CustomTile customTile in availableTiles)

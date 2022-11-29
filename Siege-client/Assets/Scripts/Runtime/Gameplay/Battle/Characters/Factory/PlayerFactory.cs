@@ -21,12 +21,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 		
 		public BasePlayer Create(PlayerSlot slot)
 		{
-			slot.Tile.Active = true;
-			return _container.InstantiatePrefabForComponent<BasePlayer>(
+			var player = _container.InstantiatePrefabForComponent<BasePlayer>(
 				_assetsProvider.LoadAsset<BasePlayer>(PathForPlayerPrefab),
 				slot.transform.position, 
 				Quaternion.identity,
 				null);
+			
+			slot.Tile.RegisterVisitor(player);
+			return player;
 		}
 	}
 }

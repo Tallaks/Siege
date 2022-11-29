@@ -18,6 +18,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 			_tilemapFactory = tilemapFactory;
 
 		public IEnumerable<CustomTile> AllTiles => _tiles;
+		public IEnumerable<CustomTile> EmptyTiles => _tiles.Where(k => !k.HasVisitor);
 
 		public void GenerateMap()
 		{

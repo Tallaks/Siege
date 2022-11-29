@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Siege.Runtime.Debugging.Logging;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
@@ -30,12 +31,17 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 			set => GetComponent<Renderer>().enabled = value;
 		}
 
-		public TileRenderer Renderer => GetComponent<TileRenderer>();
+		public bool HasVisitor => 
+			_visitor != null;
+		
+		public TileRenderer Renderer => 
+			GetComponent<TileRenderer>();
 
 		private readonly Dictionary<CustomTile, int> _neighboursWithDistances = new();
 
 		private IGridMap _map;
 		private ILoggerService _logger;
+		private BaseCharacter _visitor;
 
 		[Inject]
 		private void Construct(ILoggerService logger, IGridMap map, ITileSelector selector)
@@ -50,6 +56,21 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 			AddNeighbours(cellPos);
 			Active = false;
 		}
+
+		public void RegisterVisitor(BaseCharacter visitor)
+		{
+			Active = true;
+			_visitor = visitor;
+		}
+
+		public void UnregisterVisitor()
+		{
+			Active = false;
+			_visitor = null;
+		}
+
+		public Vector2Int this[int x, int y] =>
+			new(CellPosition.x + x, CellPosition.y + y);
 
 		private void AddNeighbours(Vector2Int cellPos)
 		{
@@ -82,8 +103,5 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 				b._neighboursWithDistances[a] = 3;
 			}
 		}
-
-		public Vector2Int this[int x, int y]
-			=> new(CellPosition.x + x, CellPosition.y + y);
 	}
 }
