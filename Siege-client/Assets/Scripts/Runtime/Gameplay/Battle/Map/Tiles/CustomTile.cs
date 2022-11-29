@@ -13,6 +13,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 {
 	[RequireComponent(typeof(Renderer))]
 	[RequireComponent(typeof(TileRenderer))]
+	[RequireComponent(typeof(TileSelection))]
 	public class CustomTile : MonoBehaviour
 	{
 		public IReadOnlyDictionary<CustomTile, int> NeighboursWithDistances =>
@@ -59,15 +60,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 
 		public void RegisterVisitor(BaseCharacter visitor)
 		{
-			Active = true;
 			_visitor = visitor;
+			_visitor.Selection.Assign(this);
 		}
 
-		public void UnregisterVisitor()
-		{
-			Active = false;
+		public void UnregisterVisitor() => 
 			_visitor = null;
-		}
 
 		public Vector2Int this[int x, int y] =>
 			new(CellPosition.x + x, CellPosition.y + y);

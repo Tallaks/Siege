@@ -37,7 +37,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 			_pathFinder.FindDistancesToAllTilesFrom(tile);
 			IEnumerable<CustomTile> availableTiles = _pathFinder.GetAvailableTilesByDistance(distancePoints);
 
-			foreach (CustomTile customTile in _map.AllTiles.Where(k => _map.EmptyTiles.Contains(k)))
+			foreach (CustomTile customTile in _map.AllTiles)
 				customTile.Active = false;
 
 			foreach (CustomTile customTile in availableTiles)
@@ -51,8 +51,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 		{
 			Ray ray = _cameraMover.Camera.ScreenPointToRay(clickPos);
 			if (Physics.Raycast(ray, out RaycastHit hit))
-				if (hit.transform.GetComponent<CustomTile>())
-					Select(hit.transform.GetComponent<CustomTile>(), 10);
+				if (hit.transform.GetComponent<ITileSelectable>() != null)
+					Select(hit.transform.GetComponent<ITileSelectable>().Tile, 10);
 		}
 	}
 }

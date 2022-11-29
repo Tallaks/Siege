@@ -16,7 +16,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid
 			private set => _tiles = new List<CustomTile>(value);
 		}
 
-		public IEnumerable<CustomTile> EmptyTiles => _tiles.Where(k => !k.HasVisitor);
+		public IEnumerable<CustomTile> EmptyTiles => 
+			_tiles.Where(k => !k.HasVisitor);
 
 		public void GenerateMap()
 		{
