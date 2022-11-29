@@ -51,8 +51,11 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 		{
 			Ray ray = _cameraMover.Camera.ScreenPointToRay(clickPos);
 			if (Physics.Raycast(ray, out RaycastHit hit))
-				if (hit.transform.GetComponent<ITileSelectable>() != null)
-					Select(hit.transform.GetComponent<ITileSelectable>().Tile, 10);
+			{
+				var tileSelectable = hit.transform.GetComponent<ITileSelectable>();
+				if (tileSelectable != null && tileSelectable.Visitor != null)
+					Select(tileSelectable.Tile, tileSelectable.Visitor.ActionPoints);
+			}
 		}
 	}
 }

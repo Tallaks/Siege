@@ -32,6 +32,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 			set => GetComponent<Renderer>().enabled = value;
 		}
 
+		public BaseCharacter Visitor =>
+			_visitor;
+		
 		public bool HasVisitor => 
 			_visitor != null;
 		

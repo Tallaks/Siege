@@ -9,6 +9,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 	public class CharacterSelection : MonoBehaviour, ITileSelectable
 	{
 		public CustomTile Tile { get; private set; }
+		public BaseCharacter Visitor => 
+			GetComponent<BaseCharacter>();
 
 		public void Assign(CustomTile customTile) => 
 			Tile = customTile;
