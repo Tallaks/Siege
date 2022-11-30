@@ -2,7 +2,6 @@ using System.Collections;
 using Kulinaria.Siege.Runtime.Gameplay.Battle;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Registry;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
@@ -85,6 +84,39 @@ namespace Kulinaria.Siege.Tests.Tiles
 						{
 							Assert.Pass();
 							yield break;
+						}
+					}
+				}
+
+				yield return null;
+			}
+		}
+		
+		[UnityTest]
+		public IEnumerator WhenUserClicksOnPlayerTileAndThenOnEmptyTileAndAgainOnPlayer_ThenItIsAgainSelected()
+		{
+			PrepareTilesWithPlayer();
+
+			yield return new WaitForSeconds(0.1f);
+
+			while (true)
+			{
+				if (_gridMap.GetTile(0, 0).Active)
+				{
+					while (true)
+					{
+						yield return null;
+						if (!_gridMap.GetTile(0, 0).Active)
+						{
+							while (true)
+							{
+								yield return null;
+								if (_gridMap.GetTile(0, 0).Active)
+								{
+									Assert.Pass();
+									yield break;
+								}
+							}
 						}
 					}
 				}
