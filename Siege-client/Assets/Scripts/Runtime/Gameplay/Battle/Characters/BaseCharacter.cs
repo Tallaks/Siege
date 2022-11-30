@@ -7,6 +7,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters
 	public abstract class BaseCharacter : MonoBehaviour
 	{
 		public CharacterSelection Selection => GetComponent<CharacterSelection>();
-		public int ActionPoints { get; protected set; } = 10;
+		public int ActionPoints { get; set; }
 	}
 }
