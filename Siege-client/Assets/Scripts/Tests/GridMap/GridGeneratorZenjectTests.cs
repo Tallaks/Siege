@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Gameplay.Battle;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Zenject;
@@ -16,32 +20,34 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenTileFactoryAndGridGeneratorBound_ThenTheyCanBeResolved()
 		{
+			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+			
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
+			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
+			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
+			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
+			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 
 			PostInstall();
 
 			Assert.NotNull(Container.Resolve<TilemapFactory>());
 			Assert.NotNull(Container.Resolve<IGridMap>());
+			Assert.NotNull(Container.Resolve<IPathFinder>());
+			Assert.NotNull(Container.Resolve<ITilesRenderingAggregator>());
+			Assert.NotNull(Container.Resolve<ITileSelector>());
+			Assert.NotNull(Container.Resolve<CameraMover>());
 			yield break;
 		}
 
 		[UnityTest]
 		public IEnumerator WhenTilemapInitializedWith2DArray_ThenItGeneratesGridWithFourTilesAsSquare2x2()
 		{
-			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
+			ArrayGridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
 
-			PreInstall();
-
-			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
-			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-
-			PostInstall();
-
-			Container.Resolve<IGridMap>().GenerateMap();
+			PrepareTiles();
 
 			Assert.NotZero(Object.FindObjectsOfType<CustomTile>(includeInactive: true).Length);
 			Assert.AreEqual(4, Object.FindObjectsOfType<CustomTile>(includeInactive: true).Length);
@@ -52,21 +58,13 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenTilemapInitializedWith2DArray_ThenItGeneratesGridWithFourTilesAsDiagonal()
 		{
-			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
+			ArrayGridMap.GridArray = new[,]
 			{
 				{ 0, 1 },
 				{ 1, 0 }
 			};
 
-			PreInstall();
-
-			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
-			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-
-			PostInstall();
-
-			Container.Resolve<IGridMap>().GenerateMap();
+			PrepareTiles();
 
 			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
 			Assert.NotZero(customTiles.Length);
@@ -81,21 +79,13 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenTilemapInitializedWith2DArray_ThenItGeneratesGridWithOneLineOf5()
 		{
-			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,]
+			ArrayGridMap.GridArray = new[,]
 			{
 				{ 1, 1, 1, 1, 0 },
 				{ 0, 0, 0, 0, 1 }
 			};
 
-			PreInstall();
-
-			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
-			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-
-			PostInstall();
-
-			Container.Resolve<IGridMap>().GenerateMap();
+			PrepareTiles();
 
 			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
 			Assert.NotZero(customTiles.Length);
@@ -114,17 +104,8 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenTTilemapInitialized_ThenAllTilesHaveRightCellPositions()
 		{
-			Runtime.Gameplay.Battle.Prototype.GridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
-
-			PreInstall();
-
-			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.GridMap>().FromNew().AsSingle();
-			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-
-			PostInstall();
-
-			Container.Resolve<IGridMap>().GenerateMap();
+			ArrayGridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
+			PrepareTiles();
 
 			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
 			Assert.IsFalse(customTiles[0].CellPosition == customTiles[1].CellPosition);
@@ -135,6 +116,24 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Assert.IsFalse(customTiles[2].CellPosition == customTiles[3].CellPosition);
 
 			yield break;
+		}
+
+		private void PrepareTiles()
+		{
+			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+
+			PreInstall();
+
+			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
+			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
+			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
+			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
+			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
+			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
+
+			PostInstall();
+
+			Container.Resolve<IGridMap>().GenerateMap();
 		}
 	}
 }

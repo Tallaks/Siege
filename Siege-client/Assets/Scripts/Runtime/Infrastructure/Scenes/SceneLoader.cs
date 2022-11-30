@@ -11,10 +11,8 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Scenes
 
 		public SceneLoader(ICoroutineRunner runner) => _runner = runner;
 
-		public void LoadSceneAsync(string sceneName, Action onLoad = null)
-		{
+		public void LoadSceneAsync(string sceneName, Action onLoad = null) => 
 			_runner.StartCoroutine(LoadRoutine(sceneName, onLoad));
-		}
 
 		private IEnumerator LoadRoutine(string sceneName, Action onLoad)
 		{

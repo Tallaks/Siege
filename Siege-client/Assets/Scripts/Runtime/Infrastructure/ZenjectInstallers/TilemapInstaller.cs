@@ -1,40 +1,27 @@
+using Kulinaria.Siege.Runtime.Debugging.Logging;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles.Rendering;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
-using UnityEngine;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 {
 	public class TilemapInstaller : MonoInstaller, IInitializable
 	{
-		[SerializeField] 
-		private Transform _tilemapTransform;
-		
+		private ILoggerService _loggerService;
+
+		[Inject]
+		private void Construct(ILoggerService loggerService) => 
+			_loggerService = loggerService;
+
 		public void Initialize()
 		{
-			GridMap.GridArray = new[,]
-			{
-				{ 1, 1, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 0, 0, 1, 1, 1 },
-				{ 1, 1, 1, 0, 0, 0, 1, 1 },
-				{ 1, 1, 1, 1, 0, 0, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 1, 0 },
-				{ 0, 0, 0, 0, 0, 0, 1, 0 },
-				{ 0, 1, 1, 1, 1, 1, 1, 0 },
-				{ 0, 1, 0, 0, 1, 1, 1, 1 },
-				{ 0, 1, 0, 0, 1, 1, 1, 1 },
-				{ 0, 1, 1, 1, 1, 1, 1, 1 },
-				{ 0, 1, 1, 1, 1, 1, 1, 1 },
-				{ 0, 1, 1, 1, 1, 1, 1, 1 }
-			};
-
-			Container.Resolve<TilemapFactory>().Initialize(_tilemapTransform);
+			_loggerService.Log("Tilemap Initialization", LoggerLevel.Battle);
 			Container.Resolve<IGridMap>().GenerateMap();
+			
+			Container.Resolve<ITileSelector>().Initialize();
 		}
 
 		public override void InstallBindings()
@@ -44,14 +31,10 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.To<TilemapInstaller>()
 				.FromInstance(this)
 				.AsSingle();
-
-			Container
-				.BindFactory<CustomTile, TilemapFactory>()
-				.AsSingle();
-
+			
 			Container
 				.Bind<IGridMap>()
-				.To<GridMap>()
+				.To<OnSceneGridMap>()
 				.FromNew()
 				.AsSingle();
 
@@ -64,6 +47,17 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 			Container
 				.Bind<ITilesRenderingAggregator>()
 				.To<TilesRenderingAggregator>()
+				.FromNew()
+				.AsSingle();
+			
+			Container
+				.Bind<IPathFinder>()
+				.To<BellmanFordPathFinder>()
+				.FromNew()
+				.AsSingle();
+			
+			Container
+				.BindInterfacesTo<CustomTileSelector>()
 				.FromNew()
 				.AsSingle();
 		}

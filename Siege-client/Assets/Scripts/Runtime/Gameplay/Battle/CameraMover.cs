@@ -1,6 +1,7 @@
 using System;
 using Kulinaria.Siege.Runtime.Extensions;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -11,16 +12,21 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 		[SerializeField] private float _movementSpeed = 1;
 		[SerializeField] private float _zoomSpeed = 1;
 		[SerializeField] private float _rotationSpeed = 1;
-		private Camera _camera;
+		[SerializeField, Required] private Camera _camera;
+
+		public Camera Camera => _camera;
 
 		private IInputService _inputService;
 
 		private float _xDeg;
 		private float _yDeg;
 
+		[Inject]
+		private void Construct(IInputService inputService) =>
+			_inputService = inputService;
+
 		private void Awake()
 		{
-			_camera = GetComponentInChildren<Camera>();
 			_xDeg = transform.eulerAngles.y;
 			_yDeg = transform.eulerAngles.x;
 		}
@@ -38,10 +44,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 			_inputService.OnZoom -= ZoomCamera();
 			_inputService.OnRotate -= RotateCamera();
 		}
-
-		[Inject]
-		private void Construct(IInputService inputService) => 
-			_inputService = inputService;
 
 		private Action<Vector2> RotateCamera()
 		{

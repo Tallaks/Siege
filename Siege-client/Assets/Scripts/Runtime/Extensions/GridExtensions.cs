@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Extensions
@@ -9,7 +9,10 @@ namespace Kulinaria.Siege.Runtime.Extensions
 	{
 		public static Vector3 ToWorld(this Vector2Int cellPosition) =>
 			new(0.5f + cellPosition.x, 0.1f, 0.5f + cellPosition.y);
-
+		
+		public static Vector2Int ToCell(this Vector3 worldPosition) =>
+			new(Mathf.RoundToInt(worldPosition.x - 0.1f), Mathf.RoundToInt(worldPosition.z  - 0.1f));
+		
 		public static IEnumerable<Vector2Int> MissingNeighboursPositions(this CustomTile tile)
 		{
 			Vector2Int[] allPositions =
@@ -26,7 +29,7 @@ namespace Kulinaria.Siege.Runtime.Extensions
 
 			return 
 				from position in allPositions
-					let neighbourPositions = tile.NeighboursWithDistances.Keys.Select(k => k.CellPosition) 
+					let neighbourPositions = tile.ActiveNeighbours.Select(k => k.CellPosition) 
 					where !neighbourPositions.Contains(position) 
 					select position;
 		}

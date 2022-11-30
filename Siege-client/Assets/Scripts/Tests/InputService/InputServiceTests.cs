@@ -1,8 +1,10 @@
 using System.Collections;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
+using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using Zenject;
@@ -18,6 +20,7 @@ namespace Kulinaria.Siege.Tests.InputService
 		[UnitySetUp]
 		public IEnumerator SetUp()
 		{
+			GameInstaller.Testing = true;
 			if (SceneManager.GetActiveScene().name != SceneNames.BootScene)
 				yield return SceneManager.LoadSceneAsync(SceneNames.BootScene);
 		}
@@ -55,6 +58,29 @@ namespace Kulinaria.Siege.Tests.InputService
 			}
 		}
 
+		[UnityTest]
+		public IEnumerator WhenAltIsPressed_ThenClicksNotWork()
+		{
+			var clicked = false;
+			var rotated = false;
+			InputService.OnClick += _ => clicked = true;
+			InputService.OnClick += _ => Debug.Log("Click");
+			InputService.OnRotate += _ => rotated = true;
+			InputService.OnRotate += _ => Debug.Log("Rotate");
+
+			while (true)
+			{
+				yield return null;
+				if (Keyboard.current.leftAltKey.isPressed && Mouse.current.leftButton.wasReleasedThisFrame)
+				{
+					InputService.OnClick = null;
+					InputService.OnRotate = null;
+					InputService.OnZoom = null;
+					Assert.IsFalse(clicked);
+					yield break;
+				}
+			}
+		}
 
 		[UnityTest]
 		public IEnumerator WhenWASDPressed_ThenInputServiceRegistersMovement()

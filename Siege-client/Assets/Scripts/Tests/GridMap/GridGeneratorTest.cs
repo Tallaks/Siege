@@ -1,7 +1,6 @@
 using System.Collections;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Infrastructure.Constants;
 using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
@@ -22,6 +21,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnitySetUp]
 		public IEnumerator SetUp()
 		{
+			GameInstaller.Testing = false;
 			yield return LoadBootScene();
 			GameInstaller.Initialize();
 			yield return new WaitForSeconds(2);
@@ -30,11 +30,8 @@ namespace Kulinaria.Siege.Tests.GridMap
 		[UnityTest]
 		public IEnumerator WhenBootSceneLoaded_ThenGridGeneratorResolved()
 		{
-			var movementService = Context.Container.Resolve<IGridMap>();
-			var tileFactory = Context.Container.Resolve<TilemapFactory>();
-
-			Assert.NotNull(movementService);
-			Assert.NotNull(tileFactory);
+			var gridMap = Context.Container.Resolve<IGridMap>();
+			Assert.NotNull(gridMap);
 			yield break;
 		}
 
@@ -59,6 +56,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 				Object.Destroy(runner.gameObject);
 			}
 
+			GameInstaller.Testing = true;
 			yield break;
 		}
 

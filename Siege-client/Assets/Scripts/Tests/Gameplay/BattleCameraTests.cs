@@ -29,7 +29,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			yield return new WaitForSeconds(0.5f);
 
 			_camera = Object.FindObjectOfType<Camera>();
-			_cameraMover = Object.FindObjectOfType<CameraMover>();
+			_cameraMover = Object.FindObjectOfType<SceneContext>().Container.Resolve<CameraMover>();
 
 			_startPosition = _cameraMover.transform.position;
 			_startRotation = _cameraMover.transform.rotation;
@@ -39,14 +39,14 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenBattleSceneLoaded_ThenCameraExists()
 		{
-			Assert.NotNull(Object.FindObjectOfType<Camera>());
+			Assert.NotNull(_camera);
 			yield break;
 		}
 
 		[UnityTest]
 		public IEnumerator WhenBattleSceneLoaded_ThenCameraMoverComponentExists()
 		{
-			Assert.NotNull(Object.FindObjectOfType<CameraMover>());
+			Assert.NotNull(_cameraMover);
 			yield break;
 		}
 
