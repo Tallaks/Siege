@@ -44,7 +44,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     ""id"": ""2c628513-27f7-416f-a4f4-fdbad4041339"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=1)"",
                     ""initialStateCheck"": false
                 },
                 {

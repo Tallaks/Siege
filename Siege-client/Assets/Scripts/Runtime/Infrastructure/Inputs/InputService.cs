@@ -16,7 +16,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
 
 		private void Update()
 		{
-			if (_inputSystem.CameraActions.Click.WasPerformedThisFrame())
+			if (_inputSystem.CameraActions.Click.WasPerformedThisFrame() && !Keyboard.current.leftAltKey.isPressed)
 				OnClick?.Invoke(Mouse.current.position.ReadValue());
 
 			if (_inputSystem.CameraActions.Move.IsInProgress())
