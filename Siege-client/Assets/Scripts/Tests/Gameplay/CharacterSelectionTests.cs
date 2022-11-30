@@ -38,6 +38,48 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Assert.IsTrue(_tile20.Active);
 			Assert.IsFalse(_tile00.Active);
 		}
+		
+		[UnityTest]
+		public IEnumerator WhenPlayersInstantiated_ThenTheyCanBeSelected()
+		{
+			PrepareTilesWithPlayer();
+			
+			yield return new WaitForSeconds(0.1f);
+
+			_tile00.GetComponent<Collider>().enabled = false;
+			_tile20.GetComponent<Collider>().enabled = false;
+			
+			while (true)
+			{
+				if (_gridMap.GetTile(0, 0).Active)
+				{
+					while (true)
+					{
+						yield return null;
+						if (_gridMap.GetTile(2, 0).Active)
+						{
+							Assert.Pass();
+							yield break;
+						}
+					}
+				}
+
+				if (_gridMap.GetTile(2, 0).Active)
+				{
+					while (true)
+					{
+						yield return null;
+						if (_gridMap.GetTile(0, 0).Active)
+						{
+							Assert.Pass();
+							yield break;
+						}
+					}
+				}
+				
+				yield return null;
+			}
+		}
 
 		private void PrepareTilesWithPlayer()
 		{

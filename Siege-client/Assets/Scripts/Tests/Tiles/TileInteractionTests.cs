@@ -164,8 +164,10 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			BasePlayer player = null;
 			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSlots)
-				Container.Resolve<PlayerFactory>().Create(slot);
+				player = Container.Resolve<PlayerFactory>().Create(slot);
 
+			player.GetComponent<Collider>().enabled = false;
+			
 			Container.Resolve<ITileSelector>().Initialize();
 		}
 
