@@ -16,6 +16,8 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
 
 		private void Update()
 		{
+			PointPosition = _inputSystem.CameraActions.PointPosition.ReadValue<Vector2>();
+			
 			if (_inputSystem.CameraActions.Click.WasPerformedThisFrame() && !Keyboard.current.leftAltKey.isPressed)
 				OnClick?.Invoke(Mouse.current.position.ReadValue());
 
@@ -29,6 +31,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
 				OnZoom?.Invoke(_inputSystem.CameraActions.Zoom.ReadValue<float>());
 		}
 
+		public Vector2 PointPosition { get; set; }
 		public Action<Vector2> OnClick { get; set; }
 		public Action<Vector2> OnMove { get; set; }
 		public Action<Vector2> OnRotate { get; set; }

@@ -7,7 +7,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 	{
 		int Distance(CustomTile tileB);
 		void FindDistancesToAllTilesFrom(CustomTile tile);
-		LinkedList<CustomTile> GetShortestPath(CustomTile tile32);
+		LinkedList<CustomTile> GetShortestPath(CustomTile to);
 		IEnumerable<CustomTile> GetAvailableTilesByDistance(int distance);
 	}
 }
