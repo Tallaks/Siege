@@ -15,8 +15,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 		public BellmanFordPathFinder(IGridMap map) => 
 			_map = map;
 
-		public int Distance(CustomTile tileB) =>
-			_distances[tileB];
+		public int Distance(CustomTile to) =>
+			_distances[to];
 
 		public LinkedList<CustomTile> GetShortestPath(CustomTile tile)
 		{

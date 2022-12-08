@@ -13,7 +13,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 		private readonly IAssetsProvider _assetsProvider;
 		private readonly ILoggerService _loggerService;
 		private readonly IPathFinder _pathFinder;
-		private LineRenderer _lineRenderer;
+		private List<LineRenderer> _lineRenderers = new();
+		private LineRenderer _lineRendererPrefab;
 
 		public PathLineRenderer(
 			DiContainer container,
@@ -30,10 +31,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 		public void Initialize()
 		{
 			_loggerService.Log("Path selector initialization", LoggerLevel.Battle);
-			var prefab = _assetsProvider.LoadAsset<LineRenderer>("Prefabs/Battle/Map/Path");
-			_lineRenderer = 
-				_container.InstantiatePrefabForComponent<LineRenderer>(prefab);
-			_lineRenderer.positionCount = 0;
+			_lineRendererPrefab = _assetsProvider.LoadAsset<LineRenderer>("Prefabs/Battle/Map/Path");
 		}
 
 		public void DrawPathFromSelectedTileTo(CustomTile tile)
@@ -42,80 +40,49 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 			DrawPath(_pathFinder.GetShortestPath(tile));
 		}
 
-		public void Clear() => 
-			_lineRenderer.positionCount = 0;
+		public void Clear()
+		{
+			foreach (LineRenderer lineRenderer in _lineRenderers)
+				Object.Destroy(lineRenderer.gameObject);
+			
+			_lineRenderers = new List<LineRenderer>();
+		}
 
 		private void DrawPath(LinkedList<CustomTile> path)
 		{
 			LinkedListNode<CustomTile> currentNode = path.First;
-			var currentIndex = 0;
-			while (currentNode != null)
+			if(currentNode == null) return;
+
+			while (currentNode.Next != null)
 			{
-				_lineRenderer.positionCount++;
-				_lineRenderer.SetPosition(currentIndex, currentNode.Value.transform.position);
-				currentIndex++;
+				var lineRenderer = 
+					_container.InstantiatePrefabForComponent<LineRenderer>(_lineRendererPrefab);
+				lineRenderer.positionCount = 2;
+				lineRenderer.SetPosition(0, currentNode.Value.transform.position);
+				lineRenderer.SetPosition(1, currentNode.Next.Value.transform.position);
+				
+				SetParametersFor(lineRenderer, currentNode.Next.Value.Active);
+
+				_lineRenderers.Add(lineRenderer);
 				currentNode = currentNode.Next;
 			}
-			
-			if (PathHasAvailableAndUnavailableTiles(path, out var index))
-				DrawAvailableAndUnavailablePath(index, path);
+		}
+
+		private static void SetParametersFor(LineRenderer lineRenderer, bool tileActivity)
+		{
+			Gradient colorGradient = lineRenderer.colorGradient;
+			var temp = new GradientColorKey[1];
+
+			if (tileActivity)
+				temp[0] = new GradientColorKey(Color.green, 0);
 			else
-				DrawOnlyAvailablePath();
-		}
+				temp[0] = new GradientColorKey(Color.red, 0);
 
-		private void DrawOnlyAvailablePath()
-		{
-			Gradient colorGradient = _lineRenderer.colorGradient;
-			GradientColorKey[] temp;
-			GradientAlphaKey[] alphaTemp;
-
-			temp = new GradientColorKey[2];
-			temp[0] = new GradientColorKey(Color.green, 0);
-			temp[1] = new GradientColorKey(Color.green, 1);
-
-			alphaTemp = new GradientAlphaKey[] { new(1, 0) };
+			var alphaTemp = new GradientAlphaKey[] { new(1, 0) };
 			colorGradient.mode = GradientMode.Fixed;
-			colorGradient.colorKeys = temp;
 			colorGradient.alphaKeys = alphaTemp;
-			_lineRenderer.colorGradient = colorGradient;
-		}
-
-		private void DrawAvailableAndUnavailablePath(int index, LinkedList<CustomTile> path)
-		{
-			Gradient colorGradient = _lineRenderer.colorGradient;
-			GradientColorKey[] temp;
-			GradientAlphaKey[] alphaTemp;
-
-			float time = (float)index / path.Count;
-			_loggerService.Log("Index:" + index);
-			_loggerService.Log("path.Count:" + path.Count);
-			
-			temp = new GradientColorKey[2];
-			temp[0] = new GradientColorKey(Color.green, time);
-			temp[1] = new GradientColorKey(Color.red, 1);
-
-			alphaTemp = new GradientAlphaKey[] { new(1, 0) };
-			colorGradient.mode = GradientMode.Fixed;
 			colorGradient.colorKeys = temp;
-			colorGradient.alphaKeys = alphaTemp;
-			_lineRenderer.colorGradient = colorGradient;
-		}
-
-		private bool PathHasAvailableAndUnavailableTiles(LinkedList<CustomTile> path, out int index)
-		{
-			index = 0;
-			LinkedListNode<CustomTile> currentNode = path.First;
-
-			while (currentNode != null)
-			{
-				if (currentNode.Value.Active == false)
-					return true;
-
-				index++;
-				currentNode = currentNode.Next;
-			}
-			
-			return false;
+			lineRenderer.colorGradient = colorGradient;
 		}
 	}
 }
