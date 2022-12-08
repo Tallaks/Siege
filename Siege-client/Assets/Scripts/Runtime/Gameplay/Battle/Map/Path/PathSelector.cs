@@ -1,62 +1,43 @@
 using System.Collections;
-using System.Collections.Generic;
 using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
-using Kulinaria.Siege.Runtime.Infrastructure.Assets;
 using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using UnityEngine;
-using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 {
 	public class PathSelector : IPathSelector
 	{
-		private readonly DiContainer _container;
-		private readonly IAssetsProvider _assetsProvider;
 		private readonly ILoggerService _loggerService;
 		private readonly ICoroutineRunner _coroutineRunner;
 		private readonly IInputService _inputService;
-		private readonly IPathFinder _pathFinder;
+		private readonly IPathRenderer _pathRenderer;
 		private readonly CameraMover _cameraMover;
 
 		private CustomTile _firstPoint;
 		private CustomTile _secondPoint;
 		private CustomTile _previewSecondPoint;
 		private Coroutine _currentCoroutine;
-		private LineRenderer _lineRenderer;
 
 		public PathSelector(
-			DiContainer container,
-			IAssetsProvider assetsProvider,
 			ILoggerService loggerService,
 			ICoroutineRunner coroutineRunner,
 			IInputService inputService,
-			IPathFinder pathFinder,
+			IPathRenderer pathRenderer,
 			CameraMover cameraMover)
 		{
-			_container = container;
-			_assetsProvider = assetsProvider;
 			_loggerService = loggerService;
 			_coroutineRunner = coroutineRunner;
 			_inputService = inputService;
-			_pathFinder = pathFinder;
+			_pathRenderer = pathRenderer;
 			_cameraMover = cameraMover;
 		}
 
 		public bool HasPath => _firstPoint != null && _secondPoint != null;
 		public bool HasFirstSelectedTile => _firstPoint != null;
-
-		public void Initialize()
-		{
-			_loggerService.Log("Path selector initialization", LoggerLevel.Battle);
-			var prefab = _assetsProvider.LoadAsset<LineRenderer>("Prefabs/Battle/Map/Path");
-			_lineRenderer = 
-				_container.InstantiatePrefabForComponent<LineRenderer>(prefab);
-			_lineRenderer.positionCount = 0;
-		}
-
+		
 		public void Dispose()
 		{
 			if(_currentCoroutine != null)
@@ -70,7 +51,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 			{
 				_firstPoint = tile;
 				_currentCoroutine = _coroutineRunner.StartCoroutine(PathSelectionPreview());
-				return;
 			}
 		}
 
@@ -80,7 +60,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 			{
 				_secondPoint = tile;
 				Dispose();
-				return;
 			}
 		}
 
@@ -88,7 +67,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 		{
 			_firstPoint = null;
 			_secondPoint = null;
-			ClearPath();
+			_pathRenderer.Clear();
 			Dispose();
 		}
 
@@ -106,35 +85,15 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 						if (_previewSecondPoint != tileSelectable.Tile)
 						{
 							_previewSecondPoint = tileSelectable.Tile;
-							DrawPath(to: tileSelectable.Tile);
+							_pathRenderer.DrawPathFromSelectedTileTo(tileSelectable.Tile);
 						}
 					}
 					else
-						ClearPath();
+						_pathRenderer.Clear();
 				}
 				else
-					ClearPath();
+					_pathRenderer.Clear();
 			}
-		}
-
-		private void DrawPath(CustomTile to)
-		{
-			ClearPath();
-			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(to);
-			LinkedListNode<CustomTile> currentNode = path.First;
-			var currentIndex = 0;
-			while (currentNode != null)
-			{
-				_lineRenderer.positionCount++;
-				_lineRenderer.SetPosition(currentIndex, currentNode.Value.transform.position);
-				currentIndex++;
-				currentNode = currentNode.Next;
-			}
-		}
-
-		private void ClearPath()
-		{
-			_lineRenderer.positionCount = 0;
 		}
 	}
 }

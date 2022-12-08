@@ -60,6 +60,11 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.AsSingle();
 
 			Container
+				.BindInterfacesTo<PathLineRenderer>()
+				.FromNew()
+				.AsSingle();
+
+			Container
 				.BindInterfacesTo<CustomTileSelector>()
 				.FromNew()
 				.AsSingle();
