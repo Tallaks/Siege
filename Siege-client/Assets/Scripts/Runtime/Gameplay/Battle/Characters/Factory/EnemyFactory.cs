@@ -8,7 +8,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 {
 	public class EnemyFactory : PrefabFactory<BaseEnemy>
 	{
-		private const string PathForEnemyPrefab = "Prefabs/Battle/Characters/Enemies/Stanley_Enemy";
+		private const string PathForEnemyPrefab = "Prefabs/Battle/Characters/Enemies/Heraklios_Enemy";
 
 		private readonly DiContainer _container;
 		private readonly IAssetsProvider _assetsProvider;
