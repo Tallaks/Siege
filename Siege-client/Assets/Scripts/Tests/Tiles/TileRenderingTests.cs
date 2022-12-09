@@ -128,7 +128,9 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
-			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
+			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 
 			PostInstall();
 

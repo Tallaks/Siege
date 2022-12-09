@@ -109,6 +109,8 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.Bind<PlayerFactory>().FromNew().AsSingle();
 			Container.Bind<Setup>().FromInstance(spawnSetup).AsSingle();
 
@@ -125,9 +127,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Container.Resolve<Setup>().InitPlayers(new[] { playerSlot0, playerSlot1 });
 			
 			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSlots)
-				Container.Resolve<PlayerFactory>().Create(slot);
-
-			Container.Resolve<ITileSelector>().Initialize();
+				Container.Resolve<PlayerFactory>().Create(slot); 
 		}
 	}
 }
