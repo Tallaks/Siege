@@ -13,7 +13,7 @@ using UnityEditor;
 using UnityEngine.TestTools;
 using Zenject;
 
-namespace Kulinaria.Siege.Tests.Movement
+namespace Kulinaria.Siege.Tests.Path
 {
 	public class PathFindingTests : ZenjectIntegrationTestFixture
 	{

@@ -20,19 +20,17 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Zenject;
 
-namespace Kulinaria.Siege.Tests.Tiles
+namespace Kulinaria.Siege.Tests.Path
 {
-	public class PathTests : ZenjectIntegrationTestFixture
+	public class PathRenderingTests : ZenjectIntegrationTestFixture
 	{
 		private CameraMover _cameraMover;
 		private Setup _spawnSetup;
 		private IGridMap _gridMap;
 		private BasePlayer _player;
 		private ICharacterRegistry _registry;
-		private ITileSelector _tileSelector;
-		private IPathFinder _pathFinder;
-		private IPathSelector _pathSelector;
-		private IPathRenderer _pathRenderer;
+		private IInputService _inputService;
+		private int _clickCount;
 
 		[UnityTest]
 		public IEnumerator WhenMouseOverTileAfterTileSelected_ThenLineRendererExists()
@@ -74,7 +72,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Assert.IsTrue(lineRenderer.startColor == Color.green);
 			Assert.IsTrue(lineRenderer.endColor == Color.green);
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenMouseOverTileAfterTileSelected_ThenPathIsGreenAndRed()
 		{
@@ -90,7 +88,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 				First(k => k.GetPosition(0) == _gridMap.GetTile(0, 0).CellPosition.ToWorld());
 			LineRenderer lastLine = lineRenderers.
 				First(k => k.GetPosition(0) == _gridMap.GetTile(1, 0).CellPosition.ToWorld());
-			
+
 			Assert.IsTrue(firstLine.startColor == Color.green);
 			Assert.IsTrue(firstLine.endColor == Color.green);
 			Assert.IsTrue(lastLine.startColor == Color.red);
@@ -109,7 +107,74 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			Assert.Null(Object.FindObjectOfType<LineRenderer>());
 		}
-		
+
+		[UnityTest]
+		public IEnumerator WhenTwoTilesSelected_ThenThePathIsGreen()
+		{
+			PrepareTilesWithOneVisitor(new[,]
+			{
+				{ 1, 1, 1, 1, 1 }
+			});
+			_registry.ChangeActionPointsForAll(2);
+			yield return WaitForTwoTilesSelected();
+
+			var firstLine = Object.FindObjectOfType<LineRenderer>();
+
+			Assert.IsTrue(firstLine.startColor == Color.green);
+			Assert.IsTrue(firstLine.endColor == Color.green);
+		}
+
+		[UnityTest]
+		public IEnumerator WhenTwoTilesSelected_ThenThePathIsRed()
+		{
+			PrepareTilesWithOneVisitor(new[,]
+			{
+				{ 1, 1, 1, 1, 1 }
+			});
+			_registry.ChangeActionPointsForAll(0);
+			yield return WaitForTwoTilesSelected();
+
+			var firstLine = Object.FindObjectOfType<LineRenderer>();
+
+			Assert.IsTrue(firstLine.startColor == Color.red);
+			Assert.IsTrue(firstLine.endColor == Color.red);
+		}
+
+		[UnityTest]
+		public IEnumerator WhenTwoTilesSelected_ThenThePathIsRedAndGreen()
+		{
+			PrepareTilesWithOneVisitor(new[,]
+			{
+				{ 1, 1, 1, 1, 1 }
+			});
+			_registry.ChangeActionPointsForAll(2);
+			yield return WaitForTwoTilesSelected();
+
+			LineRenderer[] lineRenderers = Object.FindObjectsOfType<LineRenderer>();
+			LineRenderer firstLine = lineRenderers.
+				First(k => k.GetPosition(0) == _gridMap.GetTile(0, 0).CellPosition.ToWorld());
+			LineRenderer lastLine = lineRenderers.
+				First(k => k.GetPosition(0) == _gridMap.GetTile(1, 0).CellPosition.ToWorld());
+
+			Assert.IsTrue(firstLine.startColor == Color.green);
+			Assert.IsTrue(firstLine.endColor == Color.green);
+			Assert.IsTrue(lastLine.startColor == Color.red);
+			Assert.IsTrue(lastLine.endColor == Color.red);
+		}
+
+		[UnityTest]
+		public IEnumerator WhenTwoTileSelected_ThenPathNotExist()
+		{
+			PrepareTilesWithOneVisitor(new[,]
+			{
+				{ 1, 0, 1, 1, 1 }
+			});
+			_registry.ChangeActionPointsForAll(2);
+			yield return WaitForTwoTilesSelected();
+
+			Assert.Null(Object.FindObjectOfType<LineRenderer>());
+		}
+
 		private void PrepareTilesWithOneVisitor(int[,] array)
 		{
 			GameInstaller.Testing = true;
@@ -118,6 +183,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			_cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
 			_spawnSetup = AssetDatabase.LoadAssetAtPath<Setup>("Assets/Prefabs/Battle/SpawnSetup.prefab");
+			_clickCount = 0;
 
 			PreInstall();
 
@@ -151,15 +217,17 @@ namespace Kulinaria.Siege.Tests.Tiles
 			}
 
 			_gridMap = Container.Resolve<IGridMap>();
-			_tileSelector = Container.Resolve<ITileSelector>();
-			_pathFinder = Container.Resolve<IPathFinder>();
-			_pathRenderer = Container.Resolve<IPathRenderer>();
-			_pathSelector = Container.Resolve<IPathSelector>();
+			Container.Resolve<ITileSelector>();
+			Container.Resolve<IPathFinder>();
+			Container.Resolve<IPathRenderer>();
+			Container.Resolve<IPathSelector>();
+			_inputService = Container.Resolve<IInputService>();
+			_inputService.OnClick += _ => _clickCount++;
 		}
 
 		private bool MouseOverTile(CustomTile tile)
 		{
-			Ray ray = _cameraMover.Camera.ScreenPointToRay(Container.Resolve<IInputService>().PointPosition);
+			Ray ray = _cameraMover.Camera.ScreenPointToRay(_inputService.PointPosition);
 			if (Physics.Raycast(ray, out RaycastHit hit))
 			{
 				var tileSelectable = hit.transform.GetComponent<ITileSelectable>();
@@ -182,7 +250,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 		}
 
 		private IEnumerator WaitForMouseOverThirdTile()
-		{	
+		{
 			while (true)
 			{
 				if (_gridMap.GetTile(0, 0).Active)
@@ -190,6 +258,16 @@ namespace Kulinaria.Siege.Tests.Tiles
 						break;
 
 				yield return null;
+			}
+		}
+
+		private IEnumerator WaitForTwoTilesSelected()
+		{
+			while (true)
+			{
+				yield return null;
+				if (_clickCount == 2)
+					break;
 			}
 		}
 	}
