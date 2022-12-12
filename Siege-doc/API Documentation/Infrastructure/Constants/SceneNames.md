@@ -8,6 +8,6 @@ Namespace: Kulinaria.Siege.Runtime.Infrastructure.Constants
 
 
 | Name            | Type   | Summary               |
-|-----------------| ------ |-----------------------|
+|-----------------|--------|-----------------------|
 | **BattleScene** | string | Сцена тестовой боевки |
-| **BootScene**   | string | Загрузочная сцена                      |                                   |
+| **BootScene**   | string | Загрузочная сцена     |                                   |
