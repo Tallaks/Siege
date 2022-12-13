@@ -1,6 +1,7 @@
 # UnityLoggerService Class
 
 Namespace: Kulinaria.Siege.Runtime.Debugging.Logging
+
 Implements: [ILoggerService](ILoggerService.md)
 
 Сервис логгирования, работающий при помощи встроенного логгера Unity. Расширяет его при помощи возможности фильтрации сообщений по важности и по уровню.
