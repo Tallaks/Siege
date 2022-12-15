@@ -42,7 +42,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 			_inputService.OnClick += RegisterClick;
 		}
 
-		public void Dispose() => 
+		// TODO: Добавить логгирование об отписке от кликов
+		public void Dispose() =>
 			_inputService.OnClick -= RegisterClick;
 
 		public void Select(CustomTile tile, IEnumerable<CustomTile> availableTiles)
@@ -55,7 +56,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 
 			foreach (CustomTile customTile in availableTiles)
 				customTile.Active = true;
-			
+
 			foreach (CustomTile customTile in _map.AllTiles.Where(k => k.Active))
 				customTile.Renderer.Repaint();
 		}
@@ -68,7 +69,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 
 			foreach (CustomTile customTile in _map.AllTiles)
 				customTile.Active = false;
-			
+
 			foreach (CustomTile customTile in _map.AllTiles.Where(k => k.Active))
 				customTile.Renderer.Repaint();
 		}
