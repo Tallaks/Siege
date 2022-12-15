@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
-using Kulinaria.Siege.Runtime.Infrastructure.Assets;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Utilities;
 using UnityEngine;
 using Zenject;
 
@@ -9,30 +8,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 {
 	public class PathLineRenderer : IPathRenderer
 	{
-		private readonly DiContainer _container;
-		private readonly IAssetsProvider _assetsProvider;
-		private readonly ILoggerService _loggerService;
 		private readonly IPathFinder _pathFinder;
-		private List<LineRenderer> _lineRenderers = new();
-		private LineRenderer _lineRendererPrefab;
 
-		public PathLineRenderer(
-			DiContainer container,
-			IAssetsProvider assetsProvider,
-			ILoggerService loggerService,
-			IPathFinder pathFinder)
-		{
-			_container = container;
-			_assetsProvider = assetsProvider;
-			_loggerService = loggerService;
+		private List<LineRenderer> _lineRenderers = new();
+
+		[Inject] private Pool<LineRenderer> _pathRendererPool;
+
+		public PathLineRenderer(IPathFinder pathFinder) =>
 			_pathFinder = pathFinder;
-		}
-		
-		public void Initialize()
-		{
-			_loggerService.Log("Path selector initialization", LoggerLevel.Battle);
-			_lineRendererPrefab = _assetsProvider.LoadAsset<LineRenderer>("Prefabs/Battle/Map/Path");
-		}
 
 		public void DrawPathFromSelectedTileTo(CustomTile tile)
 		{
@@ -43,24 +26,25 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 		public void Clear()
 		{
 			foreach (LineRenderer lineRenderer in _lineRenderers)
-				Object.Destroy(lineRenderer.gameObject);
-			
+				lineRenderer.gameObject.SetActive(false);
+
 			_lineRenderers = new List<LineRenderer>();
 		}
 
 		private void DrawPath(LinkedList<CustomTile> path)
 		{
 			LinkedListNode<CustomTile> currentNode = path.First;
-			if(currentNode == null) return;
+			if (currentNode == null) return;
 
 			while (currentNode.Next != null)
 			{
-				var lineRenderer = 
-					_container.InstantiatePrefabForComponent<LineRenderer>(_lineRendererPrefab);
+				LineRenderer lineRenderer =
+					_pathRendererPool.GetFreeElement(Vector3.zero, Quaternion.identity);
+
 				lineRenderer.positionCount = 2;
 				lineRenderer.SetPosition(0, currentNode.Value.transform.position);
 				lineRenderer.SetPosition(1, currentNode.Next.Value.transform.position);
-				
+
 				SetParametersFor(lineRenderer, currentNode.Next.Value.Active);
 
 				_lineRenderers.Add(lineRenderer);

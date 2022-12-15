@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 {
-	public interface IPathRenderer : IInitializable
+	public interface IPathRenderer
 	{
 		void DrawPathFromSelectedTileTo(CustomTile tile);
 		void Clear();
