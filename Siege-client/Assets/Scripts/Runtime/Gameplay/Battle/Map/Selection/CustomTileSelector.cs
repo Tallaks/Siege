@@ -17,7 +17,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 		private readonly IPathFinder _pathFinder;
 		private readonly CameraMover _cameraMover;
 
-		public CustomTileSelector(ILoggerService loggerService, IInputService inputService, IGridMap map, IPathFinder pathFinder, CameraMover cameraMover)
+		public CustomTileSelector(ILoggerService loggerService, IInputService inputService, IGridMap map,
+			IPathFinder pathFinder, CameraMover cameraMover)
 		{
 			_loggerService = loggerService;
 			_inputService = inputService;
@@ -26,10 +27,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 			_cameraMover = cameraMover;
 		}
 
-		public void Initialize() => 
+		// TODO: Добавить логгирование о подписке на клики
+		public void Initialize() =>
 			_inputService.OnClick += RegisterClick;
 
-		public void Dispose() => 
+		// TODO: Добавить логгирование об отписке от кликов
+		public void Dispose() =>
 			_inputService.OnClick -= RegisterClick;
 
 		public void Select(CustomTile tile, int distancePoints)
@@ -42,7 +45,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 
 			foreach (CustomTile customTile in availableTiles)
 				customTile.Active = true;
-			
+
 			foreach (CustomTile customTile in _map.AllTiles.Where(k => k.Active))
 				customTile.Renderer.Repaint();
 		}
@@ -51,7 +54,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 		{
 			foreach (CustomTile customTile in _map.AllTiles)
 				customTile.Active = false;
-			
+
 			foreach (CustomTile customTile in _map.AllTiles.Where(k => k.Active))
 				customTile.Renderer.Repaint();
 		}
