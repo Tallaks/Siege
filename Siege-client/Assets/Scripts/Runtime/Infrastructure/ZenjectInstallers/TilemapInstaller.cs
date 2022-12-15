@@ -20,8 +20,6 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 		{
 			_loggerService.Log("Tilemap Initialization", LoggerLevel.Battle);
 			Container.Resolve<IGridMap>().GenerateMap();
-			
-			Container.Resolve<ITileSelector>().Initialize();
 		}
 
 		public override void InstallBindings()
@@ -31,7 +29,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.To<TilemapInstaller>()
 				.FromInstance(this)
 				.AsSingle();
-			
+
 			Container
 				.Bind<IGridMap>()
 				.To<OnSceneGridMap>()
@@ -49,13 +47,23 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.To<TilesRenderingAggregator>()
 				.FromNew()
 				.AsSingle();
-			
+
 			Container
 				.Bind<IPathFinder>()
 				.To<BellmanFordPathFinder>()
 				.FromNew()
 				.AsSingle();
-			
+
+			Container
+				.BindInterfacesTo<PathSelector>()
+				.FromNew()
+				.AsSingle();
+
+			Container
+				.BindInterfacesTo<PathLineRenderer>()
+				.FromNew()
+				.AsSingle();
+
 			Container
 				.BindInterfacesTo<CustomTileSelector>()
 				.FromNew()

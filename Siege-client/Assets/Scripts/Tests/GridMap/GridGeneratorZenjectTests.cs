@@ -21,14 +21,16 @@ namespace Kulinaria.Siege.Tests.GridMap
 		public IEnumerator WhenTileFactoryAndGridGeneratorBound_ThenTheyCanBeResolved()
 		{
 			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
-			
+
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
 			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 
 			PostInstall();
@@ -128,9 +130,11 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Container.Bind<IGridMap>().To<ArrayGridMap>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
-
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			
 			PostInstall();
 
 			Container.Resolve<IGridMap>().GenerateMap();

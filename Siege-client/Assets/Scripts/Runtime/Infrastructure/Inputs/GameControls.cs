@@ -64,6 +64,15 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""PointPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""83ce06e0-c109-440b-b6d4-f587d5de0c70"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -242,6 +251,17 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c07fb288-1550-4e39-8c1f-9086f7a3cec7"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""PointPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -271,6 +291,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
             m_CameraActions_Click = m_CameraActions.FindAction("Click", throwIfNotFound: true);
             m_CameraActions_Rotate = m_CameraActions.FindAction("Rotate", throwIfNotFound: true);
             m_CameraActions_Zoom = m_CameraActions.FindAction("Zoom", throwIfNotFound: true);
+            m_CameraActions_PointPosition = m_CameraActions.FindAction("PointPosition", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -334,6 +355,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
         private readonly InputAction m_CameraActions_Click;
         private readonly InputAction m_CameraActions_Rotate;
         private readonly InputAction m_CameraActions_Zoom;
+        private readonly InputAction m_CameraActions_PointPosition;
         public struct CameraActionsActions
         {
             private @GameControls m_Wrapper;
@@ -342,6 +364,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
             public InputAction @Click => m_Wrapper.m_CameraActions_Click;
             public InputAction @Rotate => m_Wrapper.m_CameraActions_Rotate;
             public InputAction @Zoom => m_Wrapper.m_CameraActions_Zoom;
+            public InputAction @PointPosition => m_Wrapper.m_CameraActions_PointPosition;
             public InputActionMap Get() { return m_Wrapper.m_CameraActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -363,6 +386,9 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     @Zoom.started -= m_Wrapper.m_CameraActionsActionsCallbackInterface.OnZoom;
                     @Zoom.performed -= m_Wrapper.m_CameraActionsActionsCallbackInterface.OnZoom;
                     @Zoom.canceled -= m_Wrapper.m_CameraActionsActionsCallbackInterface.OnZoom;
+                    @PointPosition.started -= m_Wrapper.m_CameraActionsActionsCallbackInterface.OnPointPosition;
+                    @PointPosition.performed -= m_Wrapper.m_CameraActionsActionsCallbackInterface.OnPointPosition;
+                    @PointPosition.canceled -= m_Wrapper.m_CameraActionsActionsCallbackInterface.OnPointPosition;
                 }
                 m_Wrapper.m_CameraActionsActionsCallbackInterface = instance;
                 if (instance != null)
@@ -379,6 +405,9 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
                     @Zoom.started += instance.OnZoom;
                     @Zoom.performed += instance.OnZoom;
                     @Zoom.canceled += instance.OnZoom;
+                    @PointPosition.started += instance.OnPointPosition;
+                    @PointPosition.performed += instance.OnPointPosition;
+                    @PointPosition.canceled += instance.OnPointPosition;
                 }
             }
         }
@@ -398,6 +427,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Inputs
             void OnClick(InputAction.CallbackContext context);
             void OnRotate(InputAction.CallbackContext context);
             void OnZoom(InputAction.CallbackContext context);
+            void OnPointPosition(InputAction.CallbackContext context);
         }
     }
 }

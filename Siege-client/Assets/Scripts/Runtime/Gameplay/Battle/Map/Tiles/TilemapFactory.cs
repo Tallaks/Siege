@@ -6,7 +6,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 {
 	public class TilemapFactory : PlaceholderFactory<CustomTile>
 	{
-		private const string TilePrefabPath = "Prefabs/Battle/Tile";
+		private const string TilePrefabPath = "Prefabs/Battle/Map/Tile";
 
 		private readonly DiContainer _container;
 		private Transform _parent;

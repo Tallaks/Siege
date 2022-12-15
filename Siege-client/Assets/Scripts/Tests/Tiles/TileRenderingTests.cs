@@ -19,6 +19,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 	public partial class TileRenderingTests : ZenjectIntegrationTestFixture
 	{
 		private IGridMap _gridMap;
+		private IPathFinder _pathFinder;
 		private ITileSelector _selector;
 
 		[UnityTest]
@@ -75,7 +76,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 			_gridMap.GenerateMap();
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
-			_selector.Select(targetTile, 1000);
+			_pathFinder.FindDistancesToAllTilesFrom(targetTile);
+			_selector.Select(targetTile, _pathFinder.GetAvailableTilesByDistance(1000));
 
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
@@ -98,7 +100,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 			_gridMap.GenerateMap();
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
-			_selector.Select(targetTile, 1000);
+			_pathFinder.FindDistancesToAllTilesFrom(targetTile);
+			_selector.Select(targetTile, _pathFinder.GetAvailableTilesByDistance(1000));
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
 
@@ -125,12 +128,15 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
-			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
+			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 
 			PostInstall();
 
 			_gridMap = Container.Resolve<IGridMap>();
 			_selector = Container.Resolve<ITileSelector>();
+			_pathFinder = Container.Resolve<IPathFinder>();
 		}
 	}
 }
