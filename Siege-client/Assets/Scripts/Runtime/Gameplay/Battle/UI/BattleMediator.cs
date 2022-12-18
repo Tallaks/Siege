@@ -7,7 +7,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.UI
 {
 	public class BattleMediator : MonoBehaviour, IInitializable
 	{
-		[SerializeField, Required] private ActionPointsPanel _actionPointsPanel;
+		[SerializeField, SceneObjectsOnly, Required] private ActionPointsPanel _actionPointsPanel;
 		
 		[Inject] private ICharacterRegistry _characterRegistry;
 		
