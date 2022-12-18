@@ -19,7 +19,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 			var enemy = _container.InstantiatePrefabForComponent<BaseEnemy>(
 				spawnTile.Enemy.Prefab,
 				spawnTile.Spawn.transform.position,
-				Quaternion.Euler(0, 180f,0), 
+				Quaternion.LookRotation(spawnTile.LookDirection, Vector3.up),
 				null);
 			
 			spawnTile.Spawn.Tile.RegisterVisitor(enemy);

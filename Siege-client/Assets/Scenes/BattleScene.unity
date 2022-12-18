@@ -10552,14 +10552,19 @@ MonoBehaviour:
   _enemySlots:
   - Spawn: {fileID: 5809158056333656861}
     Enemy: {fileID: 11400000, guid: a2d4bddc0f75d4a409c00dfbbd04877f, type: 2}
+    LookDirection: {x: 1, y: 0, z: -1}
   - Spawn: {fileID: 9025201177393709475}
     Enemy: {fileID: 11400000, guid: a2d4bddc0f75d4a409c00dfbbd04877f, type: 2}
+    LookDirection: {x: 0, y: 0, z: -1}
   - Spawn: {fileID: 7193253777161022895}
     Enemy: {fileID: 11400000, guid: a2d4bddc0f75d4a409c00dfbbd04877f, type: 2}
+    LookDirection: {x: 0, y: 0, z: -1}
   - Spawn: {fileID: 8670904312829874091}
     Enemy: {fileID: 11400000, guid: a2d4bddc0f75d4a409c00dfbbd04877f, type: 2}
+    LookDirection: {x: -1, y: 0, z: -1}
   - Spawn: {fileID: 7601332782222758808}
     Enemy: {fileID: 11400000, guid: a2d4bddc0f75d4a409c00dfbbd04877f, type: 2}
+    LookDirection: {x: -1, y: 0, z: -1}
 --- !u!1 &1274710711
 GameObject:
   m_ObjectHideFlags: 0
