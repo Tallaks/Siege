@@ -8,26 +8,21 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 {
 	public class EnemyFactory : PrefabFactory<BaseEnemy>
 	{
-		private const string PathForEnemyPrefab = "Prefabs/Battle/Characters/Enemies/Stanley_Enemy";
-
 		private readonly DiContainer _container;
 		private readonly IAssetsProvider _assetsProvider;
 
-		public EnemyFactory(DiContainer container, IAssetsProvider assetsProvider)
-		{
+		public EnemyFactory(DiContainer container) => 
 			_container = container;
-			_assetsProvider = assetsProvider;
-		}
 
-		public BaseEnemy Create(EnemySlot slot)
+		public BaseEnemy Create(EnemySlot spawnTile)
 		{
 			var enemy = _container.InstantiatePrefabForComponent<BaseEnemy>(
-				_assetsProvider.LoadAsset<BaseEnemy>(PathForEnemyPrefab),
-				slot.transform.position,
+				spawnTile.Enemy.Prefab,
+				spawnTile.Spawn.transform.position,
 				Quaternion.Euler(0, 180f,0), 
 				null);
 			
-			slot.Tile.RegisterVisitor(enemy);
+			spawnTile.Spawn.Tile.RegisterVisitor(enemy);
 			return enemy;
 		}
 	}

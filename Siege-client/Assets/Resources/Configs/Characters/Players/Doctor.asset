@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c143b5e4b10413eb7fce617860e20f0, type: 3}
+  m_Name: Doctor
+  m_EditorClassIdentifier: 
+  PlayerName: Doctor
+  Prefab: {fileID: 5901371242654616529, guid: 0d1f29cd78f046a4fabd94f7ae90fbe7, type: 3}
+  ActionPoints: 0

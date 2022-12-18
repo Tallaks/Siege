@@ -15,10 +15,10 @@ namespace Kulinaria.Siege.Runtime.Debugging.Rendering
 
 		private Color ColorByComponent()
 		{
-			if(GetComponent<PlayerSlot>())
+			if(GetComponent<PlayerSpawnTile>())
 				return Color.green;
 
-			if(GetComponent<EnemySlot>())
+			if(GetComponent<EnemySpawnTile>())
 				return Color.red;
 			
 			return new Color(0.1f, 0.1f, 0.1f);

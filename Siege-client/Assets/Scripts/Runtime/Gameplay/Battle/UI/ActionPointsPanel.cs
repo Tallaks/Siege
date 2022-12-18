@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,9 +8,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.UI
 {
 	public class ActionPointsPanel : MonoBehaviour
 	{
-		[SerializeField] private BattleMediator _battleMediator;
-		[SerializeField] private Slider _actionPointsSlider;
-		[SerializeField] private TMP_InputField _actionPointsInputField;
+		[SerializeField, Required] private BattleMediator _battleMediator;
+		[SerializeField, Required] private Slider _actionPointsSlider;
+		[SerializeField, Required] private TMP_InputField _actionPointsInputField;
 
 		public Action<int> OnActionPointsChanged { get; set; }
 

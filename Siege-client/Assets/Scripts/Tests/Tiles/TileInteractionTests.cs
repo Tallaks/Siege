@@ -163,7 +163,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			_gridMap.GenerateMap();
 
 			CustomTile tile = _gridMap.GetTile(0, 0);
-			var playerSlot = Container.InstantiateComponent<PlayerSlot>(tile.gameObject);
+			var playerSlot = Container.InstantiateComponent<PlayerSpawnTile>(tile.gameObject);
 
 			Container.Resolve<Setup>().InitPlayers(new[] { playerSlot });
 

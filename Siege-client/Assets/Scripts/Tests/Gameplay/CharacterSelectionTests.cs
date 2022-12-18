@@ -123,13 +123,13 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			_gridMap.GenerateMap();
 			
 			_tile00 = _gridMap.GetTile(0, 0);
-			var playerSlot0 = Container.InstantiateComponent<PlayerSlot>(_tile00.gameObject);
+			var playerSlot0 = Container.InstantiateComponent<PlayerSpawnTile>(_tile00.gameObject);
 			_tile20 = _gridMap.GetTile(2, 0);
-			var playerSlot1 = Container.InstantiateComponent<PlayerSlot>(_tile20.gameObject);
+			var playerSlot1 = Container.InstantiateComponent<PlayerSpawnTile>(_tile20.gameObject);
 			
 			Container.Resolve<Setup>().InitPlayers(new[] { playerSlot0, playerSlot1 });
 			
-			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSlots)
+			foreach (PlayerSpawnTile slot in Container.Resolve<Setup>().PlayerSpawnersForTest)
 				Container.Resolve<PlayerFactory>().Create(slot); 
 		}
 	}
