@@ -7,6 +7,7 @@ using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Utilities;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 		public IEnumerator WhenTileFactoryAndGridGeneratorBound_ThenTheyCanBeResolved()
 		{
 			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+			var lineRendererPrefab = AssetDatabase.LoadAssetAtPath<LineRenderer>("Assets/Prefabs/Battle/Path.prefab");
 
 			PreInstall();
 
@@ -32,6 +34,8 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
+			Container.Bind<Pool<LineRenderer>>().
+				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
 
 			PostInstall();
 
@@ -123,6 +127,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 		private void PrepareTiles()
 		{
 			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+			var lineRendererPrefab = AssetDatabase.LoadAssetAtPath<LineRenderer>("Assets/Prefabs/Battle/Path.prefab");
 
 			PreInstall();
 
@@ -134,7 +139,9 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
-			
+			Container.Bind<Pool<LineRenderer>>().
+				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
+
 			PostInstall();
 
 			Container.Resolve<IGridMap>().GenerateMap();

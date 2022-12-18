@@ -9,6 +9,7 @@ using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Utilities;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
@@ -137,6 +138,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
 			var cube = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Cube.prefab");
 			var spawnSetup = AssetDatabase.LoadAssetAtPath<Setup>("Assets/Prefabs/Battle/SpawnSetup.prefab");
+			var lineRendererPrefab = AssetDatabase.LoadAssetAtPath<LineRenderer>("Assets/Prefabs/Battle/Path.prefab");
 			Object.Instantiate(cube);
 
 			PreInstall();
@@ -152,6 +154,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.Bind<PlayerFactory>().FromNew().AsSingle();
 			Container.Bind<Setup>().FromInstance(spawnSetup).AsSingle();
+			Container.Bind<Pool<LineRenderer>>().
+				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
 
 			PostInstall();
 
@@ -181,6 +185,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
 			var cube = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Cube.prefab");
+			var lineRendererPrefab = AssetDatabase.LoadAssetAtPath<LineRenderer>("Assets/Prefabs/Battle/Path.prefab");
 			Object.Instantiate(cube);
 
 			PreInstall();
@@ -194,6 +199,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
+			Container.Bind<Pool<LineRenderer>>().
+				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
 
 			PostInstall();
 

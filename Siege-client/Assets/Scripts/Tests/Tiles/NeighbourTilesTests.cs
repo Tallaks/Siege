@@ -6,9 +6,11 @@ using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Utilities;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.TestTools;
 using Zenject;
 
@@ -75,6 +77,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			};
 
 			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+			var lineRendererPrefab = AssetDatabase.LoadAssetAtPath<LineRenderer>("Assets/Prefabs/Battle/Path.prefab");
 
 			PreInstall();
 
@@ -86,6 +89,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.Bind<Pool<LineRenderer>>().
+				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
 
 			PostInstall();
 

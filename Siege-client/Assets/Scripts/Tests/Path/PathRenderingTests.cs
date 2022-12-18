@@ -12,6 +12,7 @@ using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Utilities;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using NUnit.Framework;
@@ -183,6 +184,7 @@ namespace Kulinaria.Siege.Tests.Path
 
 			_cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
 			_spawnSetup = AssetDatabase.LoadAssetAtPath<Setup>("Assets/Prefabs/Battle/SpawnSetup.prefab");
+			var lineRendererPrefab = AssetDatabase.LoadAssetAtPath<LineRenderer>("Assets/Prefabs/Battle/Path.prefab");
 			_clickCount = 0;
 
 			PreInstall();
@@ -199,6 +201,8 @@ namespace Kulinaria.Siege.Tests.Path
 			Container.Bind<PlayerFactory>().FromNew().AsSingle();
 			Container.Bind<ICharacterRegistry>().To<CharacterRegistry>().FromNew().AsSingle();
 			Container.Bind<Setup>().FromInstance(_spawnSetup).AsSingle();
+			Container.Bind<Pool<LineRenderer>>().
+				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
 
 			PostInstall();
 
