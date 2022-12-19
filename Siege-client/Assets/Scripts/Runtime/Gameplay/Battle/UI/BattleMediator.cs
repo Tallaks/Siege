@@ -1,17 +1,17 @@
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Registry;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.UI
 {
-	public class BattleMediator : MonoBehaviour, IInitializable
+	public class BattleMediator : MonoBehaviour
 	{
-		[SerializeField, SceneObjectsOnly, Required] private ActionPointsPanel _actionPointsPanel;
-		
-		[Inject] private ICharacterRegistry _characterRegistry;
-		
-		public void Initialize() => _actionPointsPanel.OnActionPointsChanged?.Invoke(10);
-		public void ChangeActionPoints(int value) => _characterRegistry.ChangeActionPointsForAll(value);
+		[BoxGroup(GroupName = "Player Info Panel")]
+		[Title("Player Info Panel", TitleAlignment = TitleAlignments.Centered)]
+		[SerializeField, Required] private PlayerInfoUi _playerInfo;
+
+		[BoxGroup(GroupName = "Player Info Panel")]
+		[Button, DisableInEditorMode] public void ShowPlayerInfo() => _playerInfo.ShowPanel();
+		[BoxGroup(GroupName = "Player Info Panel")]
+		[Button, DisableInEditorMode] public void HidePlayerInfo() => _playerInfo.HidePanel();
 	}
 }
