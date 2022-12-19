@@ -79,7 +79,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 				Ray ray = _cameraMover.Camera.ScreenPointToRay(_inputService.PointPosition);
 				if (Physics.Raycast(ray, out RaycastHit hit))
 				{
-					var tileSelectable = hit.transform.GetComponent<ITileSelectable>();
+					var tileSelectable = hit.transform.GetComponent<IInteractable>();
 					if (tileSelectable != null)
 					{
 						if (_previewSecondPoint != tileSelectable.Tile)

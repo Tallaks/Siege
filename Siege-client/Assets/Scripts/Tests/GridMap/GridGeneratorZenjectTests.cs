@@ -32,7 +32,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 			Container.Bind<Pool<LineRenderer>>().
 				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
@@ -43,7 +43,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Assert.NotNull(Container.Resolve<IGridMap>());
 			Assert.NotNull(Container.Resolve<IPathFinder>());
 			Assert.NotNull(Container.Resolve<ITilesRenderingAggregator>());
-			Assert.NotNull(Container.Resolve<ITileSelector>());
+			Assert.NotNull(Container.Resolve<IClickInteractor>());
 			Assert.NotNull(Container.Resolve<CameraMover>());
 			yield break;
 		}
@@ -138,7 +138,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.Bind<Pool<LineRenderer>>().
 				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
 

@@ -21,7 +21,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 	{
 		private IGridMap _gridMap;
 		private IPathFinder _pathFinder;
-		private ITileSelector _selector;
+		private IClickInteractor _selector;
 
 		[UnityTest]
 		public IEnumerator WhenTilesGenerated_ThenTheyHaveRenderingComponent()
@@ -78,7 +78,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
 			_pathFinder.FindDistancesToAllTilesFrom(targetTile);
-			_selector.Select(targetTile, _pathFinder.GetAvailableTilesByDistance(1000));
+			//_selector.Select(targetTile, _pathFinder.GetAvailableTilesByDistance(1000));
 
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
@@ -102,7 +102,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
 			_pathFinder.FindDistancesToAllTilesFrom(targetTile);
-			_selector.Select(targetTile, _pathFinder.GetAvailableTilesByDistance(1000));
+			//_selector.Select(targetTile, _pathFinder.GetAvailableTilesByDistance(1000));
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
 
@@ -131,7 +131,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.Bind<Pool<LineRenderer>>().
 				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
@@ -139,7 +139,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			PostInstall();
 
 			_gridMap = Container.Resolve<IGridMap>();
-			_selector = Container.Resolve<ITileSelector>();
+			_selector = Container.Resolve<IClickInteractor>();
 			_pathFinder = Container.Resolve<IPathFinder>();
 		}
 	}

@@ -88,7 +88,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.Bind<Pool<LineRenderer>>().
 				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
 

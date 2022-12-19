@@ -21,7 +21,7 @@ namespace Kulinaria.Siege.Tests.Path
 	{
 		private IGridMap _gridMap;
 		private IPathFinder _pathFinder;
-		private ITileSelector _selector;
+		private IClickInteractor _selector;
 
 		[UnityTest]
 		public IEnumerator WhenTileSelected_ThenDistanceAndPathToSameTileIsZero()
@@ -31,7 +31,7 @@ namespace Kulinaria.Siege.Tests.Path
 			CustomTile tile04 = _gridMap.GetTile(0, 4);
 
 			_pathFinder.FindDistancesToAllTilesFrom(tile04);
-			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
+			//_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile04);
 
@@ -53,7 +53,7 @@ namespace Kulinaria.Siege.Tests.Path
 			CustomTile tile07 = _gridMap.GetTile(0, 7);
 
 			_pathFinder.FindDistancesToAllTilesFrom(tile04);
-			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
+			//_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 
 			Assert.AreEqual(12, _pathFinder.Distance(tile32));
 			Assert.AreEqual(int.MaxValue, _pathFinder.Distance(tile00));
@@ -74,7 +74,7 @@ namespace Kulinaria.Siege.Tests.Path
 			CustomTile tile00 = _gridMap.GetTile(0, 0);
 
 			_pathFinder.FindDistancesToAllTilesFrom(tile04);
-			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
+			//_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile34);
 			LinkedListNode<CustomTile> currentNode = path.First;
@@ -115,7 +115,7 @@ namespace Kulinaria.Siege.Tests.Path
 			CustomTile tile36 = _gridMap.GetTile(3, 6);
 
 			_pathFinder.FindDistancesToAllTilesFrom(tile04);
-			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
+			//_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 			IEnumerable<CustomTile> nearestTiles = _pathFinder.GetAvailableTilesByDistance(9);
 
 			Assert.AreEqual(10, nearestTiles.Count());
@@ -165,13 +165,13 @@ namespace Kulinaria.Siege.Tests.Path
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.Bind<Pool<LineRenderer>>().
 				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
 
 			PostInstall();
 
-			_selector = Container.Resolve<ITileSelector>();
+			_selector = Container.Resolve<IClickInteractor>();
 			_gridMap = Container.Resolve<IGridMap>();
 			_gridMap.GenerateMap();
 

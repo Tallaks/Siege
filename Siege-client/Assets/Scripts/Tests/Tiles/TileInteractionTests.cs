@@ -149,7 +149,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.Bind<PlayerFactory>().FromNew().AsSingle();
@@ -196,7 +196,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.Bind<Pool<LineRenderer>>().
@@ -213,7 +213,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Ray ray = cameraMover.Camera.ScreenPointToRay(clickPos);
 			if (Physics.Raycast(ray, out RaycastHit hit))
 			{
-				if (hit.transform.GetComponent<ITileSelectable>() != null)
+				if (hit.transform.GetComponent<IInteractable>() != null)
 					_clickRegistered = true;
 			}
 		}

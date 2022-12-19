@@ -2,6 +2,7 @@ using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Zenject;
@@ -53,6 +54,18 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.To<BellmanFordPathFinder>()
 				.FromNew()
 				.AsSingle();
+			
+			Container
+				.Bind<ITileActivator>()
+				.To<TileActivator>()
+				.FromNew()
+				.AsSingle();
+			
+			Container
+				.Bind<IDeselectService>()
+				.To<DeselectService>()
+				.FromNew()
+				.AsSingle();
 
 			Container
 				.BindInterfacesTo<PathSelector>()
@@ -65,7 +78,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.AsSingle();
 
 			Container
-				.BindInterfacesTo<CustomTileSelector>()
+				.BindInterfacesTo<GridmapInteractor>()
 				.FromNew()
 				.AsSingle();
 		}

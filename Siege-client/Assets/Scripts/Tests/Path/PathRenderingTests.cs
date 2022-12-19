@@ -195,7 +195,7 @@ namespace Kulinaria.Siege.Tests.Path
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(_cameraMover).AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.Bind<PlayerFactory>().FromNew().AsSingle();
@@ -221,7 +221,7 @@ namespace Kulinaria.Siege.Tests.Path
 			}
 
 			_gridMap = Container.Resolve<IGridMap>();
-			Container.Resolve<ITileSelector>();
+			Container.Resolve<IClickInteractor>();
 			Container.Resolve<IPathFinder>();
 			Container.Resolve<IPathRenderer>();
 			Container.Resolve<IPathSelector>();
@@ -234,7 +234,7 @@ namespace Kulinaria.Siege.Tests.Path
 			Ray ray = _cameraMover.Camera.ScreenPointToRay(_inputService.PointPosition);
 			if (Physics.Raycast(ray, out RaycastHit hit))
 			{
-				var tileSelectable = hit.transform.GetComponent<ITileSelectable>();
+				var tileSelectable = hit.transform.GetComponent<IInteractable>();
 				return tile == tileSelectable.Tile;
 			}
 

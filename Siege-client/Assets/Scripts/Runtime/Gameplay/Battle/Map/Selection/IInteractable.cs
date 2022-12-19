@@ -3,9 +3,10 @@ using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 {
-	public interface ITileSelectable
+	public interface IInteractable
 	{
 		CustomTile Tile { get; }
 		BaseCharacter Visitor { get; }
+		void Interact();
 	}
 }

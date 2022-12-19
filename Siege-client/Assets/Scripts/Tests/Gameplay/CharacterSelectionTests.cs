@@ -32,14 +32,14 @@ namespace Kulinaria.Siege.Tests.Gameplay
 
 			Container.Resolve<IPathFinder>().FindDistancesToAllTilesFrom(_tile00);
 			IEnumerable<CustomTile> availableTiles = Container.Resolve<IPathFinder>().GetAvailableTilesByDistance(10);
-			Container.Resolve<ITileSelector>().Select(_tile00, availableTiles);
+			//Container.Resolve<IClickInteractor>().Select(_tile00, availableTiles);
 			yield return new WaitForSeconds(0.1f);
 			Assert.IsTrue(_tile00.Active);
 			Assert.IsFalse(_tile20.Active);
 
 			Container.Resolve<IPathFinder>().FindDistancesToAllTilesFrom(_tile20);
 			availableTiles = Container.Resolve<IPathFinder>().GetAvailableTilesByDistance(10);
-			Container.Resolve<ITileSelector>().Select(_tile20, availableTiles);
+			//Container.Resolve<IClickInteractor>().Select(_tile20, availableTiles);
 			yield return new WaitForSeconds(0.1f);
 			Assert.IsTrue(_tile20.Active);
 			Assert.IsFalse(_tile00.Active);
@@ -110,7 +110,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.Bind<PlayerFactory>().FromNew().AsSingle();
