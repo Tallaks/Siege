@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6032d8ae5dba4e198387501662bb2eb7, type: 3}
   m_Name: Soldier
   m_EditorClassIdentifier: 
-  PlayerName: Soldier
+  Name: Soldier
   Prefab: {fileID: -786972075803134479, guid: 72f587abb055fa24d8ea06039a27fb55, type: 3}
-  ActionPoints: 0
+  ActionPoints: 10
+  HealthPoints: 40

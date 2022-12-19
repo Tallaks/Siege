@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c143b5e4b10413eb7fce617860e20f0, type: 3}
   m_Name: Gregor
   m_EditorClassIdentifier: 
-  PlayerName: Gregor
+  Name: Gregor
   Prefab: {fileID: 5901371242654616529, guid: 0d1f29cd78f046a4fabd94f7ae90fbe7, type: 3}
-  ActionPoints: 0
+  ActionPoints: 10
+  HealthPoints: 35

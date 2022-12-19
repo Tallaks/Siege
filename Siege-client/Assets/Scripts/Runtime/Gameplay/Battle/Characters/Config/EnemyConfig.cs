@@ -9,8 +9,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Config
 	[Serializable]
 	public class EnemyConfig : ScriptableObject
 	{
-		public string PlayerName;
+		public string Name;
 		[AssetsOnly, Required] public BaseEnemy Prefab;
 		public int ActionPoints;
+		public int HealthPoints;
 	}
 }

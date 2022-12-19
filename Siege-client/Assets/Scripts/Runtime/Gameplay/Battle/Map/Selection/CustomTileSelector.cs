@@ -63,7 +63,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 		
 		public void Deselect()
 		{
-			_loggerService.Log("Deselect tile");
+			_loggerService.Log("Deselect tile", LoggerLevel.Map);
 			_lastSelectedTile = null;
 			_pathSelector.Deselect();
 
@@ -109,15 +109,15 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 
 		private void DrawPathFromSelectedTo(ITileSelectable tileSelectable)
 		{
-			_loggerService.Log("Draw path between two tiles");
+			_loggerService.Log("Draw path between two tiles", LoggerLevel.Map);
 			_pathSelector.SelectSecondTile(tileSelectable.Tile);
 		}
 
 		private void SelectVisitor(ITileSelectable tileSelectable)
 		{
-			_loggerService.Log("Select visitor to draw path");
+			_loggerService.Log("Select visitor to draw path", LoggerLevel.Map);
 			_pathSelector.Deselect();
-			CalculatePath(tileSelectable.Tile, tileSelectable.Visitor.ActionPoints, out IEnumerable<CustomTile> availableTiles);
+			CalculatePath(tileSelectable.Tile, tileSelectable.Visitor.MaxAP, out IEnumerable<CustomTile> availableTiles);
 			Select(tileSelectable.Tile, availableTiles);
 		}
 	}
