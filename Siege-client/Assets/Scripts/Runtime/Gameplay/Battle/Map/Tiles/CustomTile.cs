@@ -40,6 +40,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 		public TileRenderer Renderer =>
 			GetComponent<TileRenderer>();
 
+		public TileInteraction Interaction =>
+			GetComponent<TileInteraction>();
+
 		private readonly Dictionary<CustomTile, int> _neighboursWithDistances = new();
 
 		private IGridMap _map;

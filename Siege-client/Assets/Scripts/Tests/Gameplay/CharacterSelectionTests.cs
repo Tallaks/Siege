@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Config;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
@@ -25,70 +26,51 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		private CustomTile _tile00;
 		private CustomTile _tile20;
 
+		private List<BasePlayer> _players = new();
+
 		[UnityTest]
 		public IEnumerator WhenOnePlayerSelected_ThenOtherPlayersTileNotActive()
 		{
 			PrepareTilesWithPlayer();
 
-			Container.Resolve<IPathFinder>().FindDistancesToAllTilesFrom(_tile00);
-			IEnumerable<CustomTile> availableTiles = Container.Resolve<IPathFinder>().GetAvailableTilesByDistance(10);
-			//Container.Resolve<IClickInteractor>().Select(_tile00, availableTiles);
+			_players[0].Interaction.Interact();
 			yield return new WaitForSeconds(0.1f);
 			Assert.IsTrue(_tile00.Active);
 			Assert.IsFalse(_tile20.Active);
 
-			Container.Resolve<IPathFinder>().FindDistancesToAllTilesFrom(_tile20);
-			availableTiles = Container.Resolve<IPathFinder>().GetAvailableTilesByDistance(10);
-			//Container.Resolve<IClickInteractor>().Select(_tile20, availableTiles);
+			Container.Resolve<IDeselectService>().Deselect();
+			_players[1].Interaction.Interact();
 			yield return new WaitForSeconds(0.1f);
 			Assert.IsTrue(_tile20.Active);
 			Assert.IsFalse(_tile00.Active);
+			Container.Resolve<IDeselectService>().Deselect();
 		}
 
 		[UnityTest]
-		public IEnumerator WhenPlayersInstantiated_ThenTheyCanBeSelected()
+		public IEnumerator WhenTryingToSelectSecondCharacterOutOfPath_ThenOtherPlayersTileActive()
 		{
 			PrepareTilesWithPlayer();
-
+			_players[0].Interaction.Interact();
 			yield return new WaitForSeconds(0.1f);
 
-			_tile00.GetComponent<Collider>().enabled = false;
-			_tile20.GetComponent<Collider>().enabled = false;
+			_players[1].Interaction.Interact();
+			yield return new WaitForSeconds(0.1f);
+			Assert.IsTrue(_tile20.Active);
+			Assert.IsFalse(_tile00.Active);
 
-			while (true)
-			{
-				if (_gridMap.GetTile(0, 0).Active)
-				{
-					while (true)
-					{
-						yield return null;
-						if (_gridMap.GetTile(2, 0).Active)
-						{
-							Assert.Pass();
-							yield break;
-						}
-					}
-				}
+			_players[1].Interaction.Interact();
+			yield return new WaitForSeconds(0.1f);
 
-				if (_gridMap.GetTile(2, 0).Active)
-				{
-					while (true)
-					{
-						yield return null;
-						if (_gridMap.GetTile(0, 0).Active)
-						{
-							Assert.Pass();
-							yield break;
-						}
-					}
-				}
-
-				yield return null;
-			}
+			_players[0].Interaction.Interact();
+			yield return new WaitForSeconds(0.1f);
+			Assert.IsTrue(_tile00.Active);
+			Assert.IsFalse(_tile20.Active);
 		}
 
 		private void PrepareTilesWithPlayer()
 		{
+			Debug.Log(2);
+
 			GameInstaller.Testing = true;
 
 			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
@@ -138,7 +120,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			});
 
 			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSpawnersForTest)
-				Container.Resolve<PlayerFactory>().Create(slot);
+				_players.Add(Container.Resolve<PlayerFactory>().Create(slot));
 		}
 	}
 }

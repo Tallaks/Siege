@@ -11,10 +11,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 	public class PathSelector : IPathSelector
 	{
 		private readonly ILoggerService _loggerService;
-		private readonly ICoroutineRunner _coroutineRunner;
 		private readonly IInputService _inputService;
 		private readonly IPathRenderer _pathRenderer;
 		private readonly CameraMover _cameraMover;
+		private ICoroutineRunner _coroutineRunner;
 
 		private CustomTile _firstPoint;
 		private CustomTile _secondPoint;
@@ -37,11 +37,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 
 		public bool HasPath => _firstPoint != null && _secondPoint != null;
 		public bool HasFirstSelectedTile => _firstPoint != null;
-		
+
 		public void Dispose()
 		{
-			if(_currentCoroutine != null)
-				_coroutineRunner.StopCoroutine(_currentCoroutine);
+			_loggerService.Log("Path selector disposal", LoggerLevel.Map);
+			if (_currentCoroutine != null)
+				_coroutineRunner?.StopCoroutine(_currentCoroutine);
 			_currentCoroutine = null;
 		}
 
@@ -50,7 +51,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 			if (_firstPoint == null)
 			{
 				_firstPoint = tile;
-				_currentCoroutine = _coroutineRunner.StartCoroutine(PathSelectionPreview());
+				_currentCoroutine = _coroutineRunner?.StartCoroutine(PathSelectionPreview());
 			}
 		}
 

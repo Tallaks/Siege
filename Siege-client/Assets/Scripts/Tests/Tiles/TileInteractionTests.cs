@@ -1,23 +1,23 @@
 using System.Collections;
+using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Config;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Utilities;
 using Kulinaria.Siege.Runtime.Infrastructure.Inputs;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
+using Kulinaria.Siege.Tests.TestInfrastructure.Installers;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Zenject;
+using PoolsInstaller = Kulinaria.Siege.Tests.TestInfrastructure.Installers.PoolsInstaller;
+using TilemapInstaller = Kulinaria.Siege.Tests.TestInfrastructure.Installers.TilemapInstaller;
 
 namespace Kulinaria.Siege.Tests.Tiles
 {
@@ -136,27 +136,28 @@ namespace Kulinaria.Siege.Tests.Tiles
 				{ 1 }
 			};
 
-			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
 			var cube = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Cube.prefab");
-			var spawnSetup = AssetDatabase.LoadAssetAtPath<Setup>("Assets/Prefabs/Battle/SpawnSetup.prefab");
-			var lineRendererPrefab = AssetDatabase.LoadAssetAtPath<LineRenderer>("Assets/Prefabs/Battle/Path.prefab");
+
+			var tilemapInstaller = new TilemapInstaller();
+			tilemapInstaller.PreInstall();
+
+			var charactersInstaller = new CharactersInstaller();
+			charactersInstaller.PreInstall();
+
+			var gameplayInstaller = new TestInfrastructure.Installers.GameplayInstaller();
+			gameplayInstaller.PreInstall();
+
+			var poolsInstaller = new PoolsInstaller();
+			poolsInstaller.PreInstall();
+
 			Object.Instantiate(cube);
 
 			PreInstall();
 
-			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
-			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
-			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
-			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
-			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
-			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
-			Container.Bind<PlayerFactory>().FromNew().AsSingle();
-			Container.Bind<Setup>().FromInstance(spawnSetup).AsSingle();
-			Container.Bind<Pool<LineRenderer>>().
-				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
+			tilemapInstaller.Install(Container);
+			charactersInstaller.Install(Container);
+			gameplayInstaller.Install(Container);
+			poolsInstaller.Install(Container);
 
 			PostInstall();
 
@@ -172,11 +173,12 @@ namespace Kulinaria.Siege.Tests.Tiles
 				new PlayerSlot { Player = playerConfig0, Spawn = playerSlot }
 			});
 
-			BasePlayer player = null;
-			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSlots)
-				player = Container.Resolve<PlayerFactory>().Create(slot);
+			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSpawnersForTest)
+				Container.Resolve<PlayerFactory>().Create(slot);
+			BasePlayer player = Container.Resolve<PlayerFactory>().
+				Create(Container.Resolve<Setup>().PlayerSpawnersForTest.First());
 
-			player.GetComponent<Collider>().enabled = false;
+			player.Interaction.GetComponent<Collider>().enabled = false;
 		}
 
 		private void PrepareTilesWithoutPlayer()
@@ -188,24 +190,28 @@ namespace Kulinaria.Siege.Tests.Tiles
 				{ 1 }
 			};
 
-			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
 			var cube = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Cube.prefab");
-			var lineRendererPrefab = AssetDatabase.LoadAssetAtPath<LineRenderer>("Assets/Prefabs/Battle/Path.prefab");
+
+			var tilemapInstaller = new TilemapInstaller();
+			tilemapInstaller.PreInstall();
+
+			var charactersInstaller = new CharactersInstaller();
+			charactersInstaller.PreInstall();
+
+			var gameplayInstaller = new TestInfrastructure.Installers.GameplayInstaller();
+			gameplayInstaller.PreInstall();
+
+			var poolsInstaller = new PoolsInstaller();
+			poolsInstaller.PreInstall();
+
 			Object.Instantiate(cube);
 
 			PreInstall();
 
-			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
-			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
-			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
-			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.BindInterfacesTo<GridmapInteractor>().FromNew().AsSingle();
-			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
-			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
-			Container.Bind<Pool<LineRenderer>>().
-				FromMethod(_ => new Pool<LineRenderer>(Container, lineRendererPrefab.gameObject, 5)).AsSingle();
+			tilemapInstaller.Install(Container);
+			charactersInstaller.Install(Container);
+			gameplayInstaller.Install(Container);
+			poolsInstaller.Install(Container);
 
 			PostInstall();
 

@@ -4,9 +4,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Coroutines
 {
 	public class CoroutineRunner : MonoBehaviour, ICoroutineRunner
 	{
-		private void Awake()
-		{
+		private void Awake() => 
 			DontDestroyOnLoad(gameObject);
-		}
 	}
 }

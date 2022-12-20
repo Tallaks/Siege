@@ -80,7 +80,11 @@ namespace Kulinaria.Siege.Tests.Scenes
 		[UnityTearDown]
 		public IEnumerator TearDown()
 		{
-			var resolvedRunner = Object.FindObjectOfType<ProjectContext>().Container.Resolve<ICoroutineRunner>();
+			ICoroutineRunner resolvedRunner = null;
+			if(Object.FindObjectOfType<ProjectContext>() != null)
+			{
+				resolvedRunner = Object.FindObjectOfType<ProjectContext>().Container.Resolve<ICoroutineRunner>();
+			}
 
 			foreach (CoroutineRunner runner in Object.FindObjectsOfType<CoroutineRunner>())
 			{

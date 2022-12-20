@@ -10,10 +10,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players
 		private ILoggerService _loggerService;
 		private IPathSelector _pathSelector;
 		private ITileActivator _tileActivator;
+		private IPathFinder _pathFinder;
 
 		[Inject]
-		private void Construct(ILoggerService loggerService, IPathSelector pathSelector, ITileActivator tileActivator)
+		private void Construct(ILoggerService loggerService, IPathFinder pathFinder, IPathSelector pathSelector, ITileActivator tileActivator)
 		{
+			_pathFinder = pathFinder;
 			_tileActivator = tileActivator;
 			_loggerService = loggerService;
 			_pathSelector = pathSelector;
@@ -30,7 +32,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players
 				}
 
 				_loggerService.Log("Draw path between two tiles", LoggerLevel.Map);
-				_pathSelector.SelectSecondTile(Tile);
+				if(_pathFinder.GetShortestPath(to: Tile).Count != 0)
+					_pathSelector.SelectSecondTile(Tile);
+				else
+					SelectPlayer();
 				return;
 			}
 
