@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using Kulinaria.Siege.Runtime.Extensions;
 using Kulinaria.Siege.Runtime.Gameplay.Battle;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Config;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Registry;
@@ -212,9 +213,13 @@ namespace Kulinaria.Siege.Tests.Path
 
 			CustomTile tile = _gridMap.GetTile(0, 0);
 			var playerSlot = Container.InstantiateComponent<PlayerSpawnTile>(tile.gameObject);
-			Container.Resolve<Setup>().InitPlayers(new[] { playerSlot });
+			var playerConfig0 = Resources.Load<PlayerConfig>("Configs/Characters/Players/Doctor");
+			Container.Resolve<Setup>().InitPlayers(new[]
+			{
+				new PlayerSlot { Spawn = playerSlot, Player = playerConfig0 }
+			});
 
-			foreach (PlayerSpawnTile slot in Container.Resolve<Setup>().PlayerSpawnersForTest)
+			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSpawnersForTest)
 			{
 				_player = Container.Resolve<PlayerFactory>().Create(slot);
 				_registry.RegisterPlayer(_player);

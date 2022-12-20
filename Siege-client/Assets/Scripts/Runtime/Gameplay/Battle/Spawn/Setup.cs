@@ -16,10 +16,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn
 		private EnemySlot[] _enemySlots;
 
 #if UNITY_INCLUDE_TESTS
-		public void InitPlayers(IEnumerable<PlayerSpawnTile> slots) => 
+		public void InitPlayers(IEnumerable<PlayerSlot> slots) => 
 			PlayerSpawnersForTest = slots;
 
-		public IEnumerable<PlayerSpawnTile> PlayerSpawnersForTest;
+		public IEnumerable<PlayerSlot> PlayerSpawnersForTest;
 #endif
 		
 		public IEnumerable<PlayerSlot> PlayerSlots => _playerSlots;
