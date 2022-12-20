@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 8269522739188573141, guid: 614811c3e9aba3749b240ad53f7efee7,
         type: 3}
       propertyPath: m_Name
-      value: Stanley_Enemy
+      value: Enemy_Base
       objectReference: {fileID: 0}
     - target: {fileID: 8552617765859222531, guid: 614811c3e9aba3749b240ad53f7efee7,
         type: 3}
@@ -75,20 +75,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2397751297926255750}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &416786216265767017
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6018419904283801427}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 7536261544965393091, guid: 72e6cbfc7da3e834e81698424be87507, type: 3}
 --- !u!114 &-786972075803134479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,15 +87,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 879d3dd291fd421ca4aa75f9f0282dad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3896772502320912466
+  _interaction: {fileID: 5177995856806072131}
+--- !u!1 &8377004597915856361 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6127041011525286255, guid: 614811c3e9aba3749b240ad53f7efee7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2397751297926255750}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5177995856806072131
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6018419904283801427}
+  m_GameObject: {fileID: 8377004597915856361}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f25ac4ac3c914fc99d34d15802b042b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _owner: {fileID: -786972075803134479}

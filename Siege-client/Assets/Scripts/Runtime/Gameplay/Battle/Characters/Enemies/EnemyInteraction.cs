@@ -5,7 +5,6 @@ using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Enemies
 {
-	[RequireComponent(typeof(BaseEnemy))]
 	public class EnemyInteraction : CharacterInteraction
 	{
 		private ILoggerService _loggerService;

@@ -1,12 +1,10 @@
 using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
-using UnityEngine;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players
 {
-	[RequireComponent(typeof(BasePlayer))]
 	public class PlayerInteraction : CharacterInteraction
 	{
 		private ILoggerService _loggerService;

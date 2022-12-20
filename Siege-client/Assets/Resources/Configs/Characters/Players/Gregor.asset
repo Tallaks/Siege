@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Gregor
   m_EditorClassIdentifier: 
   Name: Gregor
-  Prefab: {fileID: 5901371242654616529, guid: 0d1f29cd78f046a4fabd94f7ae90fbe7, type: 3}
+  Prefab: {fileID: 6641437993863295653, guid: bd8bba38796c5014bb49bf8796acc5b8, type: 3}
   ActionPoints: 10
   HealthPoints: 35

@@ -3,11 +3,12 @@ using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters
 {
-	[RequireComponent(typeof(CharacterInteraction))]
 	public abstract class BaseCharacter : MonoBehaviour
 	{
-		public CharacterInteraction Interaction => GetComponent<CharacterInteraction>();
-
+		[SerializeField, Required, ShowIn(PrefabKind.PrefabAsset)] 
+		private CharacterInteraction _interaction;
+		
+		public CharacterInteraction Interaction => _interaction;
 		[ShowInInspector] public int MaxAP { get; set; }
 		[ShowInInspector] public int MaxHP { get; set; }
 		[ShowInInspector] public string Name { get; set; }
