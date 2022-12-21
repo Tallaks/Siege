@@ -5,6 +5,7 @@ using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
+using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
 using Kulinaria.Siege.Tests.TestInfrastructure.Installers;
 using NUnit.Framework;
@@ -79,6 +80,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Renderer.Repaint();
 
 			yield return new WaitForSeconds(0.01f);
 
@@ -102,6 +105,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Renderer.Repaint();
 
 			yield return new WaitForSeconds(0.01f);
 
@@ -114,7 +119,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 		private void PrepareTiles()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 
 			var tilemapInstaller = new TilemapInstaller();
 			tilemapInstaller.PreInstall();
@@ -137,6 +142,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			PostInstall();
 
+			Debug.Log(Container.Resolve<ICoroutineRunner>());
 			_gridMap = Container.Resolve<IGridMap>();
 			Container.Resolve<IClickInteractor>();
 			_pathFinder = Container.Resolve<IPathFinder>();

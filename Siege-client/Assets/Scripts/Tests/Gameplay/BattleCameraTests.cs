@@ -25,7 +25,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		public IEnumerator SetUp()
 		{
 			yield return LoadBootScene();
-			Object.FindObjectOfType<GameInstaller>()?.Initialize();
+			Object.FindObjectOfType<ApplicationInstaller>()?.Initialize();
 			yield return new WaitForSeconds(0.5f);
 
 			_camera = Object.FindObjectOfType<Camera>();

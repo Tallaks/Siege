@@ -20,7 +20,7 @@ namespace Kulinaria.Siege.Tests.InputService
 		[UnitySetUp]
 		public IEnumerator SetUp()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 			if (SceneManager.GetActiveScene().name != SceneNames.BootScene)
 				yield return SceneManager.LoadSceneAsync(SceneNames.BootScene);
 		}

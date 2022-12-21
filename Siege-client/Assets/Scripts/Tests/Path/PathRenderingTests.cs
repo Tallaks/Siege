@@ -51,6 +51,8 @@ namespace Kulinaria.Siege.Tests.Path
 			{
 				{ 1, 1, 1, 1, 1 }
 			});
+
+			_registry.ChangeActionPointsForAll(0);
 			yield return WaitForMouseOverSecondTile();
 
 			var lineRenderer = Object.FindObjectOfType<LineRenderer>();
@@ -65,6 +67,7 @@ namespace Kulinaria.Siege.Tests.Path
 			{
 				{ 1, 1, 1, 1, 1 }
 			});
+
 			_registry.ChangeActionPointsForAll(100);
 			yield return WaitForMouseOverSecondTile();
 
@@ -177,7 +180,7 @@ namespace Kulinaria.Siege.Tests.Path
 
 		private void PrepareTilesWithOneVisitor(int[,] array)
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 
 			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = array;
 

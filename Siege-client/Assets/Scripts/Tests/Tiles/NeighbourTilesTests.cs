@@ -61,7 +61,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 		private void PrepareTiles()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 
 			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
 			{

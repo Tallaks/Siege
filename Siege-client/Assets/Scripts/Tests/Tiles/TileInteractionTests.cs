@@ -129,7 +129,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 		private void PrepareTilesWithPlayer()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 
 			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
 			{
@@ -183,7 +183,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 		private void PrepareTilesWithoutPlayer()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 
 			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
 			{

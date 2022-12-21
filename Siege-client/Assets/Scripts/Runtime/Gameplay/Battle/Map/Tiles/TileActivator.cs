@@ -3,6 +3,7 @@ using System.Linq;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
+using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 {
@@ -13,6 +14,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 
 		public TileActivator(IPathFinder pathFinder, IGridMap map)
 		{
+			Debug.Log(345);
 			_pathFinder = pathFinder;
 			_map = map;
 		}

@@ -69,9 +69,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 
 		private void PrepareTilesWithPlayer()
 		{
-			Debug.Log(2);
-
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 
 			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
 			{
@@ -119,6 +117,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 				new() { Player = playerConfig1, Spawn = playerTile1 },
 			});
 
+			_players = new List<BasePlayer>();
 			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSpawnersForTest)
 				_players.Add(Container.Resolve<PlayerFactory>().Create(slot));
 		}

@@ -9,7 +9,7 @@ using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 {
-	public class GameInstaller : MonoInstaller, IInitializable
+	public class ApplicationInstaller : MonoInstaller, IInitializable
 	{
 		public static bool Testing = false;
 
@@ -26,7 +26,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 		{
 			Container
 				.Bind<IInitializable>()
-				.To<GameInstaller>()
+				.To<ApplicationInstaller>()
 				.FromInstance(this)
 				.AsSingle();
 

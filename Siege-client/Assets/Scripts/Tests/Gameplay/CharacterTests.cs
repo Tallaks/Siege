@@ -25,7 +25,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnitySetUp]
 		public IEnumerator LoadSceneAndReferences()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 			yield return SceneManager.LoadSceneAsync(SceneNames.BattleScene);
 
 			DiContainer diContainer = Object.FindObjectOfType<SceneContext>().Container;

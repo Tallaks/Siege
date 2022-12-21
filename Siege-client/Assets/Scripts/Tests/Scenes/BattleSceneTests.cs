@@ -30,14 +30,14 @@ namespace Kulinaria.Siege.Tests.Scenes
 		[UnityTest]
 		public IEnumerator WhenBootSceneLoaded_ThenBattleSceneLoadedAfterIt()
 		{
-			GameInstaller.Testing = false;
+			ApplicationInstaller.Testing = false;
 			yield return LoadBootScene();
-			Object.FindObjectOfType<GameInstaller>()?.Initialize();
+			Object.FindObjectOfType<ApplicationInstaller>()?.Initialize();
 			yield return new WaitForSeconds(1);
 
 			Assert.IsTrue(SceneManager.GetActiveScene().name == SceneNames.BattleScene);
 			Assert.IsTrue(SceneManager.GetActiveScene().name != SceneNames.BootScene);
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 		}
 
 		[UnityTearDown]
