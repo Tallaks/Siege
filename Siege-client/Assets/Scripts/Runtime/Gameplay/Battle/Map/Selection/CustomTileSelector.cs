@@ -15,45 +15,69 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 		private readonly IInputService _inputService;
 		private readonly IGridMap _map;
 		private readonly IPathFinder _pathFinder;
+		private readonly IPathSelector _pathSelector;
 		private readonly CameraMover _cameraMover;
 
-		public CustomTileSelector(ILoggerService loggerService, IInputService inputService, IGridMap map, IPathFinder pathFinder, CameraMover cameraMover)
+		private CustomTile _lastSelectedTile; 
+		
+		public CustomTileSelector(
+			ILoggerService loggerService,
+			IInputService inputService,
+			IGridMap map,
+			IPathFinder pathFinder,
+			IPathSelector pathSelector,
+			CameraMover cameraMover)
 		{
 			_loggerService = loggerService;
 			_inputService = inputService;
 			_map = map;
 			_pathFinder = pathFinder;
+			_pathSelector = pathSelector;
 			_cameraMover = cameraMover;
 		}
 
-		public void Initialize() => 
+		public void Initialize()
+		{
+			_loggerService.Log("Tile selector initialization", LoggerLevel.Battle);
 			_inputService.OnClick += RegisterClick;
+		}
 
-		public void Dispose() => 
+		// TODO: Добавить логгирование об отписке от кликов
+		public void Dispose() =>
 			_inputService.OnClick -= RegisterClick;
 
-		public void Select(CustomTile tile, int distancePoints)
+		public void Select(CustomTile tile, IEnumerable<CustomTile> availableTiles)
 		{
-			_pathFinder.FindDistancesToAllTilesFrom(tile);
-			IEnumerable<CustomTile> availableTiles = _pathFinder.GetAvailableTilesByDistance(distancePoints);
-
+			_lastSelectedTile = tile;
+			_pathSelector.SelectFirstTile(tile);
+			
 			foreach (CustomTile customTile in _map.AllTiles)
 				customTile.Active = false;
 
 			foreach (CustomTile customTile in availableTiles)
 				customTile.Active = true;
-			
+
+			foreach (CustomTile customTile in _map.AllTiles.Where(k => k.Active))
+				customTile.Renderer.Repaint();
+		}
+		
+		public void Deselect()
+		{
+			_loggerService.Log("Deselect tile");
+			_lastSelectedTile = null;
+			_pathSelector.Deselect();
+
+			foreach (CustomTile customTile in _map.AllTiles)
+				customTile.Active = false;
+
 			foreach (CustomTile customTile in _map.AllTiles.Where(k => k.Active))
 				customTile.Renderer.Repaint();
 		}
 
-		public void Deselect()
+		private void CalculatePath(CustomTile tile, int distancePoints, out IEnumerable<CustomTile> availableTiles)
 		{
-			foreach (CustomTile customTile in _map.AllTiles)
-				customTile.Active = false;
-			
-			foreach (CustomTile customTile in _map.AllTiles.Where(k => k.Active))
-				customTile.Renderer.Repaint();
+			_pathFinder.FindDistancesToAllTilesFrom(tile);
+			availableTiles = _pathFinder.GetAvailableTilesByDistance(distancePoints);
 		}
 
 		private void RegisterClick(Vector2 clickPos)
@@ -63,12 +87,38 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 			{
 				var tileSelectable = hit.transform.GetComponent<ITileSelectable>();
 				if (tileSelectable != null && tileSelectable.Tile.HasVisitor)
-					Select(tileSelectable.Tile, tileSelectable.Visitor.ActionPoints);
+				{
+					if (_lastSelectedTile != tileSelectable.Tile && _pathSelector.HasFirstSelectedTile)
+					{
+						if (_pathSelector.HasPath)
+							SelectVisitor(tileSelectable);
+						else
+							DrawPathFromSelectedTo(tileSelectable);
+					}
+					else
+						SelectVisitor(tileSelectable);
+				}
+				else if (tileSelectable != null && _pathSelector.HasFirstSelectedTile)
+					DrawPathFromSelectedTo(tileSelectable);
 				else
 					Deselect();
 			}
 			else
 				Deselect();
+		}
+
+		private void DrawPathFromSelectedTo(ITileSelectable tileSelectable)
+		{
+			_loggerService.Log("Draw path between two tiles");
+			_pathSelector.SelectSecondTile(tileSelectable.Tile);
+		}
+
+		private void SelectVisitor(ITileSelectable tileSelectable)
+		{
+			_loggerService.Log("Select visitor to draw path");
+			_pathSelector.Deselect();
+			CalculatePath(tileSelectable.Tile, tileSelectable.Visitor.ActionPoints, out IEnumerable<CustomTile> availableTiles);
+			Select(tileSelectable.Tile, availableTiles);
 		}
 	}
 }

@@ -13,14 +13,14 @@ using UnityEditor;
 using UnityEngine.TestTools;
 using Zenject;
 
-namespace Kulinaria.Siege.Tests.Movement
+namespace Kulinaria.Siege.Tests.Path
 {
 	public class PathFindingTests : ZenjectIntegrationTestFixture
 	{
 		private IGridMap _gridMap;
 		private IPathFinder _pathFinder;
 		private ITileSelector _selector;
-		
+
 		[UnityTest]
 		public IEnumerator WhenTileSelected_ThenDistanceAndPathToSameTileIsZero()
 		{
@@ -28,7 +28,8 @@ namespace Kulinaria.Siege.Tests.Movement
 
 			CustomTile tile04 = _gridMap.GetTile(0, 4);
 
-			_selector.Select(tile04, 100);
+			_pathFinder.FindDistancesToAllTilesFrom(tile04);
+			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile04);
 
@@ -49,7 +50,8 @@ namespace Kulinaria.Siege.Tests.Movement
 			CustomTile tile14 = _gridMap.GetTile(1, 4);
 			CustomTile tile07 = _gridMap.GetTile(0, 7);
 
-			_selector.Select(tile04, 100);
+			_pathFinder.FindDistancesToAllTilesFrom(tile04);
+			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 
 			Assert.AreEqual(12, _pathFinder.Distance(tile32));
 			Assert.AreEqual(int.MaxValue, _pathFinder.Distance(tile00));
@@ -69,7 +71,8 @@ namespace Kulinaria.Siege.Tests.Movement
 			CustomTile tile24 = _gridMap.GetTile(2, 4);
 			CustomTile tile00 = _gridMap.GetTile(0, 0);
 
-			_selector.Select(tile04, 100);
+			_pathFinder.FindDistancesToAllTilesFrom(tile04);
+			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile34);
 			LinkedListNode<CustomTile> currentNode = path.First;
@@ -109,7 +112,8 @@ namespace Kulinaria.Siege.Tests.Movement
 			CustomTile tile43 = _gridMap.GetTile(4, 3);
 			CustomTile tile36 = _gridMap.GetTile(3, 6);
 
-			_selector.Select(tile04, 100);
+			_pathFinder.FindDistancesToAllTilesFrom(tile04);
+			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 			IEnumerable<CustomTile> nearestTiles = _pathFinder.GetAvailableTilesByDistance(9);
 
 			Assert.AreEqual(10, nearestTiles.Count());
@@ -156,8 +160,10 @@ namespace Kulinaria.Siege.Tests.Movement
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
-			
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+
 			PostInstall();
 
 			_selector = Container.Resolve<ITileSelector>();

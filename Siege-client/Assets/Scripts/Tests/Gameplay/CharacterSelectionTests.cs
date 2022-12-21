@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Kulinaria.Siege.Runtime.Gameplay.Battle;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
@@ -28,12 +29,16 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		{
 			PrepareTilesWithPlayer();
 
-			Container.Resolve<ITileSelector>().Select(_tile00, 10);
+			Container.Resolve<IPathFinder>().FindDistancesToAllTilesFrom(_tile00);
+			IEnumerable<CustomTile> availableTiles = Container.Resolve<IPathFinder>().GetAvailableTilesByDistance(10);
+			Container.Resolve<ITileSelector>().Select(_tile00, availableTiles);
 			yield return new WaitForSeconds(0.1f);
 			Assert.IsTrue(_tile00.Active);
 			Assert.IsFalse(_tile20.Active);
-			
-			Container.Resolve<ITileSelector>().Select(_tile20, 10);
+
+			Container.Resolve<IPathFinder>().FindDistancesToAllTilesFrom(_tile20);
+			availableTiles = Container.Resolve<IPathFinder>().GetAvailableTilesByDistance(10);
+			Container.Resolve<ITileSelector>().Select(_tile20, availableTiles);
 			yield return new WaitForSeconds(0.1f);
 			Assert.IsTrue(_tile20.Active);
 			Assert.IsFalse(_tile00.Active);
@@ -104,6 +109,8 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
 			Container.Bind<PlayerFactory>().FromNew().AsSingle();
 			Container.Bind<Setup>().FromInstance(spawnSetup).AsSingle();
 
@@ -120,9 +127,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Container.Resolve<Setup>().InitPlayers(new[] { playerSlot0, playerSlot1 });
 			
 			foreach (PlayerSlot slot in Container.Resolve<Setup>().PlayerSlots)
-				Container.Resolve<PlayerFactory>().Create(slot);
-
-			Container.Resolve<ITileSelector>().Initialize();
+				Container.Resolve<PlayerFactory>().Create(slot); 
 		}
 	}
 }

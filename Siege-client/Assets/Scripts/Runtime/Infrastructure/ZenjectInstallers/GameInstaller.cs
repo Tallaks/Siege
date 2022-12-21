@@ -35,7 +35,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.To<UnityLoggerService>()
 				.FromNew()
 				.AsSingle();
-			
+
 			Container
 				.Bind<ICoroutineRunner>()
 				.To<CoroutineRunner>()
@@ -46,11 +46,6 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.Bind<IAssetsProvider>()
 				.To<ResourcesAssetsProvider>()
 				.FromNew()
-				.AsSingle();
-			
-			Container
-				.Bind<Camera>()
-				.FromInstance(Camera.main)
 				.AsSingle();
 
 			Container

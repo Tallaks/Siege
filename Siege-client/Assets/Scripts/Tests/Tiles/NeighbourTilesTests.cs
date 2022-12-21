@@ -48,7 +48,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 		public IEnumerator WhenMapGenerated_ThenDistancesAreCalculated()
 		{
 			PrepareTiles();
-			
+
 			CustomTile tile21 = _gridMap.GetTile(2, 1);
 			CustomTile tile22 = _gridMap.GetTile(2, 2);
 			CustomTile tile12 = _gridMap.GetTile(1, 2);
@@ -75,7 +75,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			};
 
 			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
-			
+
 			PreInstall();
 
 			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
@@ -83,8 +83,10 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<CameraMover>().FromInstance(cameraMover).AsSingle();
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.Bind<ITileSelector>().To<CustomTileSelector>().FromNew().AsSingle();
-			
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+
 			PostInstall();
 
 			_gridMap = Container.Resolve<IGridMap>();

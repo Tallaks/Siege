@@ -65,7 +65,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 				yield return null;
 			}
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenUserClicksOnPlayerTileAndThenOnEmptyTile_ThenItIsNotSelected()
 		{
@@ -91,7 +91,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 				yield return null;
 			}
 		}
-		
+
 		[UnityTest]
 		public IEnumerator WhenUserClicksOnPlayerTileAndThenOnEmptyTileAndAgainOnPlayer_ThenItIsAgainSelected()
 		{
@@ -148,6 +148,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 			Container.Bind<PlayerFactory>().FromNew().AsSingle();
 			Container.Bind<Setup>().FromInstance(spawnSetup).AsSingle();
 
@@ -155,7 +157,6 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			_gridMap = Container.Resolve<IGridMap>();
 			_gridMap.GenerateMap();
-
 
 			CustomTile tile = _gridMap.GetTile(0, 0);
 			var playerSlot = Container.InstantiateComponent<PlayerSlot>(tile.gameObject);
@@ -167,8 +168,6 @@ namespace Kulinaria.Siege.Tests.Tiles
 				player = Container.Resolve<PlayerFactory>().Create(slot);
 
 			player.GetComponent<Collider>().enabled = false;
-			
-			Container.Resolve<ITileSelector>().Initialize();
 		}
 
 		private void PrepareTilesWithoutPlayer()
@@ -193,6 +192,8 @@ namespace Kulinaria.Siege.Tests.Tiles
 			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
 			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
 			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
+			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
 
 			PostInstall();
 
