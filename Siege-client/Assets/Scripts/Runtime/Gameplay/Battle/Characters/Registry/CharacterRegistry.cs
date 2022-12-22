@@ -15,10 +15,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Registry
 		public void ChangeActionPointsForAll(int newValue)
 		{
 			foreach (BasePlayer player in _players)
-				player.ActionPoints = newValue;
+				player.MaxAP = newValue;
 
 			foreach (BaseEnemy enemy in _enemies)
-				enemy.ActionPoints = newValue;
+				enemy.MaxAP = newValue;
 		}
 		
 		public void RegisterPlayer(BasePlayer player) =>

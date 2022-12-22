@@ -13,18 +13,17 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 {
 	[RequireComponent(typeof(Renderer))]
 	[RequireComponent(typeof(TileRenderer))]
-	[RequireComponent(typeof(TileSelection))]
+	[RequireComponent(typeof(TileInteraction))]
 	public class CustomTile : MonoBehaviour
 	{
 		public IReadOnlyDictionary<CustomTile, int> NeighboursWithDistances =>
 			_neighboursWithDistances;
 
 		[ShowInInspector]
-		public IEnumerable<CustomTile> ActiveNeighbours => 
+		public IEnumerable<CustomTile> ActiveNeighbours =>
 			_neighboursWithDistances.Keys.Where(k => k.Active);
 
-		[ShowInInspector]
-		public Vector2Int CellPosition { get; private set; }
+		[ShowInInspector] public Vector2Int CellPosition { get; private set; }
 
 		public bool Active
 		{
@@ -34,12 +33,15 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 
 		public BaseCharacter Visitor =>
 			_visitor;
-		
-		public bool HasVisitor => 
+
+		public bool HasVisitor =>
 			_visitor != null;
-		
-		public TileRenderer Renderer => 
+
+		public TileRenderer Renderer =>
 			GetComponent<TileRenderer>();
+
+		public TileInteraction Interaction =>
+			GetComponent<TileInteraction>();
 
 		private readonly Dictionary<CustomTile, int> _neighboursWithDistances = new();
 
@@ -48,7 +50,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 		private BaseCharacter _visitor;
 
 		[Inject]
-		private void Construct(ILoggerService logger, IGridMap map, ITileSelector selector)
+		private void Construct(ILoggerService logger, IGridMap map, IClickInteractor selector)
 		{
 			_logger = logger;
 			_map = map;
@@ -64,10 +66,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 		public void RegisterVisitor(BaseCharacter visitor)
 		{
 			_visitor = visitor;
-			_visitor.Selection.Assign(this);
+			_visitor.Interaction.Assign(this);
 		}
 
-		public void UnregisterVisitor() => 
+		public void UnregisterVisitor() =>
 			_visitor = null;
 
 		public Vector2Int this[int x, int y] =>

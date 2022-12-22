@@ -26,6 +26,10 @@ namespace Kulinaria.Siege.Runtime.Debugging.Logging
 					return "<color=cyan>Application</color>";
 				case LoggerLevel.Battle:
 					return "<color=green>Battle</color>";
+				case LoggerLevel.Map:
+					return "<color=yellow>Map</color>";
+				case LoggerLevel.Characters:
+					return "<color=magenta>Characters</color>";
 				case LoggerLevel.None:
 					return "Other";
 			}

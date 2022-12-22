@@ -16,14 +16,14 @@ namespace Kulinaria.Siege.Tests.GridMap
 	public class GridGeneratorTest
 	{
 		private SceneContext Context => Object.FindObjectOfType<SceneContext>();
-		private GameInstaller GameInstaller => Object.FindObjectOfType<GameInstaller>();
+		private ApplicationInstaller ApplicationInstaller => Object.FindObjectOfType<ApplicationInstaller>();
 
 		[UnitySetUp]
 		public IEnumerator SetUp()
 		{
-			GameInstaller.Testing = false;
+			ApplicationInstaller.Testing = false;
 			yield return LoadBootScene();
-			GameInstaller.Initialize();
+			ApplicationInstaller.Initialize();
 			yield return new WaitForSeconds(2);
 		}
 
@@ -56,7 +56,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 				Object.Destroy(runner.gameObject);
 			}
 
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 			yield break;
 		}
 

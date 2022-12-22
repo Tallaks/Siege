@@ -7,5 +7,6 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Coroutines
 	{
 		Coroutine StartCoroutine(IEnumerator routine);
 		void StopCoroutine(Coroutine routine);
+		void StopAllCoroutines();
 	}
 }
