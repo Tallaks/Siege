@@ -10,10 +10,10 @@ namespace Kulinaria.Tools.BattleTrier.Level
     [Inject] private IInputService _inputService;
 
     private IInputService InputService => _inputService ?? FindObjectOfType<OldInputService>();
-    
+
     private void Update()
     {
-      if(IsOwner)
+      if (IsOwner)
         transform.position += (Vector3)InputService.MoveDirection;
     }
   }
