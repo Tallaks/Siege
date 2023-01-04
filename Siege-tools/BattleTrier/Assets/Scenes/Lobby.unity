@@ -988,7 +988,7 @@ GameObject:
   - component: {fileID: 1128444285}
   - component: {fileID: 1128444284}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1070,6 +1070,7 @@ RectTransform:
   - {fileID: 495607588}
   - {fileID: 671243108}
   - {fileID: 179516277}
+  - {fileID: 1748863478}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1425,11 +1426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d418cf8c0f7444ea89be0d7bb51b01c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _createButton: {fileID: 495607589}
-  _joinByCodeButton: {fileID: 671243109}
-  _joinPanel: {fileID: 179516276}
-  _codeInputField: {fileID: 222915827}
-  _joinButton: {fileID: 350360541}
+  _lobbyMediator: {fileID: 1748863479}
 --- !u!1 &1736746845
 GameObject:
   m_ObjectHideFlags: 0
@@ -1586,6 +1583,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1736746845}
   m_CullTransparentMesh: 1
+--- !u!1 &1748863477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1748863478}
+  - component: {fileID: 1748863479}
+  m_Layer: 5
+  m_Name: Mediator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1748863478
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748863477}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1128444287}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1748863479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748863477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 481e5b70fdaf468280ae6c61e067acc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _createButton: {fileID: 495607589}
+  _joinByCodeButton: {fileID: 671243109}
+  _joinButton: {fileID: 350360541}
+  _joinPanel: {fileID: 179516276}
+  _codeInputField: {fileID: 222915827}
 --- !u!1 &2123611372
 GameObject:
   m_ObjectHideFlags: 0
@@ -1870,6 +1921,11 @@ MonoBehaviour:
     NetworkPrefabs:
     - Override: 0
       Prefab: {fileID: 7849703053548883970, guid: 5e27db4ed01e2c5489ee3e6048ce87ca, type: 3}
+      SourcePrefabToOverride: {fileID: 7849703053548883970, guid: 5e27db4ed01e2c5489ee3e6048ce87ca, type: 3}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 4071091970830266456, guid: ebb0d65e0117fad42b0b2a6c37ba6f7d, type: 3}
       SourcePrefabToOverride: {fileID: 7849703053548883970, guid: 5e27db4ed01e2c5489ee3e6048ce87ca, type: 3}
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
