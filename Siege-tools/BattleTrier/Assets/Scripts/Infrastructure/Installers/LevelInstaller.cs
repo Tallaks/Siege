@@ -7,7 +7,7 @@ namespace Kulinaria.Tools.BattleTrier.Infrastructure.Installers
   public class LevelInstaller : MonoInstaller, IInitializable
   {
     [SerializeField] private BoardSpawner _boardSpawner;
-    
+
     public override void InstallBindings()
     {
       Debug.Log("<color=blue>Join Code :</color>" + LobbyInstaller.JoinCode);

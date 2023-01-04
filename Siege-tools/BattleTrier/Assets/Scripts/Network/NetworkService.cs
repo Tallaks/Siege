@@ -1,6 +1,6 @@
 using Unity.Netcode;
 
-namespace Kulinaria.Tools.BattleTrier.Infrastructure.Services.Network
+namespace Kulinaria.Tools.BattleTrier.Network
 {
   public class NetworkService : NetworkManager
   {

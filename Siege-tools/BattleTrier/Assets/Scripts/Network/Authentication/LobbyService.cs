@@ -6,7 +6,7 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 
-namespace Kulinaria.Tools.BattleTrier.Infrastructure.Services.Network.Authentication
+namespace Kulinaria.Tools.BattleTrier.Network.Authentication
 {
   public class LobbyService
   {

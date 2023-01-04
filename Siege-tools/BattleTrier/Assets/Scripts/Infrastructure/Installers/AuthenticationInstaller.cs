@@ -1,5 +1,5 @@
 using System.Collections;
-using Kulinaria.Tools.BattleTrier.Infrastructure.Services.Network.Authentication;
+using Kulinaria.Tools.BattleTrier.Network.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.UI;

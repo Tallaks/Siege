@@ -2,11 +2,11 @@ using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Kulinaria.Tools.BattleTrier.Infrastructure.Services.Network.Authentication
+namespace Kulinaria.Tools.BattleTrier.Network.Authentication
 {
   public class SignInService
   {
-    public string PlayerId { get; private set; }
+    private string PlayerId { get; set; }
 
     public async void SignInAnonymously()
     {

@@ -13,5 +13,13 @@ namespace Kulinaria.Tools.BattleTrier.Network.Roles
       base.OnNetworkSpawn();
       Debug.Log("First player spawned");
     }
+
+    private void Update()
+    {
+      if (IsOwner)
+      {
+        Debug.Log(NetworkManager.ConnectedClientsList.Count);
+      }
+    }
   }
 }

@@ -1,4 +1,4 @@
-using Kulinaria.Tools.BattleTrier.Infrastructure.Services.Network.Authentication;
+using Kulinaria.Tools.BattleTrier.Network.Authentication;
 using Kulinaria.Tools.BattleTrier.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
