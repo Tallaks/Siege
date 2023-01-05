@@ -27,6 +27,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     public override void InstallBindings()
     {
       Container.Bind<IInitializable>().To<PlayerInstaller>().FromInstance(this).AsSingle();
+      Container.Bind<LevelMediator>().FromInstance(_levelMediator).AsSingle();
     }
   }
 }

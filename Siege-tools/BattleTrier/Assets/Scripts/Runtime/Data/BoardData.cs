@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Data
@@ -6,7 +7,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
   public class BoardData : ScriptableObject
   {
     public string Name;
-    public GameObject Prefab;
+    public NetworkObject Prefab;
     public Sprite Icon;
   }
 }

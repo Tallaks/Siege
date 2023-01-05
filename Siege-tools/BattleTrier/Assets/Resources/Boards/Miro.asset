@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Miro
   m_EditorClassIdentifier: 
   Name: "\u0414\u043E\u0441\u043A\u0430 \u043A\u0430\u043A \u0432 \u043C\u0438\u0440\u043E"
-  Prefab: {fileID: 8806302578832626142, guid: 08f3a1551b722d341876216538a48fad, type: 3}
-  Icon: {fileID: 0}
+  Prefab: {fileID: 8806302578832626136, guid: 08f3a1551b722d341876216538a48fad, type: 3}
+  Icon: {fileID: 21300000, guid: a04ecc9d5e12d5d449077414eb86635e, type: 3}

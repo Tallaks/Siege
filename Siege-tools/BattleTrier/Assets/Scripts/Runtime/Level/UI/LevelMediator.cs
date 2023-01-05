@@ -6,9 +6,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Level.UI
   {
     [SerializeField] private MapChoicePanel _mapChoicePanel;
     [SerializeField] private RoleChoicePanel _roleChoicePanel;
-    
+
     public void ShowMapChoice() => _mapChoicePanel.Show();
     public void InitMaps() => _mapChoicePanel.Initialize();
+    public void HideMapChoicePanel() => _mapChoicePanel.Hide();
     public void ShowRoleChoice() => _roleChoicePanel.Show();
   }
 }
