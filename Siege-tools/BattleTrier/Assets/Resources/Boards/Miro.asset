@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 843e6733976446bbbd66d539fb1a8ab7, type: 3}
+  m_Name: Miro
+  m_EditorClassIdentifier: 
+  Name: "\u0414\u043E\u0441\u043A\u0430 \u043A\u0430\u043A \u0432 \u043C\u0438\u0440\u043E"
+  Prefab: {fileID: 8806302578832626142, guid: 08f3a1551b722d341876216538a48fad, type: 3}
+  Icon: {fileID: 0}

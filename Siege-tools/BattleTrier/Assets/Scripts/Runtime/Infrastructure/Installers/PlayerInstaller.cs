@@ -17,6 +17,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       {
         _playerService.RegisterFirstPlayer();
         _levelMediator.ShowMapChoice();
+        _levelMediator.InitMaps();
         return;
       }
 
