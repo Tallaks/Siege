@@ -9,7 +9,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
   {
     public static string JoinCode;
 
-    [SerializeField] private LobbyMediator _lobbyMediator;
+    [SerializeField] private MainMenuMediator _mainMenuMediator;
 
     private AuthenticationServiceFacade _authentication;
     
@@ -18,10 +18,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 
     private async void TrySignIn()
     {
+      _mainMenuMediator.HideUntilAuth();
       _authentication = Container.Resolve<AuthenticationServiceFacade>();
       await _authentication.SignInAnonymously();
       
       Debug.Log($"Signed in. Unity Player ID {_authentication.PlayerId}");
+      _mainMenuMediator.Initialize();
     }
 
     public override void InstallBindings()

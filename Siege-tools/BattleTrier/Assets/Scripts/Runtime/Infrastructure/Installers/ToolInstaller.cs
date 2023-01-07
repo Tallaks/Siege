@@ -17,6 +17,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     }
 
     public async void Initialize() => 
-      SceneManager.LoadSceneAsync("Lobby");
+      SceneManager.LoadSceneAsync("MainMenu");
   }
 }
