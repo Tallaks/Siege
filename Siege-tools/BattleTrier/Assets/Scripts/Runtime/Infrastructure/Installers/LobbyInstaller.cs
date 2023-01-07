@@ -1,7 +1,6 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication;
 using Kulinaria.Tools.BattleTrier.Runtime.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
@@ -11,22 +10,24 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     public static string JoinCode;
 
     [SerializeField] private LobbyMediator _lobbyMediator;
+
+    private AuthenticationServiceFacade _authentication;
     
-    public async void Initialize()
+    public void Initialize() => 
+      TrySignIn();
+
+    private async void TrySignIn()
     {
-      _lobbyMediator.Initialize();
+      _authentication = Container.Resolve<AuthenticationServiceFacade>();
+      await _authentication.SignInAnonymously();
       
-      Container.Resolve<LobbyService>().OnGameCreated += code =>
-      {
-        JoinCode = code;
-        SceneManager.LoadSceneAsync("Level1");
-      };
+      Debug.Log($"Signed in. Unity Player ID {_authentication.PlayerId}");
     }
 
     public override void InstallBindings()
     {
       Container.BindInterfacesTo<LobbyInstaller>().FromInstance(this).AsSingle();
-      Container.Bind<LobbyService>().AsSingle();
+      Container.Bind<AuthenticationServiceFacade>().FromNew().AsSingle();
     }
   }
 }

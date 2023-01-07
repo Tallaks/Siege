@@ -26,11 +26,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI
 
     public void Initialize()
     {
-      _joinPanel.SetActive(false);
-
-      _createButton.onClick.AddListener(() => _lobbyService.CreateGame());
-      _joinByCodeButton.onClick.AddListener(() => _joinPanel.SetActive(true));
-      _joinButton.onClick.AddListener(() => _lobbyService.JoinGame(_codeInputField.text));
+      // _joinPanel.SetActive(false);
+      //
+      // _createButton.onClick.AddListener(() => _lobbyService.CreateGame());
+      // _joinByCodeButton.onClick.AddListener(() => _joinPanel.SetActive(true));
+      // _joinButton.onClick.AddListener(() => _lobbyService.JoinGame(_codeInputField.text));
     }
   }
 }
