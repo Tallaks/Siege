@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.UI
@@ -19,7 +20,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI
       _parent.gameObject.SetActive(true);
       _joinPanel.SetActive(false);
 
-      _createButton.onClick.AddListener(() => Debug.Log("CreateGame"));
+      _createButton.onClick.AddListener(() =>
+      {
+        SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Additive);
+        _parent.gameObject.SetActive(false);
+      });
       _joinByCodeButton.onClick.AddListener(() => _joinPanel.SetActive(true));
       _joinButton.onClick.AddListener(() => Debug.Log("JoinGame"));
     }

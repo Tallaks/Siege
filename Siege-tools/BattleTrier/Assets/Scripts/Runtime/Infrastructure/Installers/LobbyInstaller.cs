@@ -11,25 +11,29 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 
     [SerializeField] private MainMenuMediator _mainMenuMediator;
 
-    private AuthenticationServiceFacade _authentication;
-    
-    public void Initialize() => 
+    private AuthenticationServiceFacade _authenticationService;
+
+    [Inject]
+    private void Construct(AuthenticationServiceFacade authenticationService) =>
+      _authenticationService = authenticationService;
+
+    public void Initialize() =>
       TrySignIn();
+
+    public override void InstallBindings()
+    {
+      Container.Bind<IInitializable>().To<LobbyInstaller>().FromInstance(this).AsSingle();
+      Container.Bind<MainMenuMediator>().FromInstance(_mainMenuMediator).AsSingle();
+    }
 
     private async void TrySignIn()
     {
       _mainMenuMediator.HideUntilAuth();
-      _authentication = Container.Resolve<AuthenticationServiceFacade>();
-      await _authentication.SignInAnonymously();
-      
-      Debug.Log($"Signed in. Unity Player ID {_authentication.PlayerId}");
-      _mainMenuMediator.Initialize();
-    }
+      _authenticationService = Container.Resolve<AuthenticationServiceFacade>();
+      await _authenticationService.SignInAnonymously();
 
-    public override void InstallBindings()
-    {
-      Container.BindInterfacesTo<LobbyInstaller>().FromInstance(this).AsSingle();
-      Container.Bind<AuthenticationServiceFacade>().FromNew().AsSingle();
+      Debug.Log($"Signed in. Unity Player ID {_authenticationService.PlayerId}");
+      _mainMenuMediator.Initialize();
     }
   }
 }
