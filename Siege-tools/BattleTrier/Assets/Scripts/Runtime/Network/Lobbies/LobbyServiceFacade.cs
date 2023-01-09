@@ -19,11 +19,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       _authentication = authentication;
     }
 
-    public async Task<(bool Success, Lobby lobby)> TryCreateLobby()
+    public async Task<(bool Success, Lobby lobby)> TryCreateLobby(string lobbyName)
     {
       try
       {
-        Lobby lobby = await _lobbyApi.CreateLobby();
+        Lobby lobby = await _lobbyApi.CreateLobby(lobbyName);
         return (true, lobby);
       }
       catch (LobbyServiceException exception)

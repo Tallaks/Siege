@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.UI
+namespace Kulinaria.Tools.BattleTrier.Runtime.UI.Menu
 {
   public class MainMenuMediator : MonoBehaviour
   {

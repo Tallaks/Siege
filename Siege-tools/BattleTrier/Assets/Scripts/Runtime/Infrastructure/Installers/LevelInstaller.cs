@@ -10,7 +10,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 
     public override void InstallBindings()
     {
-      Debug.Log("<color=blue>Join Code :</color>" + LobbyInstaller.JoinCode);
+      Debug.Log("<color=blue>Join Code :</color>" + MainMenuInstaller.JoinCode);
       Container.Bind<IInitializable>().To<LevelInstaller>().FromInstance(this).AsSingle();
       Container.Bind<BoardSpawner>().FromInstance(_boardSpawner).AsSingle();
     }

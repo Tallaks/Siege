@@ -10,7 +10,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
   {
     public const int MaxPlayers = 8;
     
-    public async Task<Lobby> CreateLobby()
+    public async Task<Lobby> CreateLobby(string lobbyName)
     {
       var options = new CreateLobbyOptions()
       {
@@ -20,7 +20,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         })
       };
 
-      return await LobbyService.Instance.CreateLobbyAsync("Lobby1", MaxPlayers, options);
+      return await LobbyService.Instance.CreateLobbyAsync(lobbyName, MaxPlayers, options);
     }
   }
 }

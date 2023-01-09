@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.UI
+namespace Kulinaria.Tools.BattleTrier.Runtime.UI.Menu
 {
   public class MainMenuUi : MonoBehaviour
   {
