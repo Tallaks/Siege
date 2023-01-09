@@ -1,7 +1,8 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobby;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -19,6 +20,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind<NetworkManager>().FromInstance(FindObjectOfType<NetworkManager>()).AsSingle();
       Container.Bind<AuthenticationServiceFacade>().FromNew().AsSingle();
       Container.Bind<LobbyServiceFacade>().FromNew().AsSingle();
+      Container.Bind<UnityLobbyApi>().FromNew().AsSingle();
+      Container.Bind<UserProfile>().FromNew().AsSingle();
+      Container.Bind<LobbyInfo>().FromNew().AsSingle();
     }
 
     public void Initialize() =>
