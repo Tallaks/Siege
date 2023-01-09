@@ -14,11 +14,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     private readonly AuthenticationServiceFacade _authentication;
     private readonly UnityLobbyApi _lobbyApi;
     private readonly LobbyInfo _lobbyInfo;
+    private UserProfile _localUser;
 
     public Lobby CurrentLobby { get; set; }
     
-    public LobbyServiceFacade(AuthenticationServiceFacade authentication, UnityLobbyApi lobbyApi, LobbyInfo lobbyInfo)
+    public LobbyServiceFacade(
+      AuthenticationServiceFacade authentication,
+      UnityLobbyApi lobbyApi,
+      LobbyInfo lobbyInfo,
+      UserProfile localUser)
     {
+      _localUser = localUser;
       _lobbyApi = lobbyApi;
       _lobbyInfo = lobbyInfo;
       _authentication = authentication;
@@ -88,6 +94,41 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       catch (LobbyServiceException e)
       {
         Debug.LogError(e.Reason);
+      }
+    }
+
+    public async Task<Lobby> ReconnectToLobbyAsync(string lobbyId)
+    {
+      try
+      {
+        return await _lobbyApi.ReconnectToLobby(lobbyId);
+      }
+      catch (LobbyServiceException e)
+      {
+        // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
+        if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
+          Debug.LogError(e.Reason);
+      }
+
+      return null;
+    }
+
+    public async void RemovePlayerFromLobbyAsync(string playerId, string currentLobbyId)
+    {
+      if (_localUser.IsHost)
+      {
+        try
+        {
+          await _lobbyApi.RemovePlayerFromLobby(playerId, currentLobbyId);
+        }
+        catch (LobbyServiceException e)
+        {
+          Debug.LogError(e.Reason);
+        }
+      }
+      else
+      {
+        Debug.LogError("Only the host can remove other players from the lobby.");
       }
     }
   }

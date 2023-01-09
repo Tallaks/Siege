@@ -1,12 +1,10 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
+using System.Threading.Tasks;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
 {
   public interface IConnectionService
   {
-    ConnectionState CurrentState { get; }
-    void Enter<TState>() where TState : NonParameterConnectionState;
-    void Enter<TState, TPayload>(TPayload payload) where TState : ParameterConnectionState<TPayload>;
-    void Initialize();
+    Task SetupHostConnectionAsync(string userName);
+    Task ConnectClientAsync(string userName);
   }
 }

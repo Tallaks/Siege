@@ -1,29 +1,22 @@
 using System;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Session;
 using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
-using Unity.Networking.Transport.Relay;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
-using Unity.Services.Relay;
-using Unity.Services.Relay.Models;
 using UnityEngine;
-using Task = System.Threading.Tasks.Task;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
-  public class StartingHostState : ParameterConnectionState<string>
+  public class StartingHostState : ParameterConnectionState<string>, IApprovalCheck, IOnlineState
   {
     private NetworkManager _networkManager;
     private LobbyInfo _lobbyInfo;
-    private LobbyServiceFacade _lobbyService;
+    private IConnectionStateMachine _connectionStateMachine;
     private IConnectionService _connectionService;
 
-    public StartingHostState(IConnectionService connectionService, NetworkManager networkManager, LobbyInfo lobbyInfo, LobbyServiceFacade lobbyService)
+    public StartingHostState(IConnectionStateMachine connectionStateMachine, IConnectionService connectionService, NetworkManager networkManager, LobbyInfo lobbyInfo)
     {
       _connectionService = connectionService;
-      _lobbyService = lobbyService;
+      _connectionStateMachine = connectionStateMachine;
       _lobbyInfo = lobbyInfo;
       _networkManager = networkManager;
     }
@@ -32,7 +25,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     {
       try
       {
-        await SetupHostConnectionAsync(userName.ToString());
+        await _connectionService.SetupHostConnectionAsync(userName.ToString());
         Debug.Log($"Created relay allocation with join code {_lobbyInfo.RelayJoinCode}");
 
         // NGO's StartHost launches everything
@@ -44,12 +37,35 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
         StartHostFailed();
         throw;
       }
+    }
 
+    public override void ReactToClientDisconnect(ulong clientId)
+    {
+      if (_networkManager.LocalClientId == clientId)
+        _connectionStateMachine.Enter<OfflineState>();
+    }
+
+    public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+    {
+      byte[] connectionData = request.Payload;
+      ulong clientId = request.ClientNetworkId;
+      // This happens when starting as a host, before the end of the StartHost call. In that case, we simply approve ourselves.
+      if (clientId == _networkManager.LocalClientId)
+      {
+        var payload = System.Text.Encoding.UTF8.GetString(connectionData);
+        var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload); // https://docs.unity3d.com/2020.2/Documentation/Manual/JSONSerialization.html
+
+        SessionService<SessionPlayerData>.Instance.SetupConnectingPlayerSessionData(clientId, connectionPayload.PlayerId,
+          new SessionPlayerData(clientId, connectionPayload.PlayerName, new NetworkGuid(), 0, true));
+
+        // connection approval will create a player object for you
+        response.Approved = true;
+        response.CreatePlayerObject = true;
+      }
     }
 
     public override void Exit()
     {
-      
     }
 
     private void OnClientDisconnect(ulong clientId)
@@ -61,53 +77,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     private void StartHostFailed()
     {
       Debug.LogError("Start Hosting failed!!");
-      _connectionService.Enter<OfflineState>();
+      _connectionStateMachine.Enter<OfflineState>();
     }
 
-    private async Task SetupHostConnectionAsync(string userName)
-    {
-      Debug.Log("Setting up Unity Relay host");
-
-      SetConnectionPayload(GetPlayerId(), userName); // Need to set connection payload for host as well, as host is a client too
-
-      // Create relay allocation
-      Allocation hostAllocation = await RelayService.Instance.CreateAllocationAsync(8, region: null);
-      var joinCode = await RelayService.Instance.GetJoinCodeAsync(hostAllocation.AllocationId);
-
-      Debug.Log($"server: connection data: {hostAllocation.ConnectionData[0]} {hostAllocation.ConnectionData[1]}, " +
-                $"allocation ID:{hostAllocation.AllocationId}, region:{hostAllocation.Region}");
-
-      _lobbyInfo.RelayJoinCode = joinCode;
-
-      //next line enable lobby and relay services integration
-      await _lobbyService.UpdateLobbyDataAsync(_lobbyInfo.GetDataForUnityServices());
-      await _lobbyService.UpdatePlayerRelayInfoAsync(hostAllocation.AllocationIdBytes.ToString(), joinCode);
-
-      // Setup UTP with relay connection info
-      var utp = (UnityTransport)_networkManager.NetworkConfig.NetworkTransport;
-      utp.SetRelayServerData(new RelayServerData(hostAllocation, "dtls")); // This is with DTLS enabled for a secure connection
-    }
-
-    private void SetConnectionPayload(string playerId, string userName)
-    {
-      string payload = JsonUtility.ToJson(new ConnectionPayload()
-      {
-        PlayerId = playerId,
-        PlayerName = userName,
-        IsDebug = Debug.isDebugBuild
-      });
-
-      byte[] payloadBytes = System.Text.Encoding.UTF8.GetBytes(payload);
-
-      _networkManager.NetworkConfig.ConnectionData = payloadBytes;
-    }
-
-    private string GetPlayerId()
-    {
-      if (UnityServices.State != ServicesInitializationState.Initialized)
-        return Guid.NewGuid().ToString();
-
-      return AuthenticationService.Instance.PlayerId;
-    }
+    public void OnTransportFailure() => 
+      _connectionStateMachine.Enter<OfflineState>();
   }
 }

@@ -39,5 +39,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       };
       return await LobbyService.Instance.UpdatePlayerAsync(currentLobbyId, playerId, updateOptions);
     }
+
+    public async Task<Lobby> ReconnectToLobby(string lobbyId) => 
+      await LobbyService.Instance.ReconnectToLobbyAsync(lobbyId);
+
+    public async Task RemovePlayerFromLobby(string playerId, string currentLobbyId)
+    {
+      try
+      {
+        await LobbyService.Instance.RemovePlayerAsync(currentLobbyId, playerId);
+      }
+      catch (LobbyServiceException e)
+        when (e is { Reason: LobbyExceptionReason.PlayerNotFound })
+      {
+        // If Player is not found, they have already left the lobby or have been kicked out. No need to throw here
+      }
+    }
   }
 }

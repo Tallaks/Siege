@@ -1,68 +1,145 @@
 using System;
-using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
 using UnityEngine;
+using Zenject;
+using Task = System.Threading.Tasks.Task;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
 {
   public class RelayConnectionService : IConnectionService
   {
-    private Dictionary<Type, ConnectionState> _connections;
-
-    private NetworkManager _networkManager;
-    private readonly LobbyInfo _lobbyInfo;
     private readonly LobbyServiceFacade _lobbyService;
+    private readonly NetworkManager _networkManager;
+    private readonly LobbyInfo _currentLobby;
+    
+    [Inject] private IConnectionStateMachine _connectionStateMachine;
 
-    public ConnectionState CurrentState { get; private set; }
-
-    public RelayConnectionService(NetworkManager networkManager,  LobbyInfo lobbyInfo, LobbyServiceFacade lobbyService)
+    public RelayConnectionService(
+      NetworkManager networkManager,
+      LobbyServiceFacade lobbyService,
+      LobbyInfo currentLobby)
     {
       _networkManager = networkManager;
-      _lobbyInfo = lobbyInfo;
+      _currentLobby = currentLobby;
       _lobbyService = lobbyService;
     }
 
-    public void Initialize()
+    public async Task SetupHostConnectionAsync(string userName)
     {
-      _connections = new()
+      Debug.Log("Setting up Unity Relay host");
+
+      SetConnectionPayload(GetPlayerId(),
+        userName); // Need to set connection payload for host as well, as host is a client too
+
+      // Create relay allocation
+      Allocation hostAllocation = await RelayService.Instance.CreateAllocationAsync(8, region: null);
+      var joinCode = await RelayService.Instance.GetJoinCodeAsync(hostAllocation.AllocationId);
+
+      Debug.Log($"server: connection data: {hostAllocation.ConnectionData[0]} {hostAllocation.ConnectionData[1]}, " +
+                $"allocation ID:{hostAllocation.AllocationId}, region:{hostAllocation.Region}");
+
+      _currentLobby.RelayJoinCode = joinCode;
+
+      //next line enable lobby and relay services integration
+      await _lobbyService.UpdateLobbyDataAsync(_currentLobby.GetDataForUnityServices());
+      await _lobbyService.UpdatePlayerRelayInfoAsync(hostAllocation.AllocationIdBytes.ToString(), joinCode);
+
+      // Setup UTP with relay connection info
+      var utp = (UnityTransport)_networkManager.NetworkConfig.NetworkTransport;
+      utp.SetRelayServerData(new RelayServerData(hostAllocation,
+        "dtls")); // This is with DTLS enabled for a secure connection
+    }
+
+    public async Task ConnectClientAsync(string userName)
+    {
+      try
       {
-        [typeof(OfflineState)] = new OfflineState(_networkManager),
-        [typeof(ClientReconnectingState)] = new ClientReconnectingState(),
-        [typeof(ClientConnectingState)] = new ClientConnectingState(),
-        [typeof(ClientConnectedState)] = new ClientConnectedState(),
-        [typeof(HostingState)] = new HostingState(),
-        [typeof(StartingHostState)] = new StartingHostState(this, _networkManager, _lobbyInfo, _lobbyService)
-      };
+        // Setup NGO with current connection method
+        await SetupClientConnectionAsync(userName);
+
+        // NGO's StartClient launches everything
+        if (!_networkManager.StartClient())
+          throw new Exception("NetworkManager StartClient failed");
+      }
+      catch (Exception e)
+      {
+        Debug.LogError("Error connecting client, see following exception");
+        Debug.LogException(e);
+        StartingClientFailedAsync();
+        throw;
+      }
     }
-    
-    public void Enter<TState>() where TState : NonParameterConnectionState
+
+    private async Task SetupClientConnectionAsync(string playerName)
     {
-      var state = ChangeState<TState>();
-      state.Enter();
+      Debug.Log("Setting up Unity Relay client");
+
+      SetConnectionPayload(GetPlayerId(), playerName);
+
+      if (_lobbyService.CurrentLobby == null)
+      {
+        throw new Exception("Trying to start relay while Lobby isn't set");
+      }
+
+      Debug.Log($"Setting Unity Relay client with join code {_currentLobby.RelayJoinCode}");
+
+      // Create client joining allocation from join code
+      var joinedAllocation = await RelayService.Instance.JoinAllocationAsync(_currentLobby.RelayJoinCode);
+      Debug.Log($"client: {joinedAllocation.ConnectionData[0]} {joinedAllocation.ConnectionData[1]}, " +
+                $"host: {joinedAllocation.HostConnectionData[0]} {joinedAllocation.HostConnectionData[1]}, " +
+                $"client: {joinedAllocation.AllocationId}");
+
+      await _lobbyService.UpdatePlayerRelayInfoAsync(joinedAllocation.AllocationId.ToString(),
+        _currentLobby.RelayJoinCode);
+
+      // Configure UTP with allocation
+      var utp = (UnityTransport)_networkManager.NetworkConfig.NetworkTransport;
+      utp.SetRelayServerData(new RelayServerData(joinedAllocation, "dtls"));
     }
 
-    public void Enter<TState, TPayload>(TPayload payload) where TState : ParameterConnectionState<TPayload>
+    private void SetConnectionPayload(string playerId, string userName)
     {
-      var state = ChangeState<TState>();
-      state.Enter(payload);
+      string payload = JsonUtility.ToJson(new ConnectionPayload()
+      {
+        PlayerId = playerId,
+        PlayerName = userName,
+        IsDebug = Debug.isDebugBuild
+      });
+
+      byte[] payloadBytes = System.Text.Encoding.UTF8.GetBytes(payload);
+
+      _networkManager.NetworkConfig.ConnectionData = payloadBytes;
     }
 
-    private TState ChangeState<TState>() where TState : ConnectionState
+    private string GetPlayerId()
     {
-      CurrentState?.Exit();
+      if (UnityServices.State != ServicesInitializationState.Initialized)
+        return Guid.NewGuid().ToString();
 
-      var state = GetState<TState>();
-
-      Debug.Log($"Changed connection state from {CurrentState?.GetType().Name} to {state.GetType().Name}.");
-      CurrentState = state;
-
-      return state;
+      return AuthenticationService.Instance.PlayerId;
     }
 
-    private TState GetState<TState>() where TState : ConnectionState =>
-      _connections[typeof(TState)] as TState;
+    private void StartingClientFailedAsync()
+    {
+      string disconnectReason = _networkManager.DisconnectReason;
+      if (string.IsNullOrEmpty(disconnectReason))
+        Debug.Log("Connection Failed!!!");
+      else
+      {
+        var connectStatus = JsonUtility.FromJson<ConnectStatus>(disconnectReason);
+        Debug.Log(connectStatus);
+      }
+
+      _connectionStateMachine.Enter<OfflineState>();
+    }
   }
 }

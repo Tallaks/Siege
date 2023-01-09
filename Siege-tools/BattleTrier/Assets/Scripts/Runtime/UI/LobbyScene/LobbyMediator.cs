@@ -15,15 +15,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
     private LobbyServiceFacade _lobbyService;
     private UserProfile _localUser;
     private LobbyInfo _lobbyInfo;
+    private IConnectionStateMachine _connectionStateMachine;
     private IConnectionService _connectionService;
 
     [Inject]
-    private void Construct(LobbyServiceFacade lobbyService, UserProfile userProfile, LobbyInfo lobbyInfo, IConnectionService connectionService)
+    private void Construct(LobbyServiceFacade lobbyService, UserProfile userProfile, LobbyInfo lobbyInfo,
+      IConnectionStateMachine connectionStateMachine, IConnectionService connectionService)
     {
+      _connectionService = connectionService;
       _lobbyInfo = lobbyInfo;
       _localUser = userProfile;
       _lobbyService = lobbyService;
-      _connectionService = connectionService;
+      _connectionStateMachine = connectionStateMachine;
     }
 
     public void Initialize() => _lobbyUi.Initialize();
@@ -37,8 +40,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
         _lobbyService.SetRemoteLobby(lobbyCreationAttempt.Lobby);
 
         Debug.Log($"Created lobby with ID: {_lobbyInfo.Id} and code {_lobbyInfo.Code}");
-        _connectionService.Enter<StartingHostState, string>(_localUser.Name);
+        _connectionStateMachine.Enter<StartingHostState, string>(_localUser.Name);
       }
+    }
+
+    public void OnJoinedLobby(Lobby remoteLobby)
+    {
+      _lobbyService.SetRemoteLobby(remoteLobby);
+
+      Debug.Log(
+        $"Joined lobby with code: {_lobbyInfo.Code}, Internal Relay Join Code{_lobbyInfo.RelayJoinCode}");
+
+      _connectionStateMachine.Enter<ClientReconnectingState, string>(_localUser.Name);
     }
   }
 }
