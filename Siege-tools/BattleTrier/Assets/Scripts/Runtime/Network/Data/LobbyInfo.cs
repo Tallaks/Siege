@@ -17,17 +17,23 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 
     private Dictionary<string, UserProfile> _lobbyUsers = new();
 
-    private LobbyInfo()
+    public LobbyInfo()
     {
     }
 
-    public LobbyInfo(Lobby lobby)
+    public LobbyInfo(Lobby lobby) =>
+      ApplyRemoteData(lobby);
+
+    public void ApplyRemoteData(Lobby lobby)
     {
       var data = new LobbyInfo();
       data.Id = lobby.Id;
       data.Name = lobby.Name;
       data.Code = lobby.LobbyCode;
-      data.RelayJoinCode = lobby.Data.ContainsKey("RelayJoinCode") ? lobby.Data["RelayJoinCode"].Value : null;
+      if (lobby.Data != null)
+        data.RelayJoinCode = lobby.Data.ContainsKey("RelayJoinCode") ? lobby.Data["RelayJoinCode"].Value : null;
+      else
+        data.RelayJoinCode = null;
 
       var lobbyUsers = new Dictionary<string, UserProfile>();
       foreach (var player in lobby.Players)
@@ -83,7 +89,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       user.OnChanged -= OnChangedUser;
     }
 
-    private void OnChangedUser(UserProfile user) => 
+    private void OnChangedUser(UserProfile user) =>
       OnLobbyChanged?.Invoke(this);
+
+    public Dictionary<string, DataObject> GetDataForUnityServices() =>
+      new()
+      {
+        { "RelayJoinCode", new DataObject(DataObject.VisibilityOptions.Public, RelayJoinCode) }
+      };
   }
 }

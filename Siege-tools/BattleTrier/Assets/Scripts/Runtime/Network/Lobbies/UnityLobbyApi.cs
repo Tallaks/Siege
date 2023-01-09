@@ -22,5 +22,22 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
 
       return await LobbyService.Instance.CreateLobbyAsync(lobbyName, MaxPlayers, options);
     }
+
+    public async Task<Lobby> UpdateLobby(string currentLobbyId, Dictionary<string,DataObject> data, bool shouldLock)
+    {
+      var updateOptions = new UpdateLobbyOptions { Data = data, IsLocked = shouldLock };
+      return await LobbyService.Instance.UpdateLobbyAsync(currentLobbyId, updateOptions);
+    }
+
+    public async Task<Lobby> UpdatePlayer(string currentLobbyId, string playerId, Dictionary<string,PlayerDataObject> data, string allocationId, string connectionInfo)
+    {
+      UpdatePlayerOptions updateOptions = new UpdatePlayerOptions
+      {
+        Data = data,
+        AllocationId = allocationId,
+        ConnectionInfo = connectionInfo
+      };
+      return await LobbyService.Instance.UpdatePlayerAsync(currentLobbyId, playerId, updateOptions);
+    }
   }
 }

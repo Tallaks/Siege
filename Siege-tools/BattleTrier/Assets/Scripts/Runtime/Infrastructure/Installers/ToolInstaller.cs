@@ -1,6 +1,8 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
 using Unity.Netcode;
@@ -23,9 +25,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind<UnityLobbyApi>().FromNew().AsSingle();
       Container.Bind<UserProfile>().FromNew().AsSingle();
       Container.Bind<LobbyInfo>().FromNew().AsSingle();
+      Container.Bind<IConnectionService>().To<RelayConnectionService>().FromNew().AsSingle();
     }
 
-    public void Initialize() =>
+    public void Initialize()
+    {
+      Container.Resolve<IConnectionService>().Initialize();
+      Container.Resolve<IConnectionService>().Enter<OfflineState>();
       SceneManager.LoadSceneAsync("MainMenu");
+    }
   }
 }
