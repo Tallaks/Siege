@@ -109,9 +109,9 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DistIntens: 1
-    - _DistSpeed: 3.2
-    - _Distortion_Noise_Scale: 1
+    - _DistIntens: 0.5
+    - _DistSpeed: 1
+    - _Distortion_Noise_Scale: 2
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _FoamContrast: 0

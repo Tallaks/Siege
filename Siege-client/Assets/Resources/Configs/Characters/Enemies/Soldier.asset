@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Soldier
   m_EditorClassIdentifier: 
   Name: Soldier
-  Prefab: {fileID: 8053380497271588316, guid: 93cd726ed6ac1cc419ae6c6b5f752953, type: 3}
+  Prefab: {fileID: 8032559572535848152, guid: fd58df0bee7e4284fa17513c75f79327, type: 3}
   ActionPoints: 10
   HealthPoints: 40
