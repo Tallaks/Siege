@@ -1,11 +1,12 @@
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
-using UnityEngine;
+using System;
+using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Config;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn
 {
-	[RequireComponent(typeof(CustomTile))]
-	public class PlayerSlot : MonoBehaviour
+	[Serializable]
+	public struct PlayerSlot
 	{
-		public CustomTile Tile => GetComponent<CustomTile>();
+		public PlayerSpawnTile Spawn;
+		public PlayerConfig Player;
 	}
 }

@@ -1,6 +1,6 @@
+using Kulinaria.Siege.Runtime.Debugging.Logging;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Enemies;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Spawn;
-using Kulinaria.Siege.Runtime.Infrastructure.Assets;
 using UnityEngine;
 using Zenject;
 
@@ -8,26 +8,30 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 {
 	public class EnemyFactory : PrefabFactory<BaseEnemy>
 	{
-		private const string PathForEnemyPrefab = "Prefabs/Battle/Characters/Enemies/Heraklios_Enemy";
-
 		private readonly DiContainer _container;
-		private readonly IAssetsProvider _assetsProvider;
+		private readonly ILoggerService _loggerService;
 
-		public EnemyFactory(DiContainer container, IAssetsProvider assetsProvider)
+		public EnemyFactory(DiContainer container, ILoggerService loggerService)
 		{
 			_container = container;
-			_assetsProvider = assetsProvider;
+			_loggerService = loggerService;
 		}
 
-		public BaseEnemy Create(EnemySlot slot)
+		public BaseEnemy Create(EnemySlot spawnTile)
 		{
 			var enemy = _container.InstantiatePrefabForComponent<BaseEnemy>(
-				_assetsProvider.LoadAsset<BaseEnemy>(PathForEnemyPrefab),
-				slot.transform.position,
-				Quaternion.Euler(0, 180f,0), 
+				spawnTile.Enemy.Prefab,
+				spawnTile.Spawn.transform.position,
+				Quaternion.LookRotation(spawnTile.LookDirection, Vector3.up),
 				null);
-			
-			slot.Tile.RegisterVisitor(enemy);
+
+			enemy.MaxAP = spawnTile.Enemy.ActionPoints;
+			enemy.MaxHP = spawnTile.Enemy.HealthPoints;
+			enemy.Name = spawnTile.Enemy.Name;
+
+			_loggerService.Log($"Created: {enemy}", LoggerLevel.Characters);
+
+			spawnTile.Spawn.Tile.RegisterVisitor(enemy);
 			return enemy;
 		}
 	}

@@ -25,7 +25,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnitySetUp]
 		public IEnumerator LoadSceneAndReferences()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 			yield return SceneManager.LoadSceneAsync(SceneNames.BattleScene);
 
 			DiContainer diContainer = Object.FindObjectOfType<SceneContext>().Container;
@@ -48,9 +48,9 @@ namespace Kulinaria.Siege.Tests.Gameplay
 		[UnityTest]
 		public IEnumerator WhenBattleSceneLoaded_ThenItHasPlayerSlots()
 		{
-			Assert.NotZero(Object.FindObjectsOfType<PlayerSlot>().Length);
+			Assert.NotZero(Object.FindObjectsOfType<PlayerSpawnTile>().Length);
 			Assert.NotZero(_spawnSetup.PlayerSlots.Count());
-			Assert.AreEqual(Object.FindObjectsOfType<PlayerSlot>().Length, _spawnSetup.PlayerSlots.Count());
+			Assert.AreEqual(Object.FindObjectsOfType<PlayerSpawnTile>().Length, _spawnSetup.PlayerSlots.Count());
 			yield break;
 		}
 

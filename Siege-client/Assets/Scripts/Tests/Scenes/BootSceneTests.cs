@@ -14,7 +14,7 @@ namespace Kulinaria.Siege.Tests.Scenes
 	[TestFixture]
 	public class BootSceneTests
 	{
-		private GameInstaller GameInstaller => Object.FindObjectOfType<GameInstaller>();
+		private ApplicationInstaller ApplicationInstaller => Object.FindObjectOfType<ApplicationInstaller>();
 		private ProjectContext ProjectContext => Object.FindObjectOfType<ProjectContext>();
 
 		[UnityTest]
@@ -47,7 +47,7 @@ namespace Kulinaria.Siege.Tests.Scenes
 
 			// Assert
 			Assert.IsNotNull(ProjectContext);
-			Assert.IsNotNull(GameInstaller);
+			Assert.IsNotNull(ApplicationInstaller);
 		}
 
 		[UnityTest]
@@ -57,7 +57,7 @@ namespace Kulinaria.Siege.Tests.Scenes
 			yield return LoadBootSceneAndWait();
 
 			// Assert
-			Assert.IsTrue(ProjectContext.Installers.Contains(GameInstaller));
+			Assert.IsTrue(ProjectContext.Installers.Contains(ApplicationInstaller));
 		}
 
 		[UnityTest]
@@ -67,7 +67,7 @@ namespace Kulinaria.Siege.Tests.Scenes
 			yield return LoadBootSceneAndWait();
 
 			// Assert
-			Assert.AreEqual(1, Object.FindObjectsOfType<GameInstaller>().Length);
+			Assert.AreEqual(1, Object.FindObjectsOfType<ApplicationInstaller>().Length);
 		}
 
 		[UnityTest]
@@ -80,7 +80,11 @@ namespace Kulinaria.Siege.Tests.Scenes
 		[UnityTearDown]
 		public IEnumerator TearDown()
 		{
-			var resolvedRunner = Object.FindObjectOfType<ProjectContext>().Container.Resolve<ICoroutineRunner>();
+			ICoroutineRunner resolvedRunner = null;
+			if(Object.FindObjectOfType<ProjectContext>() != null)
+			{
+				resolvedRunner = Object.FindObjectOfType<ProjectContext>().Container.Resolve<ICoroutineRunner>();
+			}
 
 			foreach (CoroutineRunner runner in Object.FindObjectsOfType<CoroutineRunner>())
 			{

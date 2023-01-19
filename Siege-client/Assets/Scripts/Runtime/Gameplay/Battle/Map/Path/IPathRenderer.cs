@@ -1,5 +1,4 @@
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
-using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 {

@@ -1,2 +1,2 @@
 - [API](API%20Documentation/Readme.md)
-- [Guides](HowTo/ReadMe.md)
+- [Guides](Guides/ReadMe.md)

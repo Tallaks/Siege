@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Movement;
+using Kulinaria.Siege.Runtime.Infrastructure.Coroutines;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
+using Kulinaria.Siege.Tests.TestInfrastructure.Installers;
 using NUnit.Framework;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Zenject;
+using PoolsInstaller = Kulinaria.Siege.Tests.TestInfrastructure.Installers.PoolsInstaller;
+using TilemapInstaller = Kulinaria.Siege.Tests.TestInfrastructure.Installers.TilemapInstaller;
 
 namespace Kulinaria.Siege.Tests.Tiles
 {
@@ -20,7 +21,6 @@ namespace Kulinaria.Siege.Tests.Tiles
 	{
 		private IGridMap _gridMap;
 		private IPathFinder _pathFinder;
-		private ITileSelector _selector;
 
 		[UnityTest]
 		public IEnumerator WhenTilesGenerated_ThenTheyHaveRenderingComponent()
@@ -77,10 +77,11 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
 			_pathFinder.FindDistancesToAllTilesFrom(targetTile);
-			_selector.Select(targetTile, _pathFinder.GetAvailableTilesByDistance(1000));
 
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Renderer.Repaint();
 
 			yield return new WaitForSeconds(0.01f);
 
@@ -101,9 +102,11 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 			CustomTile targetTile = _gridMap.GetTile(1, 1);
 			_pathFinder.FindDistancesToAllTilesFrom(targetTile);
-			_selector.Select(targetTile, _pathFinder.GetAvailableTilesByDistance(1000));
+
 			foreach (CustomTile tile in _gridMap.AllTiles)
 				tile.Active = true;
+			foreach (CustomTile tile in _gridMap.AllTiles)
+				tile.Renderer.Repaint();
 
 			yield return new WaitForSeconds(0.01f);
 
@@ -116,26 +119,32 @@ namespace Kulinaria.Siege.Tests.Tiles
 
 		private void PrepareTiles()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 
-			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+			var tilemapInstaller = new TilemapInstaller();
+			tilemapInstaller.PreInstall();
+
+			var charactersInstaller = new CharactersInstaller();
+			charactersInstaller.PreInstall();
+
+			var gameplayInstaller = new TestInfrastructure.Installers.GameplayInstaller();
+			gameplayInstaller.PreInstall();
+
+			var poolsInstaller = new PoolsInstaller();
+			poolsInstaller.PreInstall();
 
 			PreInstall();
 
-			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
-			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.Bind<IMovementService>().To<TileMovementService>().FromNew().AsSingle();
-			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
-			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
-			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
+			tilemapInstaller.Install(Container);
+			charactersInstaller.Install(Container);
+			gameplayInstaller.Install(Container);
+			poolsInstaller.Install(Container);
 
 			PostInstall();
 
+			Debug.Log(Container.Resolve<ICoroutineRunner>());
 			_gridMap = Container.Resolve<IGridMap>();
-			_selector = Container.Resolve<ITileSelector>();
+			Container.Resolve<IClickInteractor>();
 			_pathFinder = Container.Resolve<IPathFinder>();
 		}
 	}

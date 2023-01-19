@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Siege.Runtime.Gameplay.Battle;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection;
 using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles;
-using Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering;
 using Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers;
+using Kulinaria.Siege.Tests.TestInfrastructure.Installers;
 using NUnit.Framework;
-using UnityEditor;
 using UnityEngine.TestTools;
 using Zenject;
+using PoolsInstaller = Kulinaria.Siege.Tests.TestInfrastructure.Installers.PoolsInstaller;
+using TilemapInstaller = Kulinaria.Siege.Tests.TestInfrastructure.Installers.TilemapInstaller;
 
 namespace Kulinaria.Siege.Tests.Path
 {
@@ -19,7 +19,6 @@ namespace Kulinaria.Siege.Tests.Path
 	{
 		private IGridMap _gridMap;
 		private IPathFinder _pathFinder;
-		private ITileSelector _selector;
 
 		[UnityTest]
 		public IEnumerator WhenTileSelected_ThenDistanceAndPathToSameTileIsZero()
@@ -29,7 +28,6 @@ namespace Kulinaria.Siege.Tests.Path
 			CustomTile tile04 = _gridMap.GetTile(0, 4);
 
 			_pathFinder.FindDistancesToAllTilesFrom(tile04);
-			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile04);
 
@@ -51,7 +49,6 @@ namespace Kulinaria.Siege.Tests.Path
 			CustomTile tile07 = _gridMap.GetTile(0, 7);
 
 			_pathFinder.FindDistancesToAllTilesFrom(tile04);
-			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 
 			Assert.AreEqual(12, _pathFinder.Distance(tile32));
 			Assert.AreEqual(int.MaxValue, _pathFinder.Distance(tile00));
@@ -72,8 +69,6 @@ namespace Kulinaria.Siege.Tests.Path
 			CustomTile tile00 = _gridMap.GetTile(0, 0);
 
 			_pathFinder.FindDistancesToAllTilesFrom(tile04);
-			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
-
 			LinkedList<CustomTile> path = _pathFinder.GetShortestPath(tile34);
 			LinkedListNode<CustomTile> currentNode = path.First;
 			for (var i = 0; i < path.Count; i++)
@@ -113,7 +108,6 @@ namespace Kulinaria.Siege.Tests.Path
 			CustomTile tile36 = _gridMap.GetTile(3, 6);
 
 			_pathFinder.FindDistancesToAllTilesFrom(tile04);
-			_selector.Select(tile04, _pathFinder.GetAvailableTilesByDistance(100));
 			IEnumerable<CustomTile> nearestTiles = _pathFinder.GetAvailableTilesByDistance(9);
 
 			Assert.AreEqual(10, nearestTiles.Count());
@@ -137,7 +131,7 @@ namespace Kulinaria.Siege.Tests.Path
 
 		private void PrepareTiles()
 		{
-			GameInstaller.Testing = true;
+			ApplicationInstaller.Testing = true;
 
 			Runtime.Gameplay.Battle.Prototype.ArrayGridMap.GridArray = new[,]
 			{
@@ -151,22 +145,28 @@ namespace Kulinaria.Siege.Tests.Path
 				{ 1, 0, 1, 1, 0, 0, 1 }
 			};
 
-			var cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+			var tilemapInstaller = new TilemapInstaller();
+			tilemapInstaller.PreInstall();
+
+			var charactersInstaller = new CharactersInstaller();
+			charactersInstaller.PreInstall();
+
+			var gameplayInstaller = new TestInfrastructure.Installers.GameplayInstaller();
+			gameplayInstaller.PreInstall();
+
+			var poolsInstaller = new PoolsInstaller();
+			poolsInstaller.PreInstall();
 
 			PreInstall();
 
-			Container.BindFactory<CustomTile, TilemapFactory>().AsSingle();
-			Container.Bind<IGridMap>().To<Runtime.Gameplay.Battle.Prototype.ArrayGridMap>().FromNew().AsSingle();
-			Container.Bind<IPathFinder>().To<BellmanFordPathFinder>().FromNew().AsSingle();
-			Container.Bind<CameraMover>().FromComponentInNewPrefab(cameraMover).AsSingle();
-			Container.Bind<ITilesRenderingAggregator>().To<TilesRenderingAggregator>().FromNew().AsSingle();
-			Container.BindInterfacesTo<PathLineRenderer>().FromNew().AsSingle();
-			Container.BindInterfacesTo<PathSelector>().FromNew().AsSingle();
-			Container.BindInterfacesTo<CustomTileSelector>().FromNew().AsSingle();
+			tilemapInstaller.Install(Container);
+			charactersInstaller.Install(Container);
+			gameplayInstaller.Install(Container);
+			poolsInstaller.Install(Container);
 
 			PostInstall();
 
-			_selector = Container.Resolve<ITileSelector>();
+			Container.Resolve<IClickInteractor>();
 			_gridMap = Container.Resolve<IGridMap>();
 			_gridMap.GenerateMap();
 
