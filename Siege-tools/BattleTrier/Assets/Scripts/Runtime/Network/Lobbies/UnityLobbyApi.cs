@@ -55,5 +55,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         // If Player is not found, they have already left the lobby or have been kicked out. No need to throw here
       }
     }
+
+    public async Task<Lobby> GetLobby(string lobbyId) => 
+      await LobbyService.Instance.GetLobbyAsync(lobbyId);
+
+    public async Task DeleteLobby(string lobbyId) => 
+      await LobbyService.Instance.DeleteLobbyAsync(lobbyId);
+    
+    public async void SendHeartbeatPing(string lobbyId) => 
+      await LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
   }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Unity.Services.Lobbies.Models;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 {
@@ -35,5 +37,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 
       OnChanged?.Invoke(this);
     }
+
+    public void ResetState() => 
+      IsHost = false;
+    
+    public Dictionary<string, PlayerDataObject> GetDataForUnityServices() =>
+      new()
+      {
+        {"DisplayName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, Name)},
+      };
   }
 }

@@ -22,7 +22,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.BindInterfacesTo<ToolInstaller>().FromInstance(this).AsSingle();
       Container.Bind<IInputService>().To<OldInputService>().FromInstance(FindObjectOfType<OldInputService>()).
         AsSingle();
-      Container.Bind<ICoroutineRunner>().To<CoroutineRunner>().FromInstance(FindObjectOfType<CoroutineRunner>()).
+      Container.Bind(typeof(ICoroutineRunner), typeof(IUpdateRunner)).To<AggregateRunner>().FromInstance(FindObjectOfType<AggregateRunner>()).
         AsSingle();
 
       Container.Bind<NetworkManager>().FromInstance(FindObjectOfType<NetworkManager>()).AsSingle();

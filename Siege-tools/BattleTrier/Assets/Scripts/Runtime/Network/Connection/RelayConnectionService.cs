@@ -42,7 +42,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
 
       // Create relay allocation
       Allocation hostAllocation = await RelayService.Instance.CreateAllocationAsync(8, region: null);
-      var joinCode = await RelayService.Instance.GetJoinCodeAsync(hostAllocation.AllocationId);
+      string joinCode = await RelayService.Instance.GetJoinCodeAsync(hostAllocation.AllocationId);
 
       Debug.Log($"server: connection data: {hostAllocation.ConnectionData[0]} {hostAllocation.ConnectionData[1]}, " +
                 $"allocation ID:{hostAllocation.AllocationId}, region:{hostAllocation.Region}");
@@ -93,7 +93,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
       Debug.Log($"Setting Unity Relay client with join code {_currentLobby.RelayJoinCode}");
 
       // Create client joining allocation from join code
-      var joinedAllocation = await RelayService.Instance.JoinAllocationAsync(_currentLobby.RelayJoinCode);
+      JoinAllocation joinedAllocation = await RelayService.Instance.JoinAllocationAsync(_currentLobby.RelayJoinCode);
       Debug.Log($"client: {joinedAllocation.ConnectionData[0]} {joinedAllocation.ConnectionData[1]}, " +
                 $"host: {joinedAllocation.HostConnectionData[0]} {joinedAllocation.HostConnectionData[1]}, " +
                 $"client: {joinedAllocation.AllocationId}");

@@ -3,6 +3,7 @@ using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Session;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
@@ -21,7 +22,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     
     public override void Enter()
     {
-      
+      SceneManager.LoadSceneAsync("RoleSelection");
+      if (_lobbyService.CurrentLobby != null)
+        _lobbyService.StartTracking();
     }
 
     public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
