@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,7 +47,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       foreach (Lobby lobby in lobbies.Distinct())
       {
         var item = _container.InstantiatePrefabForComponent<LobbyItem>(_lobbyItemPrefab, _content);
-        item.Initialize(lobby);
+        var lobbyInfo = new LobbyInfo(lobby);
+        item.Initialize(lobbyInfo);
         _lobbyItems.Add(item);
       }
     }

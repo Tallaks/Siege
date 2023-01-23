@@ -61,10 +61,23 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
 
       List<Lobby> lobbies = await _lobbyService.RetrieveAndPublishLobbyListAsync();
       _lobbyList.UpdateList(lobbies);
-      
+
       if (blockUI)
         UnblockUIAfterLoadingIsComplete();
     }
+
+    public async void JoinLobbyRequest(LobbyInfo lobby)
+    {
+      BlockUIWhileLoadingIsInProgress();
+
+      (bool Success, Lobby Lobby) result = await _lobbyService.TryJoinLobbyAsync(lobby.Id, lobby.Code);
+
+      if (result.Success)
+        OnJoinedLobby(result.Lobby);
+      else
+        UnblockUIAfterLoadingIsComplete();
+    }
+
 
     public void OnJoinedLobby(Lobby remoteLobby)
     {

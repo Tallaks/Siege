@@ -21,7 +21,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     private readonly UserProfile _localUser;
     [Inject]private LobbyHeartbeat _lobbyHeartbeat;
 
-    private RateLimitCooldown _queryForLobbiesLimit;
+    private readonly RateLimitCooldown _queryForLobbiesLimit;
+    private RateLimitCooldown _joinLobbyLimit;
     private bool _isTracking;
     private float _heartbeatTime;
     public Lobby CurrentLobby { get; set; }
@@ -40,6 +41,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       _authentication = authentication;
 
       _queryForLobbiesLimit = new RateLimitCooldown(1f);
+      _joinLobbyLimit = new RateLimitCooldown(3f);
     }
 
     public async Task<(bool Success, Lobby Lobby)> TryCreateLobby(string lobbyName)
@@ -314,6 +316,39 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
 
       return null;
+    }
+
+    public async Task<(bool Success, Lobby Lobby)> TryJoinLobbyAsync(string lobbyId, string lobbyCode)
+    {
+      if (!_joinLobbyLimit.CanCall ||
+          (lobbyId == null && lobbyCode == null))
+      {
+        Debug.LogWarning("Join Lobby hit the rate limit.");
+        return (false, null);
+      }
+
+      try
+      {
+        if (!string.IsNullOrEmpty(lobbyCode))
+        {
+          Lobby lobby = await _lobbyApi.JoinLobbyByCode(_authentication.PlayerId, lobbyCode, _localUser.GetDataForUnityServices());
+          return (true, lobby);
+        }
+        else
+        {
+          Lobby lobby = await _lobbyApi.JoinLobbyById(_authentication.PlayerId, lobbyId, _localUser.GetDataForUnityServices());
+          return (true, lobby);
+        }
+      }
+      catch (LobbyServiceException e)
+      {
+        if (e.Reason == LobbyExceptionReason.RateLimited)
+          _joinLobbyLimit.PutOnCooldown();
+        else
+          Debug.LogError(e.Reason);
+      }
+
+      return (false, null);
     }
   }
 }
