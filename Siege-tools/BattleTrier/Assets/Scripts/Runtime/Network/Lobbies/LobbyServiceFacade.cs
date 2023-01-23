@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Cooldown;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
 {
@@ -17,9 +19,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     private readonly LobbyInfo _lobbyInfo;
     private readonly IUpdateRunner _updateRunner;
     private readonly UserProfile _localUser;
+    [Inject]private LobbyHeartbeat _lobbyHeartbeat;
 
+    private RateLimitCooldown _queryForLobbiesLimit;
     private bool _isTracking;
-    private bool _shouldUpdate;
+    private float _heartbeatTime;
     public Lobby CurrentLobby { get; set; }
 
     public LobbyServiceFacade(
@@ -34,6 +38,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       _lobbyApi = lobbyApi;
       _lobbyInfo = lobbyInfo;
       _authentication = authentication;
+
+      _queryForLobbiesLimit = new RateLimitCooldown(1f);
     }
 
     public async Task<(bool Success, Lobby Lobby)> TryCreateLobby(string lobbyName)
@@ -63,11 +69,28 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       {
         _isTracking = true;
         _updateRunner.Subscribe(UpdateLobby, 2f);
-        _updateRunner.Subscribe(PingLobby, 1.5f);
-        _lobbyInfo.OnLobbyChanged += OnLobbyChanged;
+        _lobbyHeartbeat.BeginTracking();
       }
     }
 
+    public void DoLobbyHeartbeat(float deltaTime)
+    {
+      _heartbeatTime += deltaTime;
+      if (_heartbeatTime > 8)
+      {
+        _heartbeatTime -= 8;
+        try
+        {
+          _lobbyApi.SendHeartbeatPing(CurrentLobby.Id);
+        }
+        catch (LobbyServiceException e)
+        {
+          if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
+            Debug.LogError(e.Reason);
+        }
+      }
+    }
+    
     public async Task UpdateLobbyDataAsync(Dictionary<string, DataObject> dataObjects)
     {
       Dictionary<string, DataObject> dataCurr = CurrentLobby.Data ?? new Dictionary<string, DataObject>();
@@ -150,11 +173,42 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
     }
 
-    private async void UpdateLobby()
+    public async Task UpdatePlayerDataAsync(Dictionary<string, PlayerDataObject> data)
     {
+      if(!_queryForLobbiesLimit.CanCall)
+        return;
+
       try
       {
-        Debug.Log("Lobby update");
+        Lobby result = await _lobbyApi.UpdatePlayer(CurrentLobby.Id,
+          _authentication.PlayerId, data, null, null);
+
+        if (result != null)
+        {
+          CurrentLobby =
+            result; // Store the most up-to-date lobby now since we have it, instead of waiting for the next heartbeat.
+        }
+      }
+      catch (LobbyServiceException e)
+      {
+        if (e.Reason == LobbyExceptionReason.RateLimited)
+          _queryForLobbiesLimit.PutOnCooldown();
+        else if (e.Reason != LobbyExceptionReason.LobbyNotFound &&
+                 !_localUser.
+                   IsHost) // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
+        {
+          Debug.LogError(e.Reason);
+        }
+      }
+    }
+
+    private async void UpdateLobby()
+    {
+      if(!_queryForLobbiesLimit.CanCall)
+        return;
+      
+      try
+      {
         Lobby lobby = await _lobbyApi.GetLobby(_lobbyInfo.Id);
         CurrentLobby = lobby;
         _lobbyInfo.ApplyRemoteData(lobby);
@@ -201,10 +255,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       if (_isTracking)
       {
         _updateRunner.Unsubscribe(UpdateLobby);
-        _shouldUpdate = false;
-        _updateRunner.Unsubscribe(PingLobby);
-        _lobbyInfo.OnLobbyChanged -= OnLobbyChanged;
         _isTracking = false;
+        _lobbyHeartbeat.EndTracking();
       }
 
       return task;
@@ -225,49 +277,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
     }
 
-    private async void PingLobby()
-    {
-      if (_localUser.IsHost)
-      {
-        Debug.Log("Ping");
-        _lobbyApi.SendHeartbeatPing(CurrentLobby.Id);
-      }
-
-      if (_shouldUpdate)
-      {
-        _shouldUpdate = false;
-
-        if (_localUser.IsHost)
-          await UpdateLobbyDataAsync(_lobbyInfo.GetDataForUnityServices());
-
-        await UpdatePlayerDataAsync(_localUser.GetDataForUnityServices());
-      }
-    }
-
-    private async Task UpdatePlayerDataAsync(Dictionary<string, PlayerDataObject> data)
-    {
-      try
-      {
-        Lobby result = await _lobbyApi.UpdatePlayer(CurrentLobby.Id,
-          _authentication.PlayerId, data, null, null);
-
-        if (result != null)
-        {
-          CurrentLobby =
-            result; // Store the most up-to-date lobby now since we have it, instead of waiting for the next heartbeat.
-        }
-      }
-      catch (LobbyServiceException e)
-      {
-        if (e.Reason != LobbyExceptionReason.LobbyNotFound &&
-            !_localUser.
-              IsHost) // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
-        {
-          Debug.LogError(e.Reason);
-        }
-      }
-    }
-
     private async Task DeleteLobbyAsync(string lobbyId)
     {
       if (_localUser.IsHost)
@@ -281,19 +290,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
           Debug.LogError(e.Reason);
         }
       }
-    }
-
-    private void OnLobbyChanged(LobbyInfo lobbyInfo)
-    {
-      if (string.IsNullOrEmpty(_lobbyInfo.
-            Id)) // When the player leaves, their LocalLobby is cleared out but maintained.
-      {
-        _shouldUpdate = false;
-        _updateRunner.Unsubscribe(PingLobby);
-        _lobbyInfo.OnLobbyChanged -= OnLobbyChanged;
-      }
-
-      _shouldUpdate = true;
     }
   }
 }

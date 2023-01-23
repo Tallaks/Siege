@@ -28,6 +28,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind<NetworkManager>().FromInstance(FindObjectOfType<NetworkManager>()).AsSingle();
       Container.Bind<AuthenticationServiceFacade>().FromNew().AsSingle();
       Container.Bind<LobbyServiceFacade>().FromNew().AsSingle();
+      Container.Bind<LobbyHeartbeat>().FromNew().AsSingle();
       Container.Bind<UnityLobbyApi>().FromNew().AsSingle();
       Container.Bind<UserProfile>().FromNew().AsSingle();
       Container.Bind<LobbyInfo>().FromNew().AsSingle();
