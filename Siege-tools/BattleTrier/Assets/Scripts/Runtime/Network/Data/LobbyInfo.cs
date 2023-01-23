@@ -16,7 +16,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
     public IDictionary<string, UserProfile> LobbyUsers => _lobbyUsers;
 
     private Dictionary<string, UserProfile> _lobbyUsers = new();
-
     public LobbyInfo()
     {
     }

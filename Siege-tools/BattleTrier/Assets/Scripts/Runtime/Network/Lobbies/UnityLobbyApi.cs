@@ -64,5 +64,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     
     public async void SendHeartbeatPing(string lobbyId) => 
       await LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
+
+    public async Task<QueryResponse> QueryAllLobbies()
+    {
+      var queryOptions = new QueryLobbiesOptions();
+      queryOptions.Count = 5;
+
+      return await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
+    }
   }
 }

@@ -291,5 +291,29 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         }
       }
     }
+
+    public async Task<List<Lobby>> RetrieveAndPublishLobbyListAsync()
+    {
+      if (!_queryForLobbiesLimit.CanCall)
+      {
+        Debug.LogWarning("Retrieve Lobby list hit the rate limit. Will try again soon...");
+        return new List<Lobby>();
+      }
+
+      try
+      {
+        QueryResponse response = await _lobbyApi.QueryAllLobbies();
+        return response.Results;
+      }
+      catch (LobbyServiceException e)
+      {
+        if (e.Reason == LobbyExceptionReason.RateLimited)
+          _queryForLobbiesLimit.PutOnCooldown();
+        else
+          Debug.LogError(e.Reason);
+      }
+
+      return null;
+    }
   }
 }

@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
+using Unity.Services.Core;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using Zenject;
@@ -11,6 +13,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
   public class LobbyMediator : MonoBehaviour
   {
     [SerializeField] private LobbyUi _lobbyUi;
+    [SerializeField] private LobbyList _lobbyList;
 
     private LobbyServiceFacade _lobbyService;
     private UserProfile _localUser;
@@ -29,7 +32,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       _connectionStateMachine = connectionStateMachine;
     }
 
-    public void Initialize() => _lobbyUi.Initialize();
+    public void Initialize()
+    {
+      _lobbyUi.Initialize();
+      _lobbyList.Initialize();
+    }
 
     public async void TryCreateLobby(string lobbyName)
     {
@@ -44,6 +51,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       }
     }
 
+    public async void QueryLobbiesRequest(bool blockUI)
+    {
+      if (UnityServices.State != ServicesInitializationState.Initialized)
+        return;
+
+      if (blockUI)
+        BlockUIWhileLoadingIsInProgress();
+
+      List<Lobby> lobbies = await _lobbyService.RetrieveAndPublishLobbyListAsync();
+      _lobbyList.UpdateList(lobbies);
+      
+      if (blockUI)
+        UnblockUIAfterLoadingIsComplete();
+    }
+
     public void OnJoinedLobby(Lobby remoteLobby)
     {
       _lobbyService.SetRemoteLobby(remoteLobby);
@@ -53,5 +75,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
 
       _connectionStateMachine.Enter<ClientReconnectingState, string>(_localUser.Name);
     }
+
+    private void BlockUIWhileLoadingIsInProgress() =>
+      _lobbyUi.Block();
+
+    private void UnblockUIAfterLoadingIsComplete() =>
+      _lobbyUi.Unblock();
   }
 }
