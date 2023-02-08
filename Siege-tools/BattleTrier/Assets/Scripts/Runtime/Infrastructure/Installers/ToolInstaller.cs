@@ -1,5 +1,6 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
 using UnityEngine.SceneManagement;
 using Zenject;
 
@@ -14,6 +15,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
         AsSingle();
       Container.Bind(typeof(ICoroutineRunner), typeof(IUpdateRunner)).To<AggregateRunner>().FromInstance(FindObjectOfType<AggregateRunner>()).
         AsSingle();
+      Container.Bind<ISceneLoader>().To<SceneLoader>().FromNew().AsSingle();
     }
 
     public void Initialize() => 
