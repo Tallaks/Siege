@@ -20,5 +20,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Utilities
       base.OnNetworkDespawn();
       OnNetworkDeSpawnHook?.Invoke();
     }
+
+    public override void OnDestroy()
+    {
+      base.OnDestroy();
+      OnNetworkSpawnHook = null;
+      OnNetworkDeSpawnHook = null;
+    }
   }
 }
