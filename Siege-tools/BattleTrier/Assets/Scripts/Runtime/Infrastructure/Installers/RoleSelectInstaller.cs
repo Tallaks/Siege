@@ -36,6 +36,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       if (_networkManager.IsServer)
         Container.Resolve<RoleSelectionServer>().Initialize();
 
+      Container.Resolve<RoleMediator>().Initialize();
       Container.Resolve<RoleSelectionClient>().Initialize();
     }
   }

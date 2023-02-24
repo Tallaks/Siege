@@ -72,7 +72,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       if (_roleSelectionService.LobbyIsClosed.Value)
         return;
 
-      if (newRoleId == -1)
+      if (newRoleId == 0)
         lockedIn = false;
       else
       {

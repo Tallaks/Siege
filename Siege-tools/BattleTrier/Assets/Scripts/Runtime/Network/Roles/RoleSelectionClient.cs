@@ -7,15 +7,6 @@ using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 {
-  public enum UiMode
-  {
-    None = 0,
-    ChooseSeat = 1,
-    SeatChosen = 2,
-    LobbyEnding = 3,
-    FatalError = 4
-  }
-
   public class RoleSelectionClient : IDisposable
   {
     private readonly NetCodeHook _hook;
@@ -23,7 +14,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private readonly RoleSelectionService _roleSelectionService;
     private readonly RoleMediator _mediator;
 
-    private List<string> _roleVariant = new();
+    private List<RoleType> _roleVariant = new();
 
     private int _lastRoleSelected = -1;
 
@@ -46,12 +37,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
         _hook.OnNetworkSpawnHook += OnNetworkSpawn;
         _hook.OnNetworkDeSpawnHook += OnNetworkDeSpawn;
       }
+
+      _mediator.ConfigureUIForLobbyMode(RoleUiMode.ChooseSeat);
+      UpdateCharacterSelection(RoleState.Inactive);
     }
 
     public void Dispose()
     {
       _hook.OnNetworkSpawnHook -= OnNetworkSpawn;
       _hook.OnNetworkDeSpawnHook -= OnNetworkDeSpawn;
+    }
+
+    public void OnPlayerChosenRole(RoleType buttonIndex)
+    {
+      if(_roleSelectionService.IsSpawned)
+        _roleSelectionService.ChangeSeatServerRpc(_networkManager.LocalClientId, (int)buttonIndex, !_hasLocalPlayerLockedIn);
     }
 
     private void OnNetworkSpawn()
@@ -95,29 +95,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private void OnLobbyClosedChanged(bool wasLobbyClosed, bool isLobbyClosed)
     {
       if (isLobbyClosed)
-        _mediator.ConfigureUIForLobbyMode(UiMode.LobbyEnding);
+        _mediator.ConfigureUIForLobbyMode(RoleUiMode.LobbyEnding);
       else
-        _mediator.ConfigureUIForLobbyMode(_lastRoleSelected == -1 ? UiMode.ChooseSeat : UiMode.SeatChosen);
+        _mediator.ConfigureUIForLobbyMode(_lastRoleSelected == -1 ? RoleUiMode.ChooseSeat : RoleUiMode.SeatChosen);
     }
 
     private void UpdateSeats()
     {
-      var curSeats = new PlayerRoleState[_roleVariant.Count];
+      var roleSeats = new PlayerRoleState[_roleVariant.Count];
       foreach (PlayerRoleState playerState in _roleSelectionService.PlayerRoles)
       {
-        if (playerState.RoleId == -1 || playerState.State == RoleState.Inactive)
+        if(playerState.RoleId == 0 || playerState.State == RoleState.Inactive)
           continue;
-        if (curSeats[playerState.RoleId].State == RoleState.Inactive
-            || (curSeats[playerState.RoleId].State == RoleState.Active &&
-                curSeats[playerState.RoleId].LastChangeTime < playerState.LastChangeTime))
-        {
-          curSeats[playerState.RoleId] = playerState;
-        }
-      }
 
-      // now actually update the seats in the UI
-      for (var i = 0; i < _roleVariant.Count; ++i)
-      {
+        if (playerState.RoleId == 1 && playerState.State == RoleState.Active)
+          _mediator.SerFirstRoleState(playerState);
       }
     }
 
@@ -142,8 +134,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
         if (state == RoleState.Chosen && !_hasLocalPlayerLockedIn)
         {
           _mediator.ConfigureUIForLobbyMode(_roleSelectionService.LobbyIsClosed.Value
-            ? UiMode.LobbyEnding
-            : UiMode.SeatChosen);
+            ? RoleUiMode.LobbyEnding
+            : RoleUiMode.SeatChosen);
           _hasLocalPlayerLockedIn = true;
         }
         else if (_hasLocalPlayerLockedIn && state == RoleState.Active)
@@ -151,7 +143,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
           // reset character seats if locked in choice was unselected
           if (_hasLocalPlayerLockedIn)
           {
-            _mediator.ConfigureUIForLobbyMode(UiMode.ChooseSeat);
+            _mediator.ConfigureUIForLobbyMode(RoleUiMode.ChooseSeat);
             _hasLocalPlayerLockedIn = false;
           }
         }
