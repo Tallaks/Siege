@@ -965,7 +965,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1120505402}
   - {fileID: 1048740565}
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -1137,7 +1136,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 822533653}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1048740566
 MonoBehaviour:
@@ -1303,67 +1302,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buttonIndex: 2
---- !u!1 &1120505401
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1120505402}
-  - component: {fileID: 1120505403}
-  - component: {fileID: 1120505404}
-  m_Layer: 0
-  m_Name: NetCodeHook
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1120505402
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120505401}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 822533653}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1120505403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120505401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2818668025
-  AlwaysReplicateAsRoot: 0
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
---- !u!114 &1120505404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120505401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c19c5d71c71e4ab3aac5127a4c1d3d29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1160099234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,7 +1346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6035ded1147241f0823708896a5ad2c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hook: {fileID: 1120505404}
+  _hookPrefab: {fileID: 325513030215608578, guid: 202cd84f97a3b9c4d9cc833a3f39ea66, type: 3}
   _mediator: {fileID: 1851240770}
   _selectionService: {fileID: 1048740566}
 --- !u!1 &1224950374
@@ -1711,7 +1649,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _firstRoleButton: {fileID: 581410949}
   _secondRoleButton: {fileID: 1064602117}
-  _playerCounter: {fileID: 1947689802}
   _roleUi: {fileID: 1851240771}
 --- !u!114 &1851240771
 MonoBehaviour:
@@ -1725,6 +1662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc98923f2659412eb61bceffa965607e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerCounter: {fileID: 1947689802}
   _uiElementsForChooseSeat:
   - {fileID: 1459030472}
   _uiElementsForFatalError: []

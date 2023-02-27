@@ -19,6 +19,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     private Coroutine _reconnectCoroutine;
     private LobbyServiceFacade _lobbyService;
     private LobbyInfo _lobbyInfo;
+
     private string _userName;
 
     public ClientReconnectingState(
@@ -37,12 +38,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _networkManager = networkManager;
     }
 
-    public override void Enter<T>(T userName)
+    public override void Enter(string userName)
     {
       _attempts = 0;
       _lobbyCode = _lobbyService.CurrentLobby != null ? _lobbyService.CurrentLobby.LobbyCode : "";
       _reconnectCoroutine = _coroutineRunner.StartCoroutine(ReconnectCoroutine());
-      _userName = userName.ToString();
+      _userName = userName;
     }
 
     public override void ReactToClientDisconnect(ulong clientId)

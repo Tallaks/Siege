@@ -13,8 +13,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _connectionService = connectionService;
     }
 
-    public override void Enter<T>(T displayName) => 
-      _connectionService.ConnectClientAsync(displayName.ToString());
+    public override void Enter(string displayName) =>
+      _connectionService.ConnectClientAsync(displayName);
 
     public override void Exit()
     {

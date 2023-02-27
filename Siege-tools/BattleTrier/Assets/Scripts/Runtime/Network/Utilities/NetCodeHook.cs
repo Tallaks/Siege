@@ -1,5 +1,6 @@
 using System;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Utilities
 {
@@ -13,19 +14,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Utilities
     {
       base.OnNetworkSpawn();
       OnNetworkSpawnHook?.Invoke();
+      Debug.Log("Hook spawned");
     }
 
     public override void OnNetworkDespawn()
     {
       base.OnNetworkDespawn();
       OnNetworkDeSpawnHook?.Invoke();
-    }
-
-    public override void OnDestroy()
-    {
-      base.OnDestroy();
-      OnNetworkSpawnHook = null;
-      OnNetworkDeSpawnHook = null;
     }
   }
 }

@@ -1,8 +1,8 @@
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
-  public abstract class ParameterConnectionState<T> : ConnectionState
+  public abstract class ParameterConnectionState<TSource> : ConnectionState
   {
-    public abstract void Enter<T>(T param);
+    public abstract void Enter(TSource param);
   }
   
   public abstract class ParameterConnectionState<T1, T2> : ConnectionState

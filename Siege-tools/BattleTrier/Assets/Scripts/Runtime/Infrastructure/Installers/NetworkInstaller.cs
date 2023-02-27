@@ -75,6 +75,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       _connectionStateMachine.Enter<ClientConnectedState, ulong, ConnectionState>(clientId,
         _connectionStateMachine.CurrentState);
 
-    private void OnServerStarted() => _connectionStateMachine.Enter<HostingState>();
+    private void OnServerStarted() => _connectionStateMachine.Enter<HostingState, bool>(true);
   }
 }

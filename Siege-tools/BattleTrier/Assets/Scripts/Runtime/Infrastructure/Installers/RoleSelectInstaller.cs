@@ -11,7 +11,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
   public class RoleSelectInstaller : MonoInstaller, IInitializable
   {
-    [SerializeField] private NetCodeHook _hook;
+    [SerializeField] private NetCodeHook _hookPrefab;
     [SerializeField] private RoleMediator _mediator;
     [SerializeField] private RoleSelectionService _selectionService;
 
@@ -22,7 +22,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     public override void InstallBindings()
     {
       Container.Bind<IInitializable>().To<RoleSelectInstaller>().FromInstance(this).AsSingle();
-      Container.Bind<NetCodeHook>().FromInstance(_hook).AsSingle();
+      Container.Bind<NetCodeHook>().FromMethod(() => Instantiate(_hookPrefab).GetComponent<NetCodeHook>()).AsSingle();
       Container.Bind<RoleMediator>().FromInstance(_mediator).AsSingle();
       Container.Bind<RoleSelectionService>().FromInstance(_selectionService).AsSingle();
       if (_networkManager.IsServer)
@@ -38,6 +38,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 
       Container.Resolve<RoleMediator>().Initialize();
       Container.Resolve<RoleSelectionClient>().Initialize();
+      Container.Resolve<NetCodeHook>().OnNetworkSpawn();
     }
   }
 }

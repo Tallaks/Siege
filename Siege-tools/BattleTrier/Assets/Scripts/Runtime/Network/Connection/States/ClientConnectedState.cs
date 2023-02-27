@@ -12,7 +12,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     public override void Enter<T1, T2>(T1 clientId, T2 previousState)
     {
       if (previousState is HostingState)
-        _connectionStateMachine.Enter<HostingState>();
+        _connectionStateMachine.Enter<HostingState, bool>(false);
       
       Debug.Log($"Client with id {clientId} connected");
     }

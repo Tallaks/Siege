@@ -1,3 +1,4 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Session;
@@ -7,31 +8,37 @@ using UnityEngine.SceneManagement;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
-  public class HostingState : NonParameterConnectionState, IApprovalCheck, IOnlineState
+  public class HostingState : ParameterConnectionState<bool>, IApprovalCheck, IOnlineState
   {
     private readonly IConnectionStateMachine _connectionStateMachine;
     private readonly NetworkManager _networkManager;
     private readonly LobbyServiceFacade _lobbyService;
     private Session<SessionPlayerData> _session;
+    private ISceneLoader _sceneLoader;
 
     public HostingState(IConnectionStateMachine connectionStateMachine,
+      ISceneLoader sceneLoader,
       NetworkManager networkManager,
       Session<SessionPlayerData> session,
       LobbyServiceFacade lobbyService)
     {
       _connectionStateMachine = connectionStateMachine;
+      _sceneLoader = sceneLoader;
       _networkManager = networkManager;
       _session = session;
       _lobbyService = lobbyService;
     }
-    
-    public override void Enter()
+
+    public override void Enter(bool loadScene)
     {
-      Debug.Log("Server started, entering hosting state");
-      SceneManager.LoadSceneAsync("RoleSelection");
-      if (_lobbyService.CurrentLobby != null)
-        _lobbyService.StartTracking();
+      if (loadScene)
+      {
+        _sceneLoader.LoadScene("RoleSelection", true, LoadSceneMode.Single);
+        if (_lobbyService.CurrentLobby != null)
+          _lobbyService.StartTracking();
+      }
     }
+
 
     public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {

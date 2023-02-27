@@ -50,7 +50,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
         [typeof(ClientReconnectingState)] = new ClientReconnectingState(this, _coroutineRunner, _connectionService, _networkManager, _lobbyService, _lobbyInfo),
         [typeof(ClientConnectingState)] = new ClientConnectingState(this, _connectionService),
         [typeof(ClientConnectedState)] = new ClientConnectedState(this),
-        [typeof(HostingState)] = new HostingState(this, _networkManager, _session, _lobbyService),
+        [typeof(HostingState)] = new HostingState(this, _sceneLoader, _networkManager, _session, _lobbyService),
         [typeof(StartingHostState)] = new StartingHostState(this, _connectionService, _networkManager, _session, _lobbyInfo)
       };
     }

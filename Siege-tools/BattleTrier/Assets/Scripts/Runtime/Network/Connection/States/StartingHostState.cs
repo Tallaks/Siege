@@ -28,7 +28,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _networkManager = networkManager;
     }
 
-    public override async void Enter<T>(T userName)
+    public override async void Enter(string userName)
     {
       try
       {
@@ -53,7 +53,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
         _connectionStateMachine.Enter<OfflineState>();
     }
 
-    public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+    public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
+      NetworkManager.ConnectionApprovalResponse response)
     {
       Debug.Log("Starting hosting state approval check");
       byte[] connectionData = request.Payload;
@@ -61,7 +62,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       if (clientId == _networkManager.LocalClientId)
       {
         string payload = System.Text.Encoding.UTF8.GetString(connectionData);
-        var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload); // https://docs.unity3d.com/2020.2/Documentation/Manual/JSONSerialization.html
+        var connectionPayload =
+          JsonUtility.
+            FromJson<ConnectionPayload>(
+              payload); // https://docs.unity3d.com/2020.2/Documentation/Manual/JSONSerialization.html
 
         _session.SetupConnectingPlayerSessionData(clientId, connectionPayload.PlayerId,
           new SessionPlayerData(clientId, connectionPayload.PlayerName, new NetworkGuid(), 0, true));
@@ -87,7 +91,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _connectionStateMachine.Enter<OfflineState>();
     }
 
-    public void OnTransportFailure() => 
+    public void OnTransportFailure() =>
       _connectionStateMachine.Enter<OfflineState>();
   }
 }

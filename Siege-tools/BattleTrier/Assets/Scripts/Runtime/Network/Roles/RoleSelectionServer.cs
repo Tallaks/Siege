@@ -57,7 +57,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     {
       Debug.Log("Network spawn: server");
 
-      _networkManager.OnClientConnectedCallback += OnClientDisconnectCallback;
+      _networkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
       _roleSelectionService.OnClientChoseRole += OnClientChoseRole;
       _networkManager.SceneManager.OnSceneEvent += OnSceneEvent;
     }
@@ -66,7 +66,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     {
       Debug.Log("Network despawn: server");
 
-      _networkManager.OnClientConnectedCallback -= OnClientDisconnectCallback;
+      _networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
       _roleSelectionService.OnClientChoseRole -= OnClientChoseRole;
       _networkManager.SceneManager.OnSceneEvent -= OnSceneEvent;
     }
@@ -89,6 +89,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void OnSceneEvent(SceneEvent sceneEvent)
     {
+      Debug.Log("Server sceneEvent: " + sceneEvent.SceneEventType);
       if(sceneEvent.SceneEventType != SceneEventType.LoadComplete) return;
       SeatNewPlayer(sceneEvent.ClientId);
     }
