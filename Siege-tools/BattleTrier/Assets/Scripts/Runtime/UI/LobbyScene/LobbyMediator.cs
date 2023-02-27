@@ -79,14 +79,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
     }
 
 
-    public void OnJoinedLobby(Lobby remoteLobby)
+    private void OnJoinedLobby(Lobby remoteLobby)
     {
       _lobbyService.SetRemoteLobby(remoteLobby);
 
       Debug.Log(
         $"Joined lobby with code: {_lobbyInfo.Code}, Internal Relay Join Code{_lobbyInfo.RelayJoinCode}");
 
-      _connectionStateMachine.Enter<ClientReconnectingState, string>(_localUser.Name);
+      _connectionStateMachine.Enter<ClientConnectingState, string>(_localUser.Name);
     }
 
     private void BlockUIWhileLoadingIsInProgress() =>

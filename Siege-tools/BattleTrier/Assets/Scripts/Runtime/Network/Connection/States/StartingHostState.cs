@@ -12,12 +12,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     private LobbyInfo _lobbyInfo;
     private IConnectionStateMachine _connectionStateMachine;
     private IConnectionService _connectionService;
+    private Session<SessionPlayerData> _session;
 
-    public StartingHostState(IConnectionStateMachine connectionStateMachine, IConnectionService connectionService, NetworkManager networkManager, LobbyInfo lobbyInfo)
+    public StartingHostState(
+      IConnectionStateMachine connectionStateMachine,
+      IConnectionService connectionService,
+      NetworkManager networkManager,
+      Session<SessionPlayerData> session,
+      LobbyInfo lobbyInfo)
     {
       _connectionService = connectionService;
       _connectionStateMachine = connectionStateMachine;
       _lobbyInfo = lobbyInfo;
+      _session = session;
       _networkManager = networkManager;
     }
 
@@ -27,13 +34,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       {
         await _connectionService.SetupHostConnectionAsync(userName.ToString());
         Debug.Log($"Created relay allocation with join code {_lobbyInfo.RelayJoinCode}");
-
+        Debug.Log(_networkManager);
         // NGO's StartHost launches everything
         if (!_networkManager.StartHost())
           OnClientDisconnect(_networkManager.LocalClientId);
       }
-      catch (Exception)
+      catch (Exception e)
       {
+        Debug.LogError(e);
         StartHostFailed();
         throw;
       }
@@ -47,18 +55,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 
     public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
+      Debug.Log("Starting hosting state approval check");
       byte[] connectionData = request.Payload;
       ulong clientId = request.ClientNetworkId;
-      // This happens when starting as a host, before the end of the StartHost call. In that case, we simply approve ourselves.
       if (clientId == _networkManager.LocalClientId)
       {
-        var payload = System.Text.Encoding.UTF8.GetString(connectionData);
+        string payload = System.Text.Encoding.UTF8.GetString(connectionData);
         var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload); // https://docs.unity3d.com/2020.2/Documentation/Manual/JSONSerialization.html
 
-        SessionService<SessionPlayerData>.Instance.SetupConnectingPlayerSessionData(clientId, connectionPayload.PlayerId,
+        _session.SetupConnectingPlayerSessionData(clientId, connectionPayload.PlayerId,
           new SessionPlayerData(clientId, connectionPayload.PlayerName, new NetworkGuid(), 0, true));
 
-        // connection approval will create a player object for you
         response.Approved = true;
         response.CreatePlayerObject = true;
       }

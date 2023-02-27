@@ -39,7 +39,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       }
 
       _mediator.ConfigureUIForLobbyMode(RoleUiMode.ChooseSeat);
-      UpdateCharacterSelection(RoleState.Inactive);
     }
 
     public void Dispose()
@@ -51,7 +50,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     public void OnPlayerChosenRole(RoleType buttonIndex)
     {
       if(_roleSelectionService.IsSpawned)
-        _roleSelectionService.ChangeSeatServerRpc(_networkManager.LocalClientId, (int)buttonIndex, !_hasLocalPlayerLockedIn);
+        _roleSelectionService.ChangeSeatServerRpc(_networkManager.LocalClientId, (int)buttonIndex);
     }
 
     private void OnNetworkSpawn()
@@ -68,28 +67,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       _roleSelectionService.PlayerRoles.OnListChanged -= OnLobbyPlayerStateChanged;
     }
 
-    private void OnLobbyPlayerStateChanged(NetworkListEvent<PlayerRoleState> changeevent)
+    private void OnLobbyPlayerStateChanged(NetworkListEvent<PlayerRoleState> changeEvent)
     {
       UpdateSeats();
       UpdatePlayerCount();
 
-      int localPlayerIdx = -1;
-      for (int i = 0; i < _roleSelectionService.PlayerRoles.Count; ++i)
-      {
-        if (_roleSelectionService.PlayerRoles[i].ClientId == _networkManager.LocalClientId)
-        {
-          localPlayerIdx = i;
-          break;
-        }
-      }
-
-      if (localPlayerIdx == -1)
-        UpdateCharacterSelection(RoleState.Inactive);
-      else if (_roleSelectionService.PlayerRoles[localPlayerIdx].State == RoleState.Inactive)
-        UpdateCharacterSelection(RoleState.Inactive);
-      else
-        UpdateCharacterSelection(_roleSelectionService.PlayerRoles[localPlayerIdx].State,
-          _roleSelectionService.PlayerRoles[localPlayerIdx].RoleId);
+      int localPlayerIdx = _roleSelectionService.IndexOfClient(_networkManager.LocalClientId);
     }
 
     private void OnLobbyClosedChanged(bool wasLobbyClosed, bool isLobbyClosed)
@@ -102,55 +85,29 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void UpdateSeats()
     {
-      var roleSeats = new PlayerRoleState[_roleVariant.Count];
-      foreach (PlayerRoleState playerState in _roleSelectionService.PlayerRoles)
+      var firstRoleChosen = false;
+      var firstRoleState = new PlayerRoleState();
+      var secondRoleChosen = false;
+      var secondRoleState = new PlayerRoleState();
+      foreach (PlayerRoleState playerRole in _roleSelectionService.PlayerRoles)
       {
-        if(playerState.RoleId == 0 || playerState.State == RoleState.Inactive)
-          continue;
-
-        if (playerState.RoleId == 1 && playerState.State == RoleState.Active)
-          _mediator.SerFirstRoleState(playerState);
-      }
-    }
-
-    void UpdateCharacterSelection(RoleState state, int roleId = -1)
-    {
-      bool isNewSeat = _lastRoleSelected != roleId;
-
-      _lastRoleSelected = roleId;
-      if (state == RoleState.Inactive)
-      {
-      }
-      else
-      {
-        if (roleId != -1)
+        if (playerRole.RoleId == 1)
         {
-          // change character preview when selecting a new seat
-          if (isNewSeat)
-          {
-          }
+          firstRoleChosen = true;
+          firstRoleState = playerRole;
         }
 
-        if (state == RoleState.Chosen && !_hasLocalPlayerLockedIn)
+        if (playerRole.RoleId == 2)
         {
-          _mediator.ConfigureUIForLobbyMode(_roleSelectionService.LobbyIsClosed.Value
-            ? RoleUiMode.LobbyEnding
-            : RoleUiMode.SeatChosen);
-          _hasLocalPlayerLockedIn = true;
-        }
-        else if (_hasLocalPlayerLockedIn && state == RoleState.Active)
-        {
-          // reset character seats if locked in choice was unselected
-          if (_hasLocalPlayerLockedIn)
-          {
-            _mediator.ConfigureUIForLobbyMode(RoleUiMode.ChooseSeat);
-            _hasLocalPlayerLockedIn = false;
-          }
-        }
-        else if (state == RoleState.Active && isNewSeat)
-        {
+          secondRoleChosen = true;
+          secondRoleState = playerRole;
         }
       }
+
+      if(firstRoleChosen)
+        _mediator.SerFirstRoleState(firstRoleState);
+      if (secondRoleChosen)
+        _mediator.SetSecondRoleState(secondRoleState);
     }
 
     private void UpdatePlayerCount()

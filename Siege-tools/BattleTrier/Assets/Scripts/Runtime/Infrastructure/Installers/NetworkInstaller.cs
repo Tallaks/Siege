@@ -4,7 +4,9 @@ using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Session;
 using Unity.Netcode;
+using UnityEngine;
 using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
@@ -25,6 +27,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       _networkManager.OnServerStarted += OnServerStarted;
       _networkManager.OnClientConnectedCallback += OnClientConnectedCallback;
       _networkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
+      _networkManager.NetworkConfig.ConnectionApproval = true;
+      _networkManager.NetworkConfig.EnableSceneManagement = true;
+      _networkManager.NetworkConfig.EnableNetworkLogs = true;
       _networkManager.ConnectionApprovalCallback += ApprovalCheck;
       _networkManager.OnTransportFailure += OnTransportFailure;
     }
@@ -41,6 +46,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind<LobbyInfo>().FromNew().AsSingle();
       Container.Bind<IConnectionStateMachine>().To<ConnectionStateMachine>().FromNew().AsSingle();
       Container.Bind<IConnectionService>().To<RelayConnectionService>().FromNew().AsSingle();
+      Container.Bind<Session<SessionPlayerData>>().FromNew().AsSingle();
     }
 
     public void Dispose()
@@ -56,8 +62,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       _connectionStateMachine.Enter<OfflineState>();
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
-      NetworkManager.ConnectionApprovalResponse response) =>
+      NetworkManager.ConnectionApprovalResponse response)
+    {
+      Debug.Log("Attempt to approve check");
       ((IApprovalCheck)_connectionStateMachine.CurrentState)?.ApprovalCheck(request, response);
+    }
 
     private void OnClientDisconnectCallback(ulong clientId) =>
       _connectionStateMachine.CurrentState.ReactToClientDisconnect(clientId);

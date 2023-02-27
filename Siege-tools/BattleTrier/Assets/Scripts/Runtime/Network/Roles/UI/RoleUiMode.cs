@@ -1,4 +1,4 @@
-namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
+namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 {
   public enum RoleUiMode
   {

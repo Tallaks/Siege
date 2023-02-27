@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Session;
 using Unity.Netcode;
 using UnityEngine;
 using Zenject;
@@ -18,17 +21,23 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     private readonly LobbyServiceFacade _lobbyService;
     private ICoroutineRunner _coroutineRunner;
     [Inject] private IConnectionService _connectionService;
+    private Session<SessionPlayerData> _session;
+    private ISceneLoader _sceneLoader;
 
     public ConnectionState CurrentState { get; private set; }
 
     public ConnectionStateMachine(
       ICoroutineRunner coroutineRunner,
+      ISceneLoader sceneLoader,
       NetworkManager networkManager,
+      Session<SessionPlayerData> session,
       LobbyInfo lobbyInfo,
       LobbyServiceFacade lobbyService)
     {
+      _sceneLoader = sceneLoader;
       _coroutineRunner = coroutineRunner;
       _networkManager = networkManager;
+      _session = session;
       _lobbyInfo = lobbyInfo;
       _lobbyService = lobbyService;
     }
@@ -39,10 +48,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       {
         [typeof(OfflineState)] = new OfflineState(_networkManager),
         [typeof(ClientReconnectingState)] = new ClientReconnectingState(this, _coroutineRunner, _connectionService, _networkManager, _lobbyService, _lobbyInfo),
-        [typeof(ClientConnectingState)] = new ClientConnectingState(this),
+        [typeof(ClientConnectingState)] = new ClientConnectingState(this, _connectionService),
         [typeof(ClientConnectedState)] = new ClientConnectedState(this),
-        [typeof(HostingState)] = new HostingState(this, _networkManager, _lobbyService),
-        [typeof(StartingHostState)] = new StartingHostState(this, _connectionService, _networkManager, _lobbyInfo)
+        [typeof(HostingState)] = new HostingState(this, _networkManager, _session, _lobbyService),
+        [typeof(StartingHostState)] = new StartingHostState(this, _connectionService, _networkManager, _session, _lobbyInfo)
       };
     }
 
@@ -58,7 +67,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       state.Enter(payload);
     }
 
-    public void Enter<TState, TPayload1, TPayLoad2>(TPayload1 payload1, TPayLoad2 payLoad2) where TState : ParameterConnectionState<TPayload1, TPayLoad2>
+    public void Enter<TState, TPayload1, TPayLoad2>(TPayload1 payload1, TPayLoad2 payLoad2)
+      where TState : ParameterConnectionState<TPayload1, TPayLoad2>
     {
       var state = ChangeState<TState>();
       state.Enter(payload1, payLoad2);

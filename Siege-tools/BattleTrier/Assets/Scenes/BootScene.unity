@@ -400,7 +400,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4845276930943762971, guid: 2da3dcc22749e7f4280737786d898334, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000030517578
+      value: -0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 4845637959249703711, guid: 2da3dcc22749e7f4280737786d898334, type: 3}
       propertyPath: m_AnchorMax.y
@@ -689,33 +689,8 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 4166405378593007635}
-    PlayerPrefab: {fileID: 0}
-    NetworkPrefabs:
-    - Override: 0
-      Prefab: {fileID: 6091259294318989102, guid: 456ab834af2a4714d87b4fcd36e018e1, type: 3}
-      SourcePrefabToOverride: {fileID: 7849703053548883970, guid: 5e27db4ed01e2c5489ee3e6048ce87ca, type: 3}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
-    - Override: 0
-      Prefab: {fileID: 4071091970830266456, guid: ebb0d65e0117fad42b0b2a6c37ba6f7d, type: 3}
-      SourcePrefabToOverride: {fileID: 7849703053548883970, guid: 5e27db4ed01e2c5489ee3e6048ce87ca, type: 3}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
-    - Override: 0
-      Prefab: {fileID: 4071091970830266456, guid: 88b2320fdf045a249b49dfb0163bbdd4, type: 3}
-      SourcePrefabToOverride: {fileID: 0}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
-    - Override: 0
-      Prefab: {fileID: 8806302578832626142, guid: 08f3a1551b722d341876216538a48fad, type: 3}
-      SourcePrefabToOverride: {fileID: 7849703053548883970, guid: 5e27db4ed01e2c5489ee3e6048ce87ca, type: 3}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
-    - Override: 0
-      Prefab: {fileID: 7849703053548883970, guid: 5e27db4ed01e2c5489ee3e6048ce87ca, type: 3}
-      SourcePrefabToOverride: {fileID: 7849703053548883970, guid: 5e27db4ed01e2c5489ee3e6048ce87ca, type: 3}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
+    PlayerPrefab: {fileID: 3860559256418735385, guid: ebf6e82fecc85aa429bf169f6ebada39, type: 3}
+    NetworkPrefabs: []
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0

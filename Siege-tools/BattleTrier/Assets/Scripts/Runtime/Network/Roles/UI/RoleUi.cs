@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 {
   public class RoleUi : MonoBehaviour
   {
+    [SerializeField] private TMP_Text _playerCounter;
     [SerializeField] private List<GameObject> _uiElementsForChooseSeat;
     [SerializeField] private List<GameObject> _uiElementsForFatalError;
     [SerializeField] private List<GameObject> _uiElementsForLobbyEnding;
@@ -33,5 +35,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
       foreach (GameObject element in _lobbyUiElementsByMode[mode])
         element.SetActive(true);
     }
+
+    public void UpdatePlayerCount(int count) => 
+      _playerCounter.text = count.ToString();
   }
 }
