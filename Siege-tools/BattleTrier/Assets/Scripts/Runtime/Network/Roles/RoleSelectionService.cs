@@ -5,20 +5,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 {
   public class RoleSelectionService : NetworkBehaviour
   {
-    private NetworkList<PlayerRoleState> _playerRoles;
-
     public event Action<ulong, int> OnClientChoseRole;
     public NetworkVariable<bool> LobbyIsClosed { get; } = new();
-    public NetworkList<PlayerRoleState> PlayerRoles => _playerRoles;
+    public NetworkList<PlayerRoleState> PlayerRoles;
 
     private void Awake() => 
-      _playerRoles = new NetworkList<PlayerRoleState>();
+      PlayerRoles = new NetworkList<PlayerRoleState>();
 
     public int IndexOfClient(ulong clientId)
     {
-      for (var i = 0; i < _playerRoles.Count; i++)
+      for (var i = 0; i < PlayerRoles.Count; i++)
       {
-        if(_playerRoles[i].ClientId == clientId)
+        if(PlayerRoles[i].ClientId == clientId)
           return i;
       }
 

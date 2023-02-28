@@ -60,6 +60,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       _networkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
       _roleSelectionService.OnClientChoseRole += OnClientChoseRole;
       _networkManager.SceneManager.OnSceneEvent += OnSceneEvent;
+      
+      SeatNewPlayer(_networkManager.LocalClientId);
     }
 
     private void OnNetworkDespawn()

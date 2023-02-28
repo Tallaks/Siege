@@ -69,6 +69,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void OnLobbyPlayerStateChanged(NetworkListEvent<PlayerRoleState> changeEvent)
     {
+      Debug.Log("Player states list changed");
       UpdateSeats();
       UpdatePlayerCount();
 
