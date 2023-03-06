@@ -1,5 +1,4 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication;
-using Kulinaria.Tools.BattleTrier.Runtime.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.UI.Menu;
 using UnityEngine;
 using Zenject;

@@ -16,15 +16,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     {
       for (var i = 0; i < PlayerRoles.Count; i++)
       {
-        if(PlayerRoles[i].ClientId == clientId)
+        if (PlayerRoles[i].ClientId == clientId)
           return i;
       }
 
       return -1;
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
-    public void ChangeSeatServerRpc(ulong clientId, int seatIdx) => 
+    public void ChangeSeatServerRpc(ulong clientId, int seatIdx) =>
       OnClientChoseRole?.Invoke(clientId, seatIdx);
   }
 }

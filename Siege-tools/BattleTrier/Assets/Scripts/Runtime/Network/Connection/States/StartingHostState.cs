@@ -32,7 +32,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     {
       try
       {
-        await _connectionService.SetupHostConnectionAsync(userName.ToString());
+        await _connectionService.SetupHostConnectionAsync(userName);
         Debug.Log($"Created relay allocation with join code {_lobbyInfo.RelayJoinCode}");
         Debug.Log(_networkManager);
         // NGO's StartHost launches everything

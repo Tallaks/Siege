@@ -6,6 +6,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 {
   public class RoleUi : MonoBehaviour
   {
+    [SerializeField] private RoleSelectionButton[] _roleButtons;
     [SerializeField] private TMP_Text _playerCounter;
     [SerializeField] private List<GameObject> _uiElementsForChooseSeat;
     [SerializeField] private List<GameObject> _uiElementsForFatalError;
@@ -17,17 +18,22 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 
     public void Initialize()
     {
-      _lobbyUiElementsByMode = new Dictionary<RoleUiMode, List<GameObject>>
+      if(_lobbyUiElementsByMode == null)
       {
-        [RoleUiMode.ChooseSeat]  = _uiElementsForChooseSeat,
-        [RoleUiMode.FatalError]  = _uiElementsForFatalError,
-        [RoleUiMode.LobbyEnding] = _uiElementsForLobbyEnding,
-        [RoleUiMode.SeatChosen]  = _uiElementsForSeatChosen
-      };
+        Debug.Log("Role Ui Initialization");
+        _lobbyUiElementsByMode = new Dictionary<RoleUiMode, List<GameObject>>
+        {
+          [RoleUiMode.ChooseSeat]  = _uiElementsForChooseSeat,
+          [RoleUiMode.FatalError]  = _uiElementsForFatalError,
+          [RoleUiMode.LobbyEnding] = _uiElementsForLobbyEnding,
+          [RoleUiMode.SeatChosen]  = _uiElementsForSeatChosen
+        };
+      }
     }
 
     public void ConfigureUiForLobbyMode(RoleUiMode mode)
     {
+      Initialize();
       foreach (List<GameObject> list in _lobbyUiElementsByMode.Values)
       foreach (GameObject uiElement in list)
         uiElement.SetActive(false);
@@ -38,5 +44,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 
     public void UpdatePlayerCount(int count) => 
       _playerCounter.text = count.ToString();
+
+    public void SetState(PlayerRoleState playerState)
+    {
+      foreach (RoleSelectionButton roleButton in _roleButtons)
+        roleButton.SetState(playerState);
+    }
   }
 }

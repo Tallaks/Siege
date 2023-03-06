@@ -1,39 +1,38 @@
-using System;
-using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Utilities;
 using Unity.Netcode;
 using UnityEngine;
+using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 {
-  public class RoleSelectionClient : IDisposable
+  public class RoleSelectionClient : MonoBehaviour
   {
-    private readonly NetCodeHook _hook;
-    private readonly NetworkManager _networkManager;
-    private readonly RoleSelectionService _roleSelectionService;
-    private readonly RoleMediator _mediator;
-
-    private List<RoleType> _roleVariant = new();
+    [SerializeField] private NetCodeHook _hook;
+    private NetworkManager _networkManager;
+    private RoleSelectionService _roleSelectionService;
+    private RoleMediator _mediator;
 
     private int _lastRoleSelected = -1;
 
     private bool _hasLocalPlayerLockedIn = false;
 
-    public RoleSelectionClient(RoleSelectionService roleSelectionService, NetworkManager networkManager,
-      RoleMediator mediator, NetCodeHook hook)
+    [Inject]
+    private void Construct(
+      RoleSelectionService roleSelectionService,
+      NetworkManager networkManager,
+      RoleMediator mediator)
     {
+      _roleSelectionService = roleSelectionService;
       _networkManager = networkManager;
       _mediator = mediator;
-      _roleSelectionService = roleSelectionService;
-      _hook = hook;
     }
 
-    public void Initialize()
+    private void Awake()
     {
       if (_networkManager.IsClient)
       {
-        Debug.Log("Role Selection Client Initialization", _mediator);
+        Debug.Log("Role Selection Client Awake", _mediator);
         _hook.OnNetworkSpawnHook += OnNetworkSpawn;
         _hook.OnNetworkDeSpawnHook += OnNetworkDeSpawn;
       }
@@ -41,15 +40,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       _mediator.ConfigureUIForLobbyMode(RoleUiMode.ChooseSeat);
     }
 
-    public void Dispose()
+    private void OnDestroy()
     {
       _hook.OnNetworkSpawnHook -= OnNetworkSpawn;
       _hook.OnNetworkDeSpawnHook -= OnNetworkDeSpawn;
     }
 
-    public void OnPlayerChosenRole(RoleType buttonIndex)
+    public void OnPlayerChosenRole(RoleState buttonIndex)
     {
-      if(_roleSelectionService.IsSpawned)
+      Debug.Log(_roleSelectionService.IsSpawned);
+      if (_roleSelectionService.IsSpawned)
         _roleSelectionService.ChangeSeatServerRpc(_networkManager.LocalClientId, (int)buttonIndex);
     }
 
@@ -72,8 +72,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       Debug.Log("Player states list changed");
       UpdateSeats();
       UpdatePlayerCount();
-
-      int localPlayerIdx = _roleSelectionService.IndexOfClient(_networkManager.LocalClientId);
     }
 
     private void OnLobbyClosedChanged(bool wasLobbyClosed, bool isLobbyClosed)
@@ -86,29 +84,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void UpdateSeats()
     {
-      var firstRoleChosen = false;
-      var firstRoleState = new PlayerRoleState();
-      var secondRoleChosen = false;
-      var secondRoleState = new PlayerRoleState();
       foreach (PlayerRoleState playerRole in _roleSelectionService.PlayerRoles)
-      {
-        if (playerRole.RoleId == 1)
-        {
-          firstRoleChosen = true;
-          firstRoleState = playerRole;
-        }
-
-        if (playerRole.RoleId == 2)
-        {
-          secondRoleChosen = true;
-          secondRoleState = playerRole;
-        }
-      }
-
-      if(firstRoleChosen)
-        _mediator.SerFirstRoleState(firstRoleState);
-      if (secondRoleChosen)
-        _mediator.SetSecondRoleState(secondRoleState);
+        _mediator.SetRoleUi(playerRole);
     }
 
     private void UpdatePlayerCount()

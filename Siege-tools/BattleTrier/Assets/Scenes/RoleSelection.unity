@@ -964,8 +964,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1048740565}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1116,6 +1115,9 @@ GameObject:
   - component: {fileID: 1048740565}
   - component: {fileID: 1048740567}
   - component: {fileID: 1048740566}
+  - component: {fileID: 1048740568}
+  - component: {fileID: 1048740569}
+  - component: {fileID: 1048740570}
   m_Layer: 0
   m_Name: RoleSelection
   m_TagString: Untagged
@@ -1130,13 +1132,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1048740564}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 822533653}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1048740566
 MonoBehaviour:
@@ -1166,6 +1168,45 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1048740568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048740564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e02c3580014fcba20518fcc0afb042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hook: {fileID: 1048740570}
+--- !u!114 &1048740569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048740564}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 692207969a7c4ed4bf84600ad6eae8a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hook: {fileID: 1048740570}
+  IsAwaken: 0
+--- !u!114 &1048740570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048740564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19c5d71c71e4ab3aac5127a4c1d3d29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1064602112
 GameObject:
   m_ObjectHideFlags: 0
@@ -1346,9 +1387,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6035ded1147241f0823708896a5ad2c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hookPrefab: {fileID: 325513030215608578, guid: 202cd84f97a3b9c4d9cc833a3f39ea66, type: 3}
   _mediator: {fileID: 1851240770}
   _selectionService: {fileID: 1048740566}
+  _client: {fileID: 1048740568}
+  _server: {fileID: 1048740569}
 --- !u!1 &1224950374
 GameObject:
   m_ObjectHideFlags: 0
@@ -1647,8 +1689,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4a1ea1a624f40df87e3a0e9e3a07aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _firstRoleButton: {fileID: 581410949}
-  _secondRoleButton: {fileID: 1064602117}
   _roleUi: {fileID: 1851240771}
 --- !u!114 &1851240771
 MonoBehaviour:
@@ -1662,6 +1702,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc98923f2659412eb61bceffa965607e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _roleButtons:
+  - {fileID: 581410949}
+  - {fileID: 1064602117}
+  - {fileID: 1047526128}
   _playerCounter: {fileID: 1947689802}
   _uiElementsForChooseSeat:
   - {fileID: 1459030472}

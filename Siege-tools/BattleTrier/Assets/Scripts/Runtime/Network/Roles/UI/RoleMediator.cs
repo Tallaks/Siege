@@ -1,12 +1,9 @@
-using TMPro;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 {
   public class RoleMediator : MonoBehaviour
   {
-    [SerializeField] private RoleSelectionButton _firstRoleButton;
-    [SerializeField] private RoleSelectionButton _secondRoleButton;
     [SerializeField] private RoleUi _roleUi;
 
     public void Initialize() => 
@@ -18,10 +15,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
     public void UpdatePlayerCount(int count) => 
       _roleUi.UpdatePlayerCount(count);
 
-    public void SerFirstRoleState(PlayerRoleState playerState) => 
-      _firstRoleButton.SetState(playerState);
-
-    public void SetSecondRoleState(PlayerRoleState playerState) => 
-      _secondRoleButton.SetState(playerState);
+    public void SetRoleUi(PlayerRoleState playerState) => 
+      _roleUi.SetState(playerState);
   }
 }

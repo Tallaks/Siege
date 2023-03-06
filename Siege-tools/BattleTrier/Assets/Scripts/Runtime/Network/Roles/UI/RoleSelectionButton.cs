@@ -7,10 +7,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
   [RequireComponent(typeof(Button))]
   public class RoleSelectionButton : MonoBehaviour
   {
-    [SerializeField] private RoleType _buttonIndex;
+    [SerializeField] private RoleState _buttonIndex;
 
     private RoleSelectionClient _roleSelection;
     private Button _button;
+    private PlayerRoleState _player;
 
     [Inject]
     private void Construct(RoleSelectionClient roleSelection) =>
@@ -24,15 +25,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 
     public void SetState(PlayerRoleState playerState)
     {
-      if (playerState.State == RoleState.Inactive)
+      if (playerState.State == _buttonIndex)
         _button.interactable = false;
       else
-      {
-        
-      }
+        _button.interactable = true;
     }
 
-    private void OnRoleChosen() => 
+    private void OnRoleChosen() =>
       _roleSelection.OnPlayerChosenRole(_buttonIndex);
   }
 }

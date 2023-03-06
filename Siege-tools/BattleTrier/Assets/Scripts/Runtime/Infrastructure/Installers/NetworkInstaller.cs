@@ -71,9 +71,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     private void OnClientDisconnectCallback(ulong clientId) =>
       _connectionStateMachine.CurrentState.ReactToClientDisconnect(clientId);
 
-    private void OnClientConnectedCallback(ulong clientId) =>
+    private void OnClientConnectedCallback(ulong clientId)
+    {
+      if(_connectionStateMachine.CurrentState is StartingHostState)
+        return;
       _connectionStateMachine.Enter<ClientConnectedState, ulong, ConnectionState>(clientId,
         _connectionStateMachine.CurrentState);
+    }
 
     private void OnServerStarted() => _connectionStateMachine.Enter<HostingState, bool>(true);
   }
