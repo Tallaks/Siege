@@ -48,7 +48,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     public void OnPlayerChosenRole(RoleState buttonIndex)
     {
-      Debug.Log(_roleSelectionService.IsSpawned);
       if (_roleSelectionService.IsSpawned)
         _roleSelectionService.ChangeSeatServerRpc(_networkManager.LocalClientId, (int)buttonIndex);
     }
@@ -70,8 +69,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private void OnLobbyPlayerStateChanged(NetworkListEvent<PlayerRoleState> changeEvent)
     {
       Debug.Log("Player states list changed");
-      UpdateSeats();
       UpdatePlayerCount();
+
+      for (var i = 0; i < _roleSelectionService.PlayerRoles.Count; i++)
+      {
+        Debug.Log(_roleSelectionService.PlayerRoles[i].ClientId + " " +
+                  _roleSelectionService.PlayerRoles[i].State);
+      }
     }
 
     private void OnLobbyClosedChanged(bool wasLobbyClosed, bool isLobbyClosed)
@@ -80,12 +84,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
         _mediator.ConfigureUIForLobbyMode(RoleUiMode.LobbyEnding);
       else
         _mediator.ConfigureUIForLobbyMode(_lastRoleSelected == -1 ? RoleUiMode.ChooseSeat : RoleUiMode.SeatChosen);
-    }
-
-    private void UpdateSeats()
-    {
-      foreach (PlayerRoleState playerRole in _roleSelectionService.PlayerRoles)
-        _mediator.SetRoleUi(playerRole);
     }
 
     private void UpdatePlayerCount()

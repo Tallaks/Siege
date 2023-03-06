@@ -24,7 +24,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private Coroutine _waitToEndLobbyCoroutine;
 
     public bool IsAwaken = false;
-    
+
     [Inject]
     public void Construct(
       ICoroutineRunner coroutineRunner,
@@ -78,15 +78,28 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void OnClientChoseRole(ulong clientId, int roleButtonId)
     {
-      int indexOfPlayerStatesOfClientId = FindLobbyPlayerIdx(clientId);
-      if (_roleSelectionService.LobbyIsClosed.Value == true)
-        return;
+      for (int i = 0; i < _roleSelectionService.PlayerRoles.Count; i++)
+      {
+        if (_roleSelectionService.PlayerRoles[i].ClientId == clientId &&
+            _roleSelectionService.PlayerRoles[i].State != (RoleState)roleButtonId)
+        {
+          _roleSelectionService.PlayerRoles[i] = new PlayerRoleState(
+            clientId,
+            (RoleState)roleButtonId,
+            Time.time
+          );
 
-      _roleSelectionService.PlayerRoles[indexOfPlayerStatesOfClientId] = new PlayerRoleState(
-        clientId,
-        (RoleState)roleButtonId,
-        Time.time
-      );
+          if (_roleSelectionService.PlayerRoles[i].ClientId != clientId &&
+              _roleSelectionService.PlayerRoles[i].State == (RoleState)roleButtonId)
+          {
+            _roleSelectionService.PlayerRoles[i] = new PlayerRoleState(
+              clientId,
+              (RoleState)roleButtonId,
+              Time.time
+            );
+          }
+        }
+      }
 
       CloseLobbyIfReady();
     }
@@ -115,21 +128,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void CloseLobbyIfReady()
     {
-      var requiredRoles = 0;
-      foreach (var playerInfo in _roleSelectionService.PlayerRoles)
-      {
-        if (playerInfo.State == RoleState.ChosenFirst || playerInfo.State == RoleState.ChosenSecond)
-          requiredRoles++;
-      }
-
-      if (requiredRoles < 2)
-        return;
-
-      _roleSelectionService.LobbyIsClosed.Value = true;
-
-      SaveLobbyResults();
-
-      _waitToEndLobbyCoroutine = _coroutineRunner.StartCoroutine(WaitToEndLobby());
+      
     }
 
     private void SaveLobbyResults()
@@ -148,17 +147,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     {
       yield return new WaitForSeconds(3);
       _sceneLoader.LoadScene("BossRoom", true, LoadSceneMode.Single);
-    }
-
-    private int FindLobbyPlayerIdx(ulong clientId)
-    {
-      for (var i = 0; i < _roleSelectionService.PlayerRoles.Count; ++i)
-      {
-        if (_roleSelectionService.PlayerRoles[i].ClientId == clientId)
-          return i;
-      }
-
-      return -1;
     }
 
     private void SeatNewPlayer(ulong clientId)

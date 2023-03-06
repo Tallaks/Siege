@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -7,15 +8,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
   [RequireComponent(typeof(Button))]
   public class RoleSelectionButton : MonoBehaviour
   {
-    [SerializeField] private RoleState _buttonIndex;
+    [FormerlySerializedAs("_buttonIndex")] [SerializeField]
+    public RoleState ButtonIndex;
 
     private RoleSelectionClient _roleSelection;
     private Button _button;
-    private PlayerRoleState _player;
+    private RoleSelectionService _selectionService;
 
     [Inject]
-    private void Construct(RoleSelectionClient roleSelection) =>
+    private void Construct(RoleSelectionClient roleSelection, RoleSelectionService selectionService)
+    {
+      _selectionService = selectionService;
       _roleSelection = roleSelection;
+    }
 
     private void Awake()
     {
@@ -23,15 +28,23 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
       _button.onClick.AddListener(OnRoleChosen);
     }
 
-    public void SetState(PlayerRoleState playerState)
+    private void Update()
     {
-      if (playerState.State == _buttonIndex)
-        _button.interactable = false;
-      else
-        _button.interactable = true;
+      if(ButtonIndex == RoleState.ChosenSpectator)
+        return;
+      foreach (PlayerRoleState playerRole in _selectionService.PlayerRoles)
+      {
+        if (playerRole.State == ButtonIndex)
+        {
+          _button.interactable = false;
+          return;
+        }
+      }
+
+      _button.interactable = true;
     }
 
     private void OnRoleChosen() =>
-      _roleSelection.OnPlayerChosenRole(_buttonIndex);
+      _roleSelection.OnPlayerChosenRole(ButtonIndex);
   }
 }

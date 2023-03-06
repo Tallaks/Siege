@@ -1,5 +1,6 @@
 using System;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 {
@@ -24,7 +25,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ChangeSeatServerRpc(ulong clientId, int seatIdx) =>
+    public void ChangeSeatServerRpc(ulong clientId, int seatIdx)
+    {
+      Debug.Log("ChangeSeatServerRpc");
       OnClientChoseRole?.Invoke(clientId, seatIdx);
+    }
   }
 }

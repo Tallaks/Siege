@@ -44,11 +44,5 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 
     public void UpdatePlayerCount(int count) => 
       _playerCounter.text = count.ToString();
-
-    public void SetState(PlayerRoleState playerState)
-    {
-      foreach (RoleSelectionButton roleButton in _roleButtons)
-        roleButton.SetState(playerState);
-    }
   }
 }
