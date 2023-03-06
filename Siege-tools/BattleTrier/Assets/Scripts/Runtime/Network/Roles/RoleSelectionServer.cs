@@ -128,7 +128,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void CloseLobbyIfReady()
     {
-      
+      var first = false;
+      var second = false;
+      foreach (PlayerRoleState playerRole in _roleSelectionService.PlayerRoles)
+      {
+        if (playerRole.State == RoleState.ChosenFirst)
+          first = true;
+        if (playerRole.State == RoleState.ChosenSecond)
+          second = true;
+      }
+
+      if (first && second)
+        _sceneLoader.LoadScene("Gameplay", true, LoadSceneMode.Single);
     }
 
     private void SaveLobbyResults()
