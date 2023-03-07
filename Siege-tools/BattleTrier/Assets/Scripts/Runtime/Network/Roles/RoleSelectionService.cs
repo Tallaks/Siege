@@ -13,17 +13,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private void Awake() => 
       PlayerRoles = new NetworkList<PlayerRoleState>();
 
-    public int IndexOfClient(ulong clientId)
-    {
-      for (var i = 0; i < PlayerRoles.Count; i++)
-      {
-        if (PlayerRoles[i].ClientId == clientId)
-          return i;
-      }
-
-      return -1;
-    }
-
     [ServerRpc(RequireOwnership = false)]
     public void ChangeSeatServerRpc(ulong clientId, int seatIdx)
     {

@@ -14,5 +14,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 
     public void UpdatePlayerCount(int count) => 
       _roleUi.UpdatePlayerCount(count);
+
+    public void DestroyButtons() => 
+      _roleUi.DestroyButtons();
   }
 }

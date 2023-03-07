@@ -3,6 +3,7 @@ using Kulinaria.Tools.BattleTrier.Runtime.Gameplay;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Session;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Utilities;
 using Unity.Netcode;
@@ -15,15 +16,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
   public class RoleSelectionServer : MonoBehaviour
   {
     [SerializeField] private NetCodeHook _hook;
+
     private ICoroutineRunner _coroutineRunner;
     private ISceneLoader _sceneLoader;
     private NetworkManager _networkManager;
-    private RoleSelectionService _roleSelectionService;
     private Session<SessionPlayerData> _session;
+    private RoleMediator _mediator;
+    private RoleSelectionService _roleSelectionService;
 
     private Coroutine _waitToEndLobbyCoroutine;
-
-    public bool IsAwaken = false;
 
     [Inject]
     public void Construct(
@@ -31,12 +32,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       ISceneLoader sceneLoader,
       NetworkManager networkManager,
       Session<SessionPlayerData> session,
+      RoleMediator mediator,
       RoleSelectionService roleSelectionService)
     {
       _coroutineRunner = coroutineRunner;
       _sceneLoader = sceneLoader;
       _networkManager = networkManager;
       _session = session;
+      _mediator = mediator;
       _roleSelectionService = roleSelectionService;
     }
 
@@ -47,7 +50,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
         Debug.Log("Role Selection Server Awake", _hook);
         _hook.OnNetworkSpawnHook += OnNetworkSpawn;
         _hook.OnNetworkDeSpawnHook += OnNetworkDespawn;
-        IsAwaken = true;
       }
     }
 
@@ -139,7 +141,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       }
 
       if (first && second)
+      {
+        _mediator.DestroyButtons();
         _sceneLoader.LoadScene("Gameplay", true, LoadSceneMode.Single);
+      }
     }
 
     private void SaveLobbyResults()
