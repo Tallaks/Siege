@@ -19,9 +19,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
     public override void Enter()
     {
       Debug.Log("Entering Map Selection State");
-      Debug.Log(_networkManager.LocalClient.PlayerObject.
+      _mediator.InitializeMapSelectionUi(_networkManager.LocalClient.PlayerObject.
         GetComponent<RoleBase>().State.Value);
-      _mediator.InitializeMapSelectionUi();
     }
 
     public override void Exit()

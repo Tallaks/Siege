@@ -1,3 +1,4 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Unity.Netcode;
 using UnityEngine;
 using Zenject;
@@ -9,13 +10,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     [SerializeField] private GameObject _firstRoleUi;
     [SerializeField] private GameObject _otherRoleUi;
 
-    private NetworkManager _networkManager;
-
-    [Inject]
-    private void Construct(NetworkManager networkManager) =>
-      _networkManager = networkManager;
-
-    public void Initialize() => 
-      _otherRoleUi.SetActive(true);
+    public void Initialize(RoleState stateValue)
+    {
+      if(stateValue == RoleState.ChosenFirst)
+        _firstRoleUi.SetActive(true);
+      else
+        _otherRoleUi.SetActive(true);
+    }
   }
 }
