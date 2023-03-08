@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -8,24 +9,27 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
 {
   public class StateMachine
   {
+    private readonly NetworkManager _networkManager;
     private readonly GameplayMediator _mediator;
+    private readonly MapSelectionBehaviour _mapSelectionBehaviour;
 
     private Dictionary<Type, IExitState> _states;
-    private NetworkManager _networkManager;
 
     public IExitState CurrentState { get; private set; }
 
-    public StateMachine(NetworkManager networkManager, GameplayMediator mediator)
+    public StateMachine(NetworkManager networkManager, GameplayMediator mediator, MapSelectionBehaviour mapSelectionBehaviour)
     {
       _networkManager = networkManager;
       _mediator = mediator;
+      _mapSelectionBehaviour = mapSelectionBehaviour;
     }
 
     public void Initialize()
     {
       _states = new Dictionary<Type, IExitState>()
       {
-        [typeof(MapSelectionState)] = new MapSelectionState(_networkManager, _mediator)
+        [typeof(MapSelectionState)] = new MapSelectionState(this, _networkManager, _mediator, _mapSelectionBehaviour),
+        [typeof(CharacterSelectionState)] = new CharacterSelectionState()
       };
     }
 
