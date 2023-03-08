@@ -9,6 +9,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
   public class RoleSelectionClient : MonoBehaviour
   {
     [SerializeField] private NetCodeHook _hook;
+
     private NetworkManager _networkManager;
     private RoleSelectionService _roleSelectionService;
     private RoleMediator _mediator;
@@ -19,12 +20,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     [Inject]
     private void Construct(
-      RoleSelectionService roleSelectionService,
       NetworkManager networkManager,
+      RoleSelectionService roleSelectionService,
       RoleMediator mediator)
     {
-      _roleSelectionService = roleSelectionService;
       _networkManager = networkManager;
+      _roleSelectionService = roleSelectionService;
       _mediator = mediator;
     }
 

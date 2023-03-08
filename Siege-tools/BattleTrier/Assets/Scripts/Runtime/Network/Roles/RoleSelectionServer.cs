@@ -1,4 +1,3 @@
-using System.Collections;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
@@ -22,6 +21,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private NetworkManager _networkManager;
     private Session<SessionPlayerData> _session;
     private RoleMediator _mediator;
+    private RoleSelectionClient _roleSelectionClient;
     private RoleSelectionService _roleSelectionService;
 
     private Coroutine _waitToEndLobbyCoroutine;
@@ -33,6 +33,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       NetworkManager networkManager,
       Session<SessionPlayerData> session,
       RoleMediator mediator,
+      RoleSelectionClient roleSelectionClient,
       RoleSelectionService roleSelectionService)
     {
       _coroutineRunner = coroutineRunner;
@@ -40,6 +41,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       _networkManager = networkManager;
       _session = session;
       _mediator = mediator;
+      _roleSelectionClient = roleSelectionClient;
       _roleSelectionService = roleSelectionService;
     }
 
@@ -100,6 +102,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
               Time.time
             );
           }
+
+          foreach (NetworkClient client in _networkManager.ConnectedClientsList)
+          {
+            if (client.ClientId == clientId)
+              client.PlayerObject.GetComponent<RoleBase>().State.Value = (RoleState)roleButtonId;
+          }
         }
       }
 
@@ -157,12 +165,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
         {
         }
       }
-    }
-
-    private IEnumerator WaitToEndLobby()
-    {
-      yield return new WaitForSeconds(3);
-      _sceneLoader.LoadScene("BossRoom", true, LoadSceneMode.Single);
     }
 
     private void SeatNewPlayer(ulong clientId)
