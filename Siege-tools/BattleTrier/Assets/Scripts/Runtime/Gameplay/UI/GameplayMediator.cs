@@ -1,5 +1,6 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
@@ -7,8 +8,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
   public class GameplayMediator : MonoBehaviour
   {
     [SerializeField] private MapSelectionUi _mapSelectionUi;
-    public void InitializeMapSelectionUi(RoleState stateValue, NetworkVariable<bool> mapSelectedState) => 
-      _mapSelectionUi.Initialize(stateValue, mapSelectedState);
+    public void InitializeMapSelectionUi(RoleState stateValue, MapSelectionBehaviour mapSelectionBehaviour) => 
+      _mapSelectionUi.Initialize(stateValue, mapSelectionBehaviour);
 
     public void HideMapSelectionUi() => 
       _mapSelectionUi.HideMapSelectionUi();

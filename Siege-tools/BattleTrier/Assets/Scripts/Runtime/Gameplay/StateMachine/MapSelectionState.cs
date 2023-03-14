@@ -29,7 +29,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
     {
       Debug.Log("Entering Map Selection State");
       _mediator.InitializeMapSelectionUi(_networkManager.LocalClient.PlayerObject.
-        GetComponent<RoleBase>().State.Value, _mapSelectionBehaviour.MapSelected);
+        GetComponent<RoleBase>().State.Value, _mapSelectionBehaviour);
     }
 
     public override void Exit() => 

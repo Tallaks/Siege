@@ -7,7 +7,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
 {
   [CreateAssetMenu(menuName = "Kulinaria/Board")]
   [Serializable]
-  public class BoardData : SerializedScriptableObject
+  public class BoardConfig : SerializedScriptableObject
   {
     private int _cols;
     private int _rows;
@@ -45,7 +45,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
     public string Name;
     public Sprite Icon;
 
-    public BoardData() => 
+    public BoardConfig() => 
       MapTiles = new TileType[1,1];
 
     private void OnValidate()
@@ -61,7 +61,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
       MapTiles = new TileType[Cols, Rows];
     }
 
-    [Space] [TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = nameof(DrawColoredEnumElement))]
+    [Space] [TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = "DrawColoredEnumElement")]
     public TileType[,] MapTiles;
 
     [Button]

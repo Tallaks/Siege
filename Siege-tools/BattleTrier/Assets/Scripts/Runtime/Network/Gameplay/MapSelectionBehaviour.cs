@@ -11,16 +11,20 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay
     public NetworkVariable<bool> MapSelected = new();
 
     [Inject]
-    private void Construct(StateMachine stateMachine) => 
+    private void Construct(StateMachine stateMachine) =>
       _stateMachine = stateMachine;
 
-    private void Awake() => 
+    private void Awake() =>
       MapSelected.OnValueChanged += OnMapSelected;
 
     private void OnMapSelected(bool previousvalue, bool newvalue)
     {
-      if(newvalue == true)
+      if (newvalue)
         _stateMachine.Enter<CharacterSelectionState>();
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetSelectedServerRpc() => 
+      MapSelected.Value = true;
   }
 }
