@@ -1575,6 +1575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eae07549b0a4a2583c5463ca00728a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mapPrefab: {fileID: 3873104154714043461, guid: 728f612e280932e4faa2ff357f0b5b46, type: 3}
   MapSelected:
     m_InternalValue: 0
 --- !u!1 &1979773797
