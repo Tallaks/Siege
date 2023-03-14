@@ -11,24 +11,24 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
   {
     private readonly NetworkManager _networkManager;
     private readonly GameplayMediator _mediator;
-    private readonly MapSelectionBehaviour _mapSelectionBehaviour;
+    private readonly MapSelectionNetwork _mapSelectionNetwork;
 
     private Dictionary<Type, IExitState> _states;
 
     public IExitState CurrentState { get; private set; }
 
-    public StateMachine(NetworkManager networkManager, GameplayMediator mediator, MapSelectionBehaviour mapSelectionBehaviour)
+    public StateMachine(NetworkManager networkManager, GameplayMediator mediator, MapSelectionNetwork mapSelectionNetwork)
     {
       _networkManager = networkManager;
       _mediator = mediator;
-      _mapSelectionBehaviour = mapSelectionBehaviour;
+      _mapSelectionNetwork = mapSelectionNetwork;
     }
 
     public void Initialize()
     {
       _states = new Dictionary<Type, IExitState>()
       {
-        [typeof(MapSelectionState)] = new MapSelectionState(this, _networkManager, _mediator, _mapSelectionBehaviour),
+        [typeof(MapSelectionState)] = new MapSelectionState(this, _networkManager, _mediator, _mapSelectionNetwork),
         [typeof(CharacterSelectionState)] = new CharacterSelectionState()
       };
     }

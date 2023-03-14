@@ -11,25 +11,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
     private readonly StateMachine _stateMachine;
     private readonly NetworkManager _networkManager;
     private readonly GameplayMediator _mediator;
-    private readonly MapSelectionBehaviour _mapSelectionBehaviour;
+    private readonly MapSelectionNetwork _mapSelectionNetwork;
 
     public MapSelectionState(
       StateMachine stateMachine,
       NetworkManager networkManager,
       GameplayMediator mediator,
-      MapSelectionBehaviour mapSelectionBehaviour)
+      MapSelectionNetwork mapSelectionNetwork)
     {
       _stateMachine = stateMachine;
       _networkManager = networkManager;
       _mediator = mediator;
-      _mapSelectionBehaviour = mapSelectionBehaviour;
+      _mapSelectionNetwork = mapSelectionNetwork;
     }
 
     public override void Enter()
     {
       Debug.Log("Entering Map Selection State");
       _mediator.InitializeMapSelectionUi(_networkManager.LocalClient.PlayerObject.
-        GetComponent<RoleBase>().State.Value, _mapSelectionBehaviour);
+        GetComponent<RoleBase>().State.Value, _mapSelectionNetwork);
     }
 
     public override void Exit() => 

@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -17,21 +17,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
     [SerializeField] private Transform _mapSelectionContainer;
     [SerializeField] private MapSelectionButton _mapSelectionPrefab;
 
-    private GameplayMediator _mediator;
     private DiContainer _container;
 
-    private MapSelectionBehaviour _mapSelectionBehaviour;
+    private MapSelectionNetwork _mapSelectionNetwork;
+    private List<MapSelectionButton> _mapSelectionButtons = new();
 
     [Inject]
-    private void Construct(DiContainer container, GameplayMediator mediator)
-    {
+    private void Construct(DiContainer container) => 
       _container = container;
-      _mediator = mediator;
-    }
 
-    public void Initialize(RoleState stateValue, MapSelectionBehaviour mapSelectionBehaviour)
+    public void Initialize(RoleState stateValue, MapSelectionNetwork mapSelectionNetwork)
     {
-      _mapSelectionBehaviour = mapSelectionBehaviour;
+      _selectMapButton.interactable = false;
+      _mapSelectionNetwork = mapSelectionNetwork;
       _selectMapButton.onClick.AddListener(OnMapSelectedServerRpc);
       if (stateValue == RoleState.ChosenFirst)
       {
@@ -40,7 +38,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
         {
           var button =
             _container.InstantiatePrefabForComponent<MapSelectionButton>(_mapSelectionPrefab, _mapSelectionContainer);
-          button.Initialize(config);
+          button.Initialize(config, mapSelectionNetwork);
+          _mapSelectionButtons.Add(button);
         }
       }
       else
@@ -48,12 +47,27 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
     }
 
     private void OnMapSelectedServerRpc() =>
-      _mapSelectionBehaviour.SetSelectedServerRpc();
+      _mapSelectionNetwork.SetSelectedServerRpc();
 
     public void HideMapSelectionUi()
     {
       _firstRoleUi.SetActive(false);
       _otherRoleUi.SetActive(false);
+    }
+
+    public void EnableSubmitButton() =>
+      _selectMapButton.interactable = true;
+
+    public void SetMap(MapSelectionButton selected)
+    {
+      foreach (MapSelectionButton button in _mapSelectionButtons)
+        button.Deselect();
+
+      foreach (MapSelectionButton button in _mapSelectionButtons.Where(button => button == selected))
+      {
+        button.Select();
+        return;
+      }
     }
   }
 }
