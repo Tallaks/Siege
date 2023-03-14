@@ -26,82 +26,10 @@ MonoBehaviour:
       Data: 0|Kulinaria.Tools.BattleTrier.Runtime.Data.TileType[,], Runtime
     - Name: 
       Entry: 12
-      Data: 120
+      Data: 96
     - Name: ranks
       Entry: 1
-      Data: 15|8
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 1
+      Data: 12|8
     - Name: 
       Entry: 3
       Data: 1
@@ -396,7 +324,5 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  Cols: 15
-  Rows: 8
-  Name: "\u041F\u0443\u0441\u0442\u0430\u044F \u043A\u0430\u0440\u0442\u0430"
-  Icon: {fileID: 21300000, guid: 0f061b4bd0275bc4eb60f2af31e7375a, type: 3}
+  Name: Default
+  Icon: {fileID: 21300000, guid: d70dda60ce4a8cb428488a390c2f2778, type: 3}

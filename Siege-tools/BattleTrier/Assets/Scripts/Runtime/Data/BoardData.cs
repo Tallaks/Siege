@@ -9,27 +9,60 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
   [Serializable]
   public class BoardData : SerializedScriptableObject
   {
-    private int _previousCols;
-    private int _previousRows;
+    private int _cols;
+    private int _rows;
 
-    [ShowInInspector] public int Cols;
-    [ShowInInspector] public int Rows;
+    [Button]
+    public void SetMap(int cols, int rows)
+    {
+      Cols = cols;
+      Rows = rows;
+      OnValidate();
+    }
+    
+    public int Cols
+    {
+      get => _cols;
+      set
+      {
+        _cols = value;
+        PlayerPrefs.SetInt("Cols" + name, value);
+        PlayerPrefs.Save();
+      }
+    }
+
+    public int Rows
+    {
+      get => _rows;
+      set
+      {
+        _rows = value;
+        PlayerPrefs.SetInt("Rows" + name, value);
+        PlayerPrefs.Save();
+      }
+    }
 
     public string Name;
     public Sprite Icon;
 
+    public BoardData() => 
+      MapTiles = new TileType[1,1];
+
     private void OnValidate()
     {
-      if(_previousCols == Cols && _previousRows == Rows)
+      int cols = PlayerPrefs.GetInt("Cols" + name, -1);
+      int rows = PlayerPrefs.GetInt("Rows" + name, -1);
+
+      if(cols == Cols && rows == Rows && MapTiles.GetLength(1) == rows && MapTiles.GetLength(0) == cols)
+        return;
+
+      if (cols == -1 && rows == -1)
         return;
       MapTiles = new TileType[Cols, Rows];
-      _previousCols = Cols;
-      _previousRows = Rows;
     }
 
-    [Space]
-    [TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = nameof(DrawColoredEnumElement))]
-    public TileType[,] MapTiles = new TileType[10, 15];
+    [Space] [TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = nameof(DrawColoredEnumElement))]
+    public TileType[,] MapTiles;
 
     [Button]
     public void SetAllTilesDefault()
@@ -38,7 +71,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
       for (int j = 0; j < MapTiles.GetLength(1); j++)
         MapTiles[i, j] = TileType.Default;
     }
-    
+
 #if UNITY_EDITOR
 
     private static TileType DrawColoredEnumElement(Rect rect, TileType value)
