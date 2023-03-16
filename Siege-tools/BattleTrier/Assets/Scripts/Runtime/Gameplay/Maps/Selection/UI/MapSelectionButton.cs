@@ -33,7 +33,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
 
     private void OnMapSelected(BoardConfig config, MapSelectionNetwork mapSelectionNetwork)
     {
-      mapSelectionNetwork.Select(config);
+      mapSelectionNetwork.Select(config.name);
       _mediator.SetSelectedMap(this);
     }
   }

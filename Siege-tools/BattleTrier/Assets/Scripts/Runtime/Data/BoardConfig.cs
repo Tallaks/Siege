@@ -19,10 +19,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
       Rows = rows;
       OnValidate();
     }
-    
+
     public int Cols
     {
-      get => _cols;
+      get
+      {
+        if (_cols == default)
+          _cols = PlayerPrefs.GetInt("Cols" + name, -1);
+        return _cols;
+      }
       set
       {
         _cols = value;
@@ -33,7 +38,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
 
     public int Rows
     {
-      get => _rows;
+      get
+      {
+        if (_rows == default)
+          _rows = PlayerPrefs.GetInt("Rows" + name, -1);
+        return _rows;
+      }
       set
       {
         _rows = value;
@@ -45,15 +55,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
     public string Name;
     public Sprite Icon;
 
-    public BoardConfig() => 
-      MapTiles = new TileType[1,1];
+    public BoardConfig() =>
+      MapTiles = new TileType[1, 1];
 
     private void OnValidate()
     {
       int cols = PlayerPrefs.GetInt("Cols" + name, -1);
       int rows = PlayerPrefs.GetInt("Rows" + name, -1);
 
-      if(cols == Cols && rows == Rows && MapTiles.GetLength(1) == rows && MapTiles.GetLength(0) == cols)
+      if (cols == Cols && rows == Rows && MapTiles.GetLength(1) == rows && MapTiles.GetLength(0) == cols)
         return;
 
       if (cols == -1 && rows == -1)
