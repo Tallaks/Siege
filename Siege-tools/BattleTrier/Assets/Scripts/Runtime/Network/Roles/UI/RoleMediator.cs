@@ -1,4 +1,6 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
 using UnityEngine;
+using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 {
@@ -6,6 +8,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
   {
     [SerializeField] private RoleUi _roleUi;
 
+    [Inject] private IConnectionStateMachine _connectionStateMachine;
+    
     public void Initialize() => 
       _roleUi.Initialize();
 
@@ -17,5 +21,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 
     public void DestroyButtons() => 
       _roleUi.DestroyButtons();
+
+    public void OnRequestedShutdown() =>
+      (_connectionStateMachine.CurrentState as IRequestShutdown)?.OnUserRequestedShutdown();
   }
 }

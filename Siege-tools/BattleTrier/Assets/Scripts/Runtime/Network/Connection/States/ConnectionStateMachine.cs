@@ -22,6 +22,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     [Inject] private IConnectionService _connectionService;
     private Session<SessionPlayerData> _session;
     private ISceneLoader _sceneLoader;
+    private UserProfile _localUser;
 
     public ConnectionState CurrentState { get; private set; }
 
@@ -30,6 +31,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       ISceneLoader sceneLoader,
       NetworkManager networkManager,
       Session<SessionPlayerData> session,
+      UserProfile localUser,
       LobbyInfo lobbyInfo,
       LobbyServiceFacade lobbyService)
     {
@@ -37,6 +39,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _coroutineRunner = coroutineRunner;
       _networkManager = networkManager;
       _session = session;
+      _localUser = localUser;
       _lobbyInfo = lobbyInfo;
       _lobbyService = lobbyService;
     }
@@ -45,10 +48,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     {
       _connections = new()
       {
-        [typeof(OfflineState)] = new OfflineState(_networkManager),
+        [typeof(OfflineState)] = new OfflineState(_networkManager, _sceneLoader, _lobbyService),
         [typeof(ClientReconnectingState)] = new ClientReconnectingState(this, _coroutineRunner, _connectionService, _networkManager, _lobbyService, _lobbyInfo),
-        [typeof(ClientConnectingState)] = new ClientConnectingState(this, _connectionService),
-        [typeof(ClientConnectedState)] = new ClientConnectedState(this),
+        [typeof(ClientConnectingState)] = new ClientConnectingState(_networkManager, this, _connectionService),
+        [typeof(ClientConnectedState)] = new ClientConnectedState(this, _networkManager, _localUser),
         [typeof(HostingState)] = new HostingState(this, _sceneLoader, _networkManager, _session, _lobbyService),
         [typeof(StartingHostState)] = new StartingHostState(this, _connectionService, _networkManager, _session, _lobbyInfo)
       };

@@ -7,11 +7,41 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
   [Serializable]
   public class UserProfile
   {
-    public event Action<UserProfile> OnChanged;
+    public bool IsHost
+    {
+      get => _isHost;
+      set
+      {
+        _isHost = value;
+        OnChanged?.Invoke(this);
+      }
+    }
 
-    public bool IsHost { get; set; }
-    public string Name { get; set; }
-    public string Id { get; set; }
+    public string Name
+    {
+      get => _name;
+      set
+      {
+        _name = value;
+        OnChanged?.Invoke(this);
+      }
+    }
+
+    public string Id
+    {
+      get => _id;
+      set
+      {
+        _id = value;
+        OnChanged?.Invoke(this);
+      }
+    }
+
+    private string _id;
+    private bool _isHost;
+    private string _name;
+
+    public event Action<UserProfile> OnChanged;
 
     [Flags]
     public enum ChangedFields
@@ -38,13 +68,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       OnChanged?.Invoke(this);
     }
 
-    public void ResetState() => 
+    public void ResetState() =>
       IsHost = false;
-    
+
     public Dictionary<string, PlayerDataObject> GetDataForUnityServices() =>
       new()
       {
-        {"DisplayName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, Name)},
+        { "DisplayName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, Name) },
       };
   }
 }

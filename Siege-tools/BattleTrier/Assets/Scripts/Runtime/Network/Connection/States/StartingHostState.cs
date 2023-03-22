@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
-  public class StartingHostState : ParameterConnectionState<string>, IApprovalCheck, IOnlineState
+  public class StartingHostState : ParameterConnectionState<string>, IApprovalCheck, IOnlineState, IClientDisconnect
   {
     private NetworkManager _networkManager;
     private LobbyInfo _lobbyInfo;
@@ -47,7 +47,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       }
     }
 
-    public override void ReactToClientDisconnect(ulong clientId)
+    public void ReactToClientDisconnect(ulong clientId)
     {
       if (_networkManager.LocalClientId == clientId)
         _connectionStateMachine.Enter<OfflineState>();
@@ -74,6 +74,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
         response.CreatePlayerObject = true;
       }
     }
+
+    public void OnUserRequestedShutdown() =>
+      _connectionStateMachine.Enter<OfflineState>();
 
     public override void Exit()
     {

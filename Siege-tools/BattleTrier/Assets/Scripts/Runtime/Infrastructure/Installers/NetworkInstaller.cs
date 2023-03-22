@@ -69,7 +69,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     }
 
     private void OnClientDisconnectCallback(ulong clientId) =>
-      _connectionStateMachine.CurrentState.ReactToClientDisconnect(clientId);
+      ((IClientDisconnect)_connectionStateMachine.CurrentState)?.ReactToClientDisconnect(clientId);
 
     private void OnClientConnectedCallback(ulong clientId)
     {

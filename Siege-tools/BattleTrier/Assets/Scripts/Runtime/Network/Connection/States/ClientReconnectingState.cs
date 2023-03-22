@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
-  public class ClientReconnectingState : ParameterConnectionState<string>, IOnlineState
+  public class ClientReconnectingState : ParameterConnectionState<string>, IOnlineState, IClientDisconnect
   {
     private readonly NetworkManager _networkManager;
     private readonly IConnectionStateMachine _connectionStateMachine;
@@ -46,7 +46,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _userName = userName;
     }
 
-    public override void ReactToClientDisconnect(ulong clientId)
+    public void ReactToClientDisconnect(ulong clientId)
     {
       string disconnectReason = _networkManager.DisconnectReason;
 
@@ -89,6 +89,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     }
 
     public void OnTransportFailure() =>
+      _connectionStateMachine.Enter<OfflineState>();
+
+    public void OnUserRequestedShutdown() =>
       _connectionStateMachine.Enter<OfflineState>();
 
     public override void Exit()

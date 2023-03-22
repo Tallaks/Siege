@@ -6,16 +6,28 @@ using UnityEngine;
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 {
   [Serializable]
-  public class LobbyInfo
+  public sealed class LobbyInfo
   {
     public event Action<LobbyInfo> OnLobbyChanged;
-    public string Id { get; set; }
+
+    public string Id
+    {
+      get => _id;
+      set
+      {
+        Debug.Log(value + " " + Name + " " + RelayJoinCode);
+        _id = value;
+      }
+    }
+
     public string Code { get; set; }
     public string RelayJoinCode { get; set; }
     public string Name { get; set; }
     public IDictionary<string, UserProfile> LobbyUsers => _lobbyUsers;
 
     private Dictionary<string, UserProfile> _lobbyUsers = new();
+    private string _id;
+
     public LobbyInfo()
     {
     }
@@ -34,13 +46,27 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
         RelayJoinCode = null;
 
       var lobbyUsers = new Dictionary<string, UserProfile>();
-      foreach (var player in lobby.Players)
+      foreach (Player player in lobby.Players)
       {
         if (player.Data == null)
-          continue;
+        {
+          if (LobbyUsers.ContainsKey(player.Id))
+          {
+            Debug.LogWarning("Lobby contains " + player.Id);
+            lobbyUsers.Add(player.Id, LobbyUsers[player.Id]);
+            continue;
+          }
+        }
 
-        if (LobbyUsers.ContainsKey(player.Id))
-          lobbyUsers.Add(player.Id, LobbyUsers[player.Id]);
+        Debug.LogWarning("incoming data " + player.Id);
+        var incomingData = new UserProfile
+        {
+          IsHost = lobby.HostId.Equals(player.Id),
+          Id = player.Id,
+          Name = player.Data?.ContainsKey("DisplayName") == true ? player.Data["DisplayName"].Value : default,
+        };
+
+        lobbyUsers.Add(incomingData.Id, incomingData);
       }
 
       CopyDataFrom(lobbyUsers);
@@ -54,22 +80,27 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 
     private void CopyDataFrom(Dictionary<string, UserProfile> lobbyUsers)
     {
-      var toRemove = new List<UserProfile>();
-      foreach (KeyValuePair<string, UserProfile> oldUser in _lobbyUsers)
+      if (lobbyUsers == null)
+        _lobbyUsers = new Dictionary<string, UserProfile>();
+      else
       {
-        if (lobbyUsers.ContainsKey(oldUser.Key))
-          oldUser.Value.CopyDataFrom(lobbyUsers[oldUser.Key]);
-        else
-          toRemove.Add(oldUser.Value);
-      }
+        var toRemove = new List<UserProfile>();
+        foreach (KeyValuePair<string, UserProfile> oldUser in _lobbyUsers)
+        {
+          if (lobbyUsers.ContainsKey(oldUser.Key))
+            oldUser.Value.CopyDataFrom(lobbyUsers[oldUser.Key]);
+          else
+            toRemove.Add(oldUser.Value);
+        }
 
-      foreach (UserProfile remove in toRemove)
-        DoRemoveUser(remove);
+        foreach (UserProfile remove in toRemove)
+          DoRemoveUser(remove);
 
-      foreach (KeyValuePair<string, UserProfile> currUser in lobbyUsers)
-      {
-        if (!_lobbyUsers.ContainsKey(currUser.Key))
-          DoAddUser(currUser.Value);
+        foreach (KeyValuePair<string, UserProfile> currUser in lobbyUsers)
+        {
+          if (!_lobbyUsers.ContainsKey(currUser.Key))
+            DoAddUser(currUser.Value);
+        }
       }
 
       OnLobbyChanged?.Invoke(this);
@@ -77,6 +108,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 
     private void DoAddUser(UserProfile user)
     {
+      Debug.LogWarning(user.Id + " " + user);
       _lobbyUsers.Add(user.Id, user);
       user.OnChanged += OnChangedUser;
     }
@@ -104,6 +136,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 
     private void AddUser(UserProfile localUser)
     {
+      foreach (string usersKey in _lobbyUsers.Keys)
+      {
+        Debug.LogWarning(usersKey);
+      }
+
       if (!_lobbyUsers.ContainsKey(localUser.Id))
       {
         DoAddUser(localUser);

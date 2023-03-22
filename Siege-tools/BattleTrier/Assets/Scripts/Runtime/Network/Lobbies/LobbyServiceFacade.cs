@@ -233,7 +233,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
     }
 
-    private Task EndTracking()
+    public Task EndTracking()
     {
       var task = Task.CompletedTask;
       if (CurrentLobby != null)

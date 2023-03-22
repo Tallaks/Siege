@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 {
@@ -12,13 +14,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
     [SerializeField] private List<GameObject> _uiElementsForFatalError;
     [SerializeField] private List<GameObject> _uiElementsForLobbyEnding;
     [SerializeField] private List<GameObject> _uiElementsForSeatChosen;
+    [SerializeField] private Button _backButton;
 
     private Dictionary<RoleUiMode, List<GameObject>> _lobbyUiElementsByMode;
     private int _lastSeatSelected;
+    private RoleMediator _mediator;
+
+    [Inject]
+    private void Construct(RoleMediator mediator) =>
+      _mediator = mediator;
 
     public void Initialize()
     {
-      if(_lobbyUiElementsByMode == null)
+      if (_lobbyUiElementsByMode == null)
       {
         Debug.Log("Role Ui Initialization");
         _lobbyUiElementsByMode = new Dictionary<RoleUiMode, List<GameObject>>
@@ -28,6 +36,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
           [RoleUiMode.LobbyEnding] = _uiElementsForLobbyEnding,
           [RoleUiMode.SeatChosen]  = _uiElementsForSeatChosen
         };
+
+        _backButton.onClick.AddListener(_mediator.OnRequestedShutdown);
       }
     }
 
@@ -42,7 +52,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
         element.SetActive(true);
     }
 
-    public void UpdatePlayerCount(int count) => 
+    public void UpdatePlayerCount(int count) =>
       _playerCounter.text = count.ToString();
 
     public void DestroyButtons()

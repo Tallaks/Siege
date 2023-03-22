@@ -1,7 +1,7 @@
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
-  public interface IOnlineState : IRequestShutdown
+  public interface IRequestShutdown
   {
-    void OnTransportFailure();
+    void OnUserRequestedShutdown();
   }
 }
