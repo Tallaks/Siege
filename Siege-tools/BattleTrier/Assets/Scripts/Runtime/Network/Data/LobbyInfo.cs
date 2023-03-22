@@ -10,23 +10,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
   {
     public event Action<LobbyInfo> OnLobbyChanged;
 
-    public string Id
-    {
-      get => _id;
-      set
-      {
-        Debug.Log(value + " " + Name + " " + RelayJoinCode);
-        _id = value;
-      }
-    }
-
+    public string Id { get; set; }
     public string Code { get; set; }
     public string RelayJoinCode { get; set; }
     public string Name { get; set; }
     public IDictionary<string, UserProfile> LobbyUsers => _lobbyUsers;
 
     private Dictionary<string, UserProfile> _lobbyUsers = new();
-    private string _id;
 
     public LobbyInfo()
     {
@@ -52,13 +42,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
         {
           if (LobbyUsers.ContainsKey(player.Id))
           {
-            Debug.LogWarning("Lobby contains " + player.Id);
             lobbyUsers.Add(player.Id, LobbyUsers[player.Id]);
             continue;
           }
         }
 
-        Debug.LogWarning("incoming data " + player.Id);
         var incomingData = new UserProfile
         {
           IsHost = lobby.HostId.Equals(player.Id),
@@ -70,6 +58,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       }
 
       CopyDataFrom(lobbyUsers);
+    }
+
+    public void AddUser(UserProfile localUser)
+    {
+      if (!_lobbyUsers.ContainsKey(localUser.Id))
+      {
+        DoAddUser(localUser);
+        OnLobbyChanged?.Invoke(this);
+      }
+    }
+
+    public void Reset(UserProfile localUser)
+    {
+      CopyDataFrom(new Dictionary<string, UserProfile>());
+      AddUser(localUser);
     }
 
     public Dictionary<string, DataObject> GetDataForUnityServices() =>
@@ -108,7 +111,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 
     private void DoAddUser(UserProfile user)
     {
-      Debug.LogWarning(user.Id + " " + user);
       _lobbyUsers.Add(user.Id, user);
       user.OnChanged += OnChangedUser;
     }
@@ -127,25 +129,5 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 
     private void OnChangedUser(UserProfile user) =>
       OnLobbyChanged?.Invoke(this);
-
-    public void Reset(UserProfile localUser)
-    {
-      CopyDataFrom(new Dictionary<string, UserProfile>());
-      AddUser(localUser);
-    }
-
-    private void AddUser(UserProfile localUser)
-    {
-      foreach (string usersKey in _lobbyUsers.Keys)
-      {
-        Debug.LogWarning(usersKey);
-      }
-
-      if (!_lobbyUsers.ContainsKey(localUser.Id))
-      {
-        DoAddUser(localUser);
-        OnLobbyChanged?.Invoke(this);
-      }
-    }
   }
 }

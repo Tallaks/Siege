@@ -19,7 +19,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     private readonly LobbyInfo _lobbyInfo;
     private readonly IUpdateRunner _updateRunner;
     private readonly UserProfile _localUser;
-    [Inject]private LobbyHeartbeat _lobbyHeartbeat;
+    [Inject] private LobbyHeartbeat _lobbyHeartbeat;
 
     private readonly RateLimitCooldown _queryForLobbiesLimit;
     private RateLimitCooldown _joinLobbyLimit;
@@ -92,7 +92,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         }
       }
     }
-    
+
     public async Task UpdateLobbyDataAsync(Dictionary<string, DataObject> dataObjects)
     {
       Dictionary<string, DataObject> dataCurr = CurrentLobby.Data ?? new Dictionary<string, DataObject>();
@@ -177,7 +177,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
 
     public async Task UpdatePlayerDataAsync(Dictionary<string, PlayerDataObject> data)
     {
-      if(!_queryForLobbiesLimit.CanCall)
+      if (!_queryForLobbiesLimit.CanCall)
         return;
 
       try
@@ -206,9 +206,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
 
     private async void UpdateLobby()
     {
-      if(!_queryForLobbiesLimit.CanCall)
+      if (!_queryForLobbiesLimit.CanCall)
         return;
-      
+
       try
       {
         Lobby lobby = await _lobbyApi.GetLobby(_lobbyInfo.Id);
@@ -331,12 +331,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       {
         if (!string.IsNullOrEmpty(lobbyCode))
         {
-          Lobby lobby = await _lobbyApi.JoinLobbyByCode(_authentication.PlayerId, lobbyCode, _localUser.GetDataForUnityServices());
+          Lobby lobby = await _lobbyApi.JoinLobbyByCode(_authentication.PlayerId, lobbyCode,
+            _localUser.GetDataForUnityServices());
           return (true, lobby);
         }
         else
         {
-          Lobby lobby = await _lobbyApi.JoinLobbyById(_authentication.PlayerId, lobbyId, _localUser.GetDataForUnityServices());
+          Lobby lobby =
+            await _lobbyApi.JoinLobbyById(_authentication.PlayerId, lobbyId, _localUser.GetDataForUnityServices());
           return (true, lobby);
         }
       }
