@@ -753,7 +753,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: X
+  m_text: Exit app
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1000,11 +1000,11 @@ RectTransform:
   m_Father: {fileID: 1128444287}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.91577077, y: 0.88788897}
-  m_AnchorMax: {x: 0.91577077, y: 0.88788897}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.96716917, y: 0.056}
+  m_AnchorMax: {x: 0.96716917, y: 0.056}
+  m_AnchoredPosition: {x: 0.0032958984, y: -0.00045776367}
+  m_SizeDelta: {x: 311.563, y: 100}
+  m_Pivot: {x: 1.0000001, y: 0}
 --- !u!114 &978285824
 MonoBehaviour:
   m_ObjectHideFlags: 0
