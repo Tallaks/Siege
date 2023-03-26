@@ -459,6 +459,7 @@ GameObject:
   - component: {fileID: 156583374}
   - component: {fileID: 156583376}
   - component: {fileID: 156583375}
+  - component: {fileID: 156583377}
   m_Layer: 0
   m_Name: CharacterChoicePanel
   m_TagString: Untagged
@@ -528,6 +529,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 156583373}
   m_CullTransparentMesh: 1
+--- !u!114 &156583377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156583373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138145e4fe934ad184350f5af045d1a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterListItemPrefab: {fileID: -693298026201048633, guid: 4f2507cce5588264cb2b0109f9f5ea18, type: 3}
+  _characterSelectionVariantPrefab: {fileID: 9092497469095704596, guid: fd68e22e7045b6c4cbd2383516262538, type: 3}
+  _selectedCharacterInfo: {fileID: 1405007202}
+  _gridLayout: {fileID: 1987818730}
 --- !u!1 &159702527
 GameObject:
   m_ObjectHideFlags: 0
@@ -3392,7 +3409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caee9dea28fe42f78cce23d4204b6be3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterSelectionPanel: {fileID: 156583373}
+  _characterSelectionPanel: {fileID: 156583377}
   _waitingAsPlayerPanel: {fileID: 631514145}
   _waitingAsSpectatorPanel: {fileID: 1499155468}
 --- !u!1 &1737640195

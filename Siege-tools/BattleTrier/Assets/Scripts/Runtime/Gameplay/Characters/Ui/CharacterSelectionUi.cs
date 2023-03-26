@@ -7,7 +7,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterSelectionUi : MonoBehaviour
   {
-    [SerializeField, Required] private GameObject _characterSelectionPanel;
+    [SerializeField, Required, Searchable] private CharacterSelectionPanel _characterSelectionPanel;
     [SerializeField, Required] private GameObject _waitingAsPlayerPanel;
     [SerializeField, Required] private GameObject _waitingAsSpectatorPanel;
 
@@ -17,9 +17,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     {
       _characterSelectionNetwork = characterSelectionNetwork;
       if (stateValue is RoleState.ChosenFirst or RoleState.ChosenSecond)
-        _characterSelectionPanel.SetActive(true);
+        ShowCharacterSelectionPanel();
       else
         _waitingAsSpectatorPanel.SetActive(true);
+    }
+
+    private void ShowCharacterSelectionPanel()
+    {
+      _characterSelectionPanel.gameObject.SetActive(true);
+      _characterSelectionPanel.Initialize();
     }
   }
 }
