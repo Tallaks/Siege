@@ -10,6 +10,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
   {
     [SerializeField] private GameplayMediator _mediator;
     [SerializeField] private MapSelectionNetwork _mapSelectionNetwork;
+    [SerializeField] private CharacterSelectionNetwork _characterSelectionNetwork;
 
     public void Initialize()
     {
@@ -22,6 +23,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind<IInitializable>().To<GameplayInstaller>().FromInstance(this).AsSingle();
       Container.Bind<GameplayMediator>().FromInstance(_mediator).AsSingle();
       Container.Bind<MapSelectionNetwork>().FromInstance(_mapSelectionNetwork).AsSingle();
+      Container.Bind<CharacterSelectionNetwork>().FromInstance(_characterSelectionNetwork).AsSingle();
       Container.Bind<StateMachine>().FromNew().AsSingle();
     }
   }

@@ -12,16 +12,22 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
     private readonly NetworkManager _networkManager;
     private readonly GameplayMediator _mediator;
     private readonly MapSelectionNetwork _mapSelectionNetwork;
+    private readonly CharacterSelectionNetwork _characterSelectionNetwork;
 
     private Dictionary<Type, IExitState> _states;
 
     public IExitState CurrentState { get; private set; }
 
-    public StateMachine(NetworkManager networkManager, GameplayMediator mediator, MapSelectionNetwork mapSelectionNetwork)
+    public StateMachine(
+      NetworkManager networkManager,
+      GameplayMediator mediator,
+      MapSelectionNetwork mapSelectionNetwork,
+      CharacterSelectionNetwork characterSelectionNetwork)
     {
       _networkManager = networkManager;
       _mediator = mediator;
       _mapSelectionNetwork = mapSelectionNetwork;
+      _characterSelectionNetwork = characterSelectionNetwork;
     }
 
     public void Initialize()
@@ -29,7 +35,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
       _states = new Dictionary<Type, IExitState>()
       {
         [typeof(MapSelectionState)] = new MapSelectionState(this, _networkManager, _mediator, _mapSelectionNetwork),
-        [typeof(CharacterSelectionState)] = new CharacterSelectionState()
+        [typeof(CharacterSelectionState)] = new CharacterSelectionState(this, _networkManager, _mediator, _characterSelectionNetwork)
       };
     }
 
