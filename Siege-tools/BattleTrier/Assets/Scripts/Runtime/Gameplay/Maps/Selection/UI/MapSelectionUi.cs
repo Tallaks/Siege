@@ -46,9 +46,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
         _otherRoleUi.SetActive(true);
     }
 
-    private void OnMapSelectedServerRpc() =>
-      _mapSelectionNetwork.SetSelectedServerRpc();
-
     public void HideMapSelectionUi()
     {
       _firstRoleUi.SetActive(false);
@@ -69,5 +66,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
         return;
       }
     }
+
+    private void OnMapSelectedServerRpc() =>
+      _mapSelectionNetwork.SetSelectedServerRpc();
   }
 }
