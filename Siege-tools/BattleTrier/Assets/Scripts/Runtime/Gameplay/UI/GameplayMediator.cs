@@ -1,3 +1,4 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay;

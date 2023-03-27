@@ -1,3 +1,4 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
@@ -15,7 +16,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     [SerializeField, Required] private GameplayMediator _mediator;
     [SerializeField, Required] private MapSelectionNetwork _mapSelectionNetwork;
     [SerializeField, Required] private CharacterSelectionNetwork _characterSelectionNetwork;
-    [SerializeField, Required] private NetworkCharacterRegistry _characterRegistry;
 
     [Inject] private NetworkManager _networkManager;
 
@@ -35,8 +35,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 
       Container.
         Bind<ICharacterRegistry>().
-        To<NetworkCharacterRegistry>().
-        FromInstance(_characterRegistry).
+        To<LocalCharacterRegistry>().
+        FromNew().
         AsSingle();
 
       Container.
