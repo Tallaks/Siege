@@ -15,7 +15,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     private CharacterSelectionVariant _characterSelectionVariantPrefab;
 
     [SerializeField, Required, ChildGameObjectsOnly]
-    private GameObject _selectedCharacterInfo;
+    private SelectedConfigInfo _selectedConfigInfo;
 
     [SerializeField, Required, ChildGameObjectsOnly]
     private GridLayoutGroup _gridLayout;
@@ -28,7 +28,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void Initialize()
     {
-      _selectedCharacterInfo.SetActive(false);
+      _selectedConfigInfo.Initialize();
       CharacterConfig[] characterConfigs = Resources.LoadAll<CharacterConfig>("Configs/Characters/");
       foreach (CharacterConfig config in characterConfigs)
       {
@@ -36,5 +36,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
         variant.Initialize(config);
       }
     }
+
+    public void ShowConfigInfo(CharacterConfig config) =>
+      _selectedConfigInfo.ShowConfig(config);
   }
 }

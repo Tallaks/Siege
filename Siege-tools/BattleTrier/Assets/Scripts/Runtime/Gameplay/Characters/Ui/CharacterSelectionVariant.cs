@@ -1,5 +1,6 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -18,12 +19,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _amountText;
 
     private ICharacterRegistry _characterRegistry;
+    private GameplayMediator _mediator;
 
     private CharacterConfig _config;
 
     [Inject]
-    private void Construct(ICharacterRegistry characterRegistry) =>
+    private void Construct(ICharacterRegistry characterRegistry, GameplayMediator mediator)
+    {
       _characterRegistry = characterRegistry;
+      _mediator = mediator;
+    }
 
     public void Initialize(CharacterConfig config)
     {
@@ -44,6 +49,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
         _characterRegistry.AddCharacter(_config, 1);
         ShowSelectionUi();
       }
+
+      _mediator.ShowConfigInfo(_config);
     }
 
     private void ShowSelectionUi()

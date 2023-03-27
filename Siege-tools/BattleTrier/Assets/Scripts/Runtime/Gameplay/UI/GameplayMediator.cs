@@ -1,3 +1,4 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI;
@@ -25,5 +26,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     public void SetSelectedMap(MapSelectionButton selected) => 
       _mapSelectionUi.SetMap(selected);
+
+    public void ShowConfigInfo(CharacterConfig config) =>
+      _characterSelectionUi.ShowConfigInfo(config);
   }
 }
