@@ -7,6 +7,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
   {
     IDictionary<CharacterConfig, int> Characters { get; }
     bool PlayerHasCharactersOfConfig(CharacterConfig config);
-    void Select(CharacterConfig config, int amount);
+    void AddCharacter(CharacterConfig config, int amount);
+    void RemoveCharacter(CharacterConfig config, int amount);
   }
 }
