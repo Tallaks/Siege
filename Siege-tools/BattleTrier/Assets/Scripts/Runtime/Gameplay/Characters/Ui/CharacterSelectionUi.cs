@@ -26,6 +26,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     public void ShowConfigInfo(CharacterConfig config) =>
       _characterSelectionPanel.ShowConfigInfo(config);
 
+    public void ChangeCharacterList() =>
+      _characterSelectionPanel.ChangeCharacterList();
+
     private void ShowCharacterSelectionPanel()
     {
       _characterSelectionPanel.gameObject.SetActive(true);

@@ -8,17 +8,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterSelectionPanel : MonoBehaviour
   {
-    [SerializeField, Required, AssetSelector]
-    private CharacterListItem _characterListItemPrefab;
-
-    [SerializeField, Required, AssetSelector] 
-    private CharacterSelectionVariant _characterSelectionVariantPrefab;
-
-    [SerializeField, Required, ChildGameObjectsOnly]
-    private SelectedConfigInfo _selectedConfigInfo;
-
-    [SerializeField, Required, ChildGameObjectsOnly]
-    private GridLayoutGroup _gridLayout;
+    [SerializeField, Required, AssetSelector] private CharacterSelectionVariant _characterSelectionVariantPrefab;
+    [SerializeField, Required, ChildGameObjectsOnly] private SelectedConfigInfo _selectedConfigInfo;
+    [SerializeField, Required, ChildGameObjectsOnly] private GridLayoutGroup _gridLayout;
+    [SerializeField, Required, ChildGameObjectsOnly] private CharacterList _characterList;
 
     private DiContainer _container;
 
@@ -32,12 +25,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       CharacterConfig[] characterConfigs = Resources.LoadAll<CharacterConfig>("Configs/Characters/");
       foreach (CharacterConfig config in characterConfigs)
       {
-        var variant = _container.InstantiatePrefabForComponent<CharacterSelectionVariant>(_characterSelectionVariantPrefab, _gridLayout.transform);
+        var variant =
+          _container.InstantiatePrefabForComponent<CharacterSelectionVariant>(_characterSelectionVariantPrefab,
+            _gridLayout.transform);
         variant.Initialize(config);
       }
     }
 
     public void ShowConfigInfo(CharacterConfig config) =>
       _selectedConfigInfo.ShowConfig(config);
+
+    public void ChangeCharacterList() =>
+      _characterList.ChangeCharacterList();
   }
 }

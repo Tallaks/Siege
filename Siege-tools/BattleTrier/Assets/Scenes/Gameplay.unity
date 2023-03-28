@@ -541,10 +541,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 138145e4fe934ad184350f5af045d1a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterListItemPrefab: {fileID: -693298026201048633, guid: 4f2507cce5588264cb2b0109f9f5ea18, type: 3}
   _characterSelectionVariantPrefab: {fileID: 9092497469095704596, guid: fd68e22e7045b6c4cbd2383516262538, type: 3}
   _selectedConfigInfo: {fileID: 1405007204}
   _gridLayout: {fileID: 1987818730}
+  _characterList: {fileID: 661605146}
 --- !u!1 &159702527
 GameObject:
   m_ObjectHideFlags: 0
@@ -1579,6 +1579,7 @@ GameObject:
   - component: {fileID: 661605145}
   - component: {fileID: 661605144}
   - component: {fileID: 661605143}
+  - component: {fileID: 661605146}
   m_Layer: 0
   m_Name: CharacterList
   m_TagString: Untagged
@@ -1676,6 +1677,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661605141}
   m_CullTransparentMesh: 1
+--- !u!114 &661605146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661605141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8feaef58e0b4453088cd632cf9c2d96b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterListItemPrefab: {fileID: -693298026201048633, guid: 4f2507cce5588264cb2b0109f9f5ea18, type: 3}
+  _listContainer: {fileID: 113275107}
 --- !u!1 &700086564
 GameObject:
   m_ObjectHideFlags: 0
