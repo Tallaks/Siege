@@ -1,3 +1,13 @@
 fileFormatVersion: 2
 guid: bc98923f2659412eb61bceffa965607e
-timeCreated: 1677203636
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _playerCounter: {instanceID: 0}
+  - _backButton: {fileID: 5622591736934123059, guid: 7c7a4e6dc5f9d0147ba40558d7371d2d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
