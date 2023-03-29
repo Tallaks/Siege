@@ -32,6 +32,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
     public override void Exit()
     {
+      Debug.Log("Exiting character selection state");
+      _mediator.HideCharacterSelectionUi();
     }
   }
 }

@@ -39,7 +39,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
     public void Select(string configName)
     {
       SaveConfigServerRpc(configName);
-      _mediator.EnableSubmitButton();
+      _mediator.EnableMapSubmitButton();
     }
 
     [ServerRpc(RequireOwnership = false)]

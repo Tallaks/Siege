@@ -49,7 +49,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       CurrentState?.Exit();
       var state = GetState<TState>();
 
-      Debug.Log($"Changed connection state from {CurrentState?.GetType().Name} to {state.GetType().Name}.");
+      Debug.Log($"Changed state from {CurrentState?.GetType().Name} to {state.GetType().Name}.");
       CurrentState = state;
 
       return state;

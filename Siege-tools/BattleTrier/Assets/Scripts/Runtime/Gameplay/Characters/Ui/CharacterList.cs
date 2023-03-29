@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
@@ -17,12 +18,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     private ICharacterRegistry _characterRegistry;
     private DiContainer _container;
+    private GameplayMediator _mediator;
 
     [Inject]
-    private void Construct(DiContainer container, ICharacterRegistry characterRegistry)
+    private void Construct(DiContainer container, ICharacterRegistry characterRegistry, GameplayMediator mediator)
     {
       _container = container;
       _characterRegistry = characterRegistry;
+      _mediator = mediator;
     }
 
     public void ChangeCharacterList()
@@ -49,6 +52,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
           _characterList.Add(listItem);
         }
       }
+
+      if (_characterRegistry.Characters.Count == 0)
+        _mediator.DisableCharacterSelectSubmitButton();
+      else
+        _mediator.EnableCharacterSelectSubmitButton();
     }
   }
 }

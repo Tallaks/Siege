@@ -20,7 +20,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     public void HideMapSelectionUi() => 
       _mapSelectionUi.HideMapSelectionUi();
 
-    public void EnableSubmitButton() => 
+    public void EnableMapSubmitButton() => 
       _mapSelectionUi.EnableSubmitButton();
 
     public void SetSelectedMap(MapSelectionButton selected) => 
@@ -31,5 +31,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     public void ChangeCharacterList() =>
       _characterSelectionUi.ChangeCharacterList();
+
+    public void HideCharacterSelectionUi() =>
+      _characterSelectionUi.HideCharacterSelectionUi();
+
+    public void DisableCharacterSelectSubmitButton() =>
+      _characterSelectionUi.DisableCharacterSelectSubmitButton();
+
+    public void EnableCharacterSelectSubmitButton() =>
+      _characterSelectionUi.EnableCharacterSelectSubmitButton();
   }
 }

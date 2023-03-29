@@ -30,6 +30,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void Initialize()
     {
+      DisableCharacterSelectSubmitButton();
       _submitButton.onClick.AddListener(OnSubmitButton);
       _selectedConfigInfo.Initialize();
       CharacterConfig[] characterConfigs = Resources.LoadAll<CharacterConfig>("Configs/Characters/");
@@ -48,7 +49,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     public void ChangeCharacterList() =>
       _characterList.ChangeCharacterList();
 
-    private void OnSubmitButton() =>
+    public void EnableCharacterSelectSubmitButton() =>
+      _submitButton.interactable = true;
+
+    public void DisableCharacterSelectSubmitButton() =>
+      _submitButton.interactable = false;
+
+    private void OnSubmitButton()
+    {
+      DisableCharacterSelectSubmitButton();
       _characterSelectionNetwork.SubmitSelectionServerRpc((int)_role.State.Value);
+    }
   }
 }
