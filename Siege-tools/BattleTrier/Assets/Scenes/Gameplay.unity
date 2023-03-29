@@ -545,6 +545,7 @@ MonoBehaviour:
   _selectedConfigInfo: {fileID: 1405007204}
   _gridLayout: {fileID: 1987818730}
   _characterList: {fileID: 661605146}
+  _submitButton: {fileID: 700086566}
 --- !u!1 &159702527
 GameObject:
   m_ObjectHideFlags: 0

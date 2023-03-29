@@ -1,8 +1,8 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
 using Unity.Netcode;

@@ -1,25 +1,24 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Unity.Netcode;
 using UnityEngine;
 using Zenject;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
 {
   public class MapSelectionNetwork : NetworkBehaviour
   {
     [SerializeField] private Map _mapPrefab;
 
-    private StateMachine _stateMachine;
+    private StateMachine.StateMachine _stateMachine;
     private GameplayMediator _mediator;
 
     public NetworkVariable<bool> MapSelected = new();
     private BoardConfig _config;
 
     [Inject]
-    private void Construct(GameplayMediator mediator, StateMachine stateMachine)
+    private void Construct(GameplayMediator mediator, StateMachine.StateMachine stateMachine)
     {
       _mediator = mediator;
       _stateMachine = stateMachine;

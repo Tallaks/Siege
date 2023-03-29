@@ -1,5 +1,5 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
 
@@ -27,7 +27,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
     public override void Enter()
     {
       Debug.Log("Entering Map Selection State");
-      _mediator.InitializeMapSelectionUi(_role.State.Value, _mapSelectionNetwork);
+      _mediator.InitializeMapSelectionUi(_role.State.Value);
     }
 
     public override void Exit() => 

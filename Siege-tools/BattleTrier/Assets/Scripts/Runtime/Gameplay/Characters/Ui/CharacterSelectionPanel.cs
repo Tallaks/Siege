@@ -12,6 +12,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     [SerializeField, Required, ChildGameObjectsOnly] private SelectedConfigInfo _selectedConfigInfo;
     [SerializeField, Required, ChildGameObjectsOnly] private GridLayoutGroup _gridLayout;
     [SerializeField, Required, ChildGameObjectsOnly] private CharacterList _characterList;
+    [SerializeField, Required, ChildGameObjectsOnly] private Button _submitButton;
 
     private DiContainer _container;
 
@@ -21,6 +22,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void Initialize()
     {
+      _submitButton.onClick.AddListener(OnSubmitButton);
       _selectedConfigInfo.Initialize();
       CharacterConfig[] characterConfigs = Resources.LoadAll<CharacterConfig>("Configs/Characters/");
       foreach (CharacterConfig config in characterConfigs)
@@ -37,5 +39,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void ChangeCharacterList() =>
       _characterList.ChangeCharacterList();
+
+    private void OnSubmitButton()
+    {
+      
+    }
   }
 }
