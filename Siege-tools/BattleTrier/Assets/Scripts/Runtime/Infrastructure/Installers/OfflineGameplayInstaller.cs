@@ -1,24 +1,16 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
-using Unity.Netcode;
 using UnityEngine;
 using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
-  public class GameplayInstaller : MonoInstaller, IInitializable
+  public class OfflineGameplayInstaller : MonoInstaller, IInitializable
   {
     [SerializeField, Required] private GameplayMediator _mediator;
-    [SerializeField, Required] private MapSelectionNetwork _mapSelectionNetwork;
-    [SerializeField, Required] private CharacterSelectionNetwork _characterSelectionNetwork;
-
-    [Inject] private NetworkManager _networkManager;
-
+    
     public void Initialize()
     {
       Container.Resolve<StateMachine>().Initialize();
@@ -29,7 +21,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     {
       Container.
         Bind<IInitializable>().
-        To<GameplayInstaller>().
+        To<OfflineGameplayInstaller>().
         FromInstance(this).
         AsSingle();
 
@@ -45,23 +37,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
         AsSingle();
 
       Container.
-        Bind<MapSelectionNetwork>().
-        FromInstance(_mapSelectionNetwork).
-        AsSingle();
-
-      Container.
-        Bind<CharacterSelectionNetwork>().
-        FromInstance(_characterSelectionNetwork).
-        AsSingle();
-
-      Container.
         Bind<StateMachine>().
         FromNew().
-        AsSingle();
-
-      Container.
-        Bind<RoleBase>().
-        FromInstance(_networkManager.LocalClient.PlayerObject.GetComponent<RoleBase>()).
         AsSingle();
     }
   }

@@ -1692,6 +1692,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _characterListItemPrefab: {fileID: -693298026201048633, guid: 4f2507cce5588264cb2b0109f9f5ea18, type: 3}
   _listContainer: {fileID: 113275107}
+--- !u!1 &691965830
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 691965831}
+  - component: {fileID: 691965832}
+  m_Layer: 0
+  m_Name: Offline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &691965831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691965830}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2039943861}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &691965832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691965830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f70d9f8b824a7b9f418718b80f5b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mediator: {fileID: 297801467}
 --- !u!1 &700086564
 GameObject:
   m_ObjectHideFlags: 0
@@ -3807,6 +3852,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1737640195}
   m_CullTransparentMesh: 1
+--- !u!1 &1780182628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1780182629}
+  - component: {fileID: 1780182630}
+  m_Layer: 0
+  m_Name: Online
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1780182629
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780182628}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2039943861}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1780182630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780182628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dda1b2bd9de4e89b6566bf126d9d65e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mapSelectionNetwork: {fileID: 1677739581}
+  _characterSelectionNetwork: {fileID: 592673425}
 --- !u!1 &1979773797
 GameObject:
   m_ObjectHideFlags: 0
@@ -4145,7 +4236,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2039943861}
   - component: {fileID: 2039943862}
-  - component: {fileID: 2039943860}
   m_Layer: 0
   m_Name: ZenjectInstaller
   m_TagString: Untagged
@@ -4153,21 +4243,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2039943860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2039943859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2f70d9f8b824a7b9f418718b80f5b51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mediator: {fileID: 297801467}
-  _mapSelectionNetwork: {fileID: 1677739581}
-  _characterSelectionNetwork: {fileID: 592673425}
 --- !u!4 &2039943861
 Transform:
   m_ObjectHideFlags: 0
@@ -4179,7 +4254,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1780182629}
+  - {fileID: 691965831}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4197,7 +4274,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 2039943860}
+  - {fileID: 1780182630}
+  - {fileID: 691965832}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
