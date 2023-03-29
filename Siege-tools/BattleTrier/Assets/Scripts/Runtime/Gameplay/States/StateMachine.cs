@@ -1,18 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
-using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class StateMachine
   {
-    [Inject] private readonly MapSelectionNetwork _mapSelectionNetwork;
-    [Inject] private readonly CharacterSelectionNetwork _characterSelectionNetwork;
     private readonly RoleBase _role;
     private readonly GameplayMediator _mediator;
 
@@ -32,8 +27,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     {
       _states = new Dictionary<Type, IExitState>()
       {
-        [typeof(MapSelectionState)] = new MapSelectionState(this, _role, _mediator, _mapSelectionNetwork),
-        [typeof(CharacterSelectionState)] = new CharacterSelectionState(this, _role, _mediator, _characterSelectionNetwork),
+        [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
+        [typeof(CharacterSelectionState)] = new CharacterSelectionState(_role, _mediator),
         [typeof(PlacingCharactersState)] = new PlacingCharactersState()
       };
     }

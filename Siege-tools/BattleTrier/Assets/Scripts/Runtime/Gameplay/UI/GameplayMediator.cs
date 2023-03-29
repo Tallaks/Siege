@@ -1,5 +1,4 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
@@ -14,8 +13,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     
     public void InitializeMapSelectionUi(RoleState stateValue) => 
       _mapSelectionUi.Initialize(stateValue);
-    public void InitializeCharacterSelectionUi(RoleState stateValue, CharacterSelectionNetwork characterSelectionNetwork) => 
-      _characterSelectionUi.Initialize(stateValue, characterSelectionNetwork);
+    public void InitializeCharacterSelectionUi(RoleState stateValue) => 
+      _characterSelectionUi.Initialize(stateValue);
 
     public void HideMapSelectionUi() => 
       _mapSelectionUi.HideMapSelectionUi();
@@ -40,5 +39,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     public void EnableCharacterSelectSubmitButton() =>
       _characterSelectionUi.EnableCharacterSelectSubmitButton();
+
+    public void ChangeCharacterSelectionUiOnFirstPlayerReady() =>
+      _characterSelectionUi.ChangeCharacterSelectionUiOnFirstPlayerReady();
+
+    public void ChangeCharacterSelectionUiOnSecondPlayerReady() =>
+      _characterSelectionUi.ChangeCharacterSelectionUiOnSecondPlayerReady();
   }
 }

@@ -1,4 +1,5 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Unity.Netcode;
 using Zenject;
@@ -11,10 +12,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
     private readonly NetworkVariable<bool> _secondPlayerReady = new();
 
     private StateMachine _gameStateMachine;
+    private GameplayMediator _mediator;
 
     [Inject]
-    private void Construct(StateMachine gameStateMachine) =>
+    private void Construct(StateMachine gameStateMachine, GameplayMediator mediator)
+    {
       _gameStateMachine = gameStateMachine;
+      _mediator = mediator;
+    }
 
     private void Awake()
     {
@@ -35,12 +40,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
     {
       if (newValue == true && _secondPlayerReady.Value == true)
         _gameStateMachine.Enter<PlacingCharactersState>();
+      else
+        _mediator.ChangeCharacterSelectionUiOnFirstPlayerReady();
     }
 
     private void OnSecondPlayerReady(bool previousValue, bool newValue)
     {
       if (newValue == true && _firstPlayerReady.Value == true)
         _gameStateMachine.Enter<PlacingCharactersState>();
+      else
+        _mediator.ChangeCharacterSelectionUiOnSecondPlayerReady();
     }
   }
 }

@@ -1,5 +1,4 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -12,12 +11,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     [SerializeField, Required] private GameObject _waitingAsPlayerPanel;
     [SerializeField, Required] private GameObject _waitingAsSpectatorPanel;
 
-    private CharacterSelectionNetwork _characterSelectionNetwork;
+    private RoleState _roleState;
 
-    public void Initialize(RoleState stateValue, CharacterSelectionNetwork characterSelectionNetwork)
+    public void Initialize(RoleState stateValue)
     {
-      _characterSelectionNetwork = characterSelectionNetwork;
-      if (stateValue is RoleState.ChosenFirst or RoleState.ChosenSecond)
+      _roleState = stateValue;
+      if (_roleState is RoleState.ChosenFirst or RoleState.ChosenSecond)
         ShowCharacterSelectionPanel();
       else
         _waitingAsSpectatorPanel.SetActive(true);
@@ -41,6 +40,24 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void DisableCharacterSelectSubmitButton() =>
       _characterSelectionPanel.DisableCharacterSelectSubmitButton();
+
+    public void ChangeCharacterSelectionUiOnFirstPlayerReady()
+    {
+      if (_roleState == RoleState.ChosenFirst)
+      {
+        _characterSelectionPanel.gameObject.SetActive(false);
+        _waitingAsPlayerPanel.SetActive(true);
+      }
+    }
+
+    public void ChangeCharacterSelectionUiOnSecondPlayerReady()
+    {
+      if (_roleState == RoleState.ChosenSecond)
+      {
+        _characterSelectionPanel.gameObject.SetActive(false);
+        _waitingAsPlayerPanel.SetActive(true);
+      }
+    }
 
     private void ShowCharacterSelectionPanel()
     {
