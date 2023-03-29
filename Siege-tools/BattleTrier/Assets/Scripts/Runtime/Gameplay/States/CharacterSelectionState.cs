@@ -3,7 +3,7 @@ using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class CharacterSelectionState : ParameterlessState
   {

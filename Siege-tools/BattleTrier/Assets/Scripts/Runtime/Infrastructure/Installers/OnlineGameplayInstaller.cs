@@ -26,7 +26,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
         Bind<CharacterSelectionNetwork>().
         FromInstance(_characterSelectionNetwork).
         AsSingle();
-      
+
       Container.
         Bind<RoleBase>().
         FromInstance(_networkManager.LocalClient.PlayerObject.GetComponent<RoleBase>()).

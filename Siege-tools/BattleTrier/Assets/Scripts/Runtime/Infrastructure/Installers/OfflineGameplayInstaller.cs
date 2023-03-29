@@ -1,5 +1,5 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;

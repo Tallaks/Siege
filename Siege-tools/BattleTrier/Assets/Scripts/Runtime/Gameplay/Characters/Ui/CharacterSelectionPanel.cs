@@ -1,4 +1,6 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,10 +17,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     [SerializeField, Required, ChildGameObjectsOnly] private Button _submitButton;
 
     private DiContainer _container;
+    private RoleBase _role;
+    private CharacterSelectionNetwork _characterSelectionNetwork;
 
     [Inject]
-    private void Construct(DiContainer container) =>
+    private void Construct(DiContainer container, RoleBase role,  CharacterSelectionNetwork characterSelectionNetwork)
+    {
       _container = container;
+      _role = role;
+      _characterSelectionNetwork = characterSelectionNetwork;
+    }
 
     public void Initialize()
     {
@@ -40,9 +48,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     public void ChangeCharacterList() =>
       _characterList.ChangeCharacterList();
 
-    private void OnSubmitButton()
-    {
-      
-    }
+    private void OnSubmitButton() =>
+      _characterSelectionNetwork.SubmitSelectionServerRpc((int)_role.State.Value);
   }
 }
