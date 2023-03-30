@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,17 +19,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
 
     private DiContainer _container;
 
+    private readonly List<MapSelectionButton> _mapSelectionButtons = new();
     private MapSelectionNetwork _mapSelectionNetwork;
-    private List<MapSelectionButton> _mapSelectionButtons = new();
 
     [Inject]
-    private void Construct(DiContainer container) => 
+    private void Construct(DiContainer container, MapSelectionNetwork mapSelectionNetwork)
+    {
       _container = container;
+      _mapSelectionNetwork = mapSelectionNetwork;
+    }
 
-    public void Initialize(RoleState stateValue, MapSelectionNetwork mapSelectionNetwork)
+    public void Initialize(RoleState stateValue)
     {
       _selectMapButton.interactable = false;
-      _mapSelectionNetwork = mapSelectionNetwork;
       _selectMapButton.onClick.AddListener(OnMapSelectedServerRpc);
       if (stateValue == RoleState.ChosenFirst)
       {
@@ -38,16 +40,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
         {
           var button =
             _container.InstantiatePrefabForComponent<MapSelectionButton>(_mapSelectionPrefab, _mapSelectionContainer);
-          button.Initialize(config, mapSelectionNetwork);
+          button.Initialize(config);
           _mapSelectionButtons.Add(button);
         }
       }
       else
         _otherRoleUi.SetActive(true);
     }
-
-    private void OnMapSelectedServerRpc() =>
-      _mapSelectionNetwork.SetSelectedServerRpc();
 
     public void HideMapSelectionUi()
     {
@@ -69,5 +68,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
         return;
       }
     }
+
+    private void OnMapSelectedServerRpc() =>
+      _mapSelectionNetwork.SetSelectedServerRpc();
   }
 }

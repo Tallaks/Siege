@@ -1,4 +1,4 @@
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public abstract class ParameterlessState : IExitState
   {

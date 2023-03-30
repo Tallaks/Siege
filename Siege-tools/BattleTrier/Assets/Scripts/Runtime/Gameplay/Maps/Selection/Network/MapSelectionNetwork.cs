@@ -1,12 +1,11 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Unity.Netcode;
 using UnityEngine;
 using Zenject;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
 {
   public class MapSelectionNetwork : NetworkBehaviour
   {
@@ -40,7 +39,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay
     public void Select(string configName)
     {
       SaveConfigServerRpc(configName);
-      _mediator.EnableSubmitButton();
+      _mediator.EnableMapSubmitButton();
     }
 
     [ServerRpc(RequireOwnership = false)]

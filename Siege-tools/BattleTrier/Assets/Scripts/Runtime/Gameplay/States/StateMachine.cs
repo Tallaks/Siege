@@ -1,35 +1,35 @@
 using System;
 using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Gameplay;
-using Unity.Netcode;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class StateMachine
   {
-    private readonly NetworkManager _networkManager;
+    private readonly RoleBase _role;
     private readonly GameplayMediator _mediator;
-    private readonly MapSelectionNetwork _mapSelectionNetwork;
 
     private Dictionary<Type, IExitState> _states;
 
     public IExitState CurrentState { get; private set; }
 
-    public StateMachine(NetworkManager networkManager, GameplayMediator mediator, MapSelectionNetwork mapSelectionNetwork)
+    public StateMachine(
+      RoleBase role,
+      GameplayMediator mediator)
     {
-      _networkManager = networkManager;
+      _role = role;
       _mediator = mediator;
-      _mapSelectionNetwork = mapSelectionNetwork;
     }
 
     public void Initialize()
     {
       _states = new Dictionary<Type, IExitState>()
       {
-        [typeof(MapSelectionState)] = new MapSelectionState(this, _networkManager, _mediator, _mapSelectionNetwork),
-        [typeof(CharacterSelectionState)] = new CharacterSelectionState()
+        [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
+        [typeof(CharacterSelectionState)] = new CharacterSelectionState(_role, _mediator),
+        [typeof(PlacingCharactersState)] = new PlacingCharactersState()
       };
     }
 
@@ -44,7 +44,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.StateMachine
       CurrentState?.Exit();
       var state = GetState<TState>();
 
-      Debug.Log($"Changed connection state from {CurrentState?.GetType().Name} to {state.GetType().Name}.");
+      Debug.Log($"Changed state from {CurrentState?.GetType().Name} to {state.GetType().Name}.");
       CurrentState = state;
 
       return state;
