@@ -1523,6 +1523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _parent: {fileID: 1128444287}
   _createButton: {fileID: 495607589}
+  _quitButton: {fileID: 978285824}
   _playerProfileName: {fileID: 547309591}
   _errorSignText: {fileID: 1937925257}
 --- !u!1 &1937925255
