@@ -1994,7 +1994,7 @@ MonoBehaviour:
   _uiElementsForLobbyEnding: []
   _uiElementsForSeatChosen:
   - {fileID: 2142907147}
-  _backButton: {fileID: 0}
+  _backButton: {fileID: 8672313220616204241}
 --- !u!1 &1903171966
 GameObject:
   m_ObjectHideFlags: 0
