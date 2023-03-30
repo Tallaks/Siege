@@ -1,4 +1,5 @@
 using System.Collections;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applications;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using TMPro;
 using UnityEngine;
@@ -11,16 +12,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.Menu
   {
     [SerializeField] private Transform _parent;
     [SerializeField] private Button _createButton;
+    [SerializeField] private Button _quitButton;
 
     [SerializeField] private TMP_InputField _playerProfileName;
     [SerializeField] private TMP_Text _errorSignText;
-    
+
+    private IApplicationService _applicationService;
     private MainMenuMediator _menuMediator;
     private UserProfile _localUser;
 
     [Inject]
-    private void Construct(MainMenuMediator menuMediator, UserProfile localUser)
+    private void Construct(IApplicationService applicationService, MainMenuMediator menuMediator, UserProfile localUser)
     {
+      _applicationService = applicationService;
       _localUser = localUser;
       _menuMediator = menuMediator;
     }
@@ -33,12 +37,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.Menu
 
       _playerProfileName.onValueChanged.AddListener(text => _localUser.Name = text);
 
+      _quitButton.onClick.AddListener(_applicationService.QuitApplication);
+
       _createButton.onClick.AddListener(() =>
       {
         if (string.IsNullOrWhiteSpace(_playerProfileName.text))
         {
           StartCoroutine(ShowErrorSign());
-          return; 
+          return;
         }
 
         _menuMediator.GoToLobby();
@@ -53,7 +59,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.Menu
       _errorSignText.gameObject.SetActive(false);
     }
 
-    public void HideMainMenuButtons() => 
+    public void HideMainMenuButtons() =>
       _parent.gameObject.SetActive(false);
   }
 }
