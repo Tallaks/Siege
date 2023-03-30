@@ -1,3 +1,4 @@
 .idea/
 Siege-tools/BattleTrier/Assets/Scripts/Editor/MonkeyCommands/
 Siege-tools/BattleTrier/Assets/Plugins/QFSW/
+!*.dll.meta
