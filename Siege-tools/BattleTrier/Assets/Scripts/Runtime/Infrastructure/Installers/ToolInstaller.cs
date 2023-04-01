@@ -1,3 +1,4 @@
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applications;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
@@ -16,9 +17,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind(typeof(ICoroutineRunner), typeof(IUpdateRunner)).To<AggregateRunner>().FromInstance(FindObjectOfType<AggregateRunner>()).
         AsSingle();
       Container.Bind<ISceneLoader>().To<SceneLoader>().FromNew().AsSingle();
+      Container.Bind<IApplicationService>().To<ApplicationService>().FromNew().AsSingle();
     }
 
-    public void Initialize() => 
+    public void Initialize()
+    {
+      Container.Resolve<IApplicationService>().Initialize();
       SceneManager.LoadSceneAsync("MainMenu");
+    }
   }
 }

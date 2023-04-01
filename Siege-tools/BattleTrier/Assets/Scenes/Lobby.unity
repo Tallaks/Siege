@@ -1249,6 +1249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _createLobbyButton: {fileID: 1446746412}
+  _quitButton: {fileID: 20400228}
   _lobbyCreationPanel: {fileID: 309226518}
   _openLobbyCreationPanelButton: {fileID: 1433310331}
   _lobbyNameInput: {fileID: 1802959112}

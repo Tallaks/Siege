@@ -9,8 +9,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
     [SerializeField] private RoleUi _roleUi;
 
     [Inject] private IConnectionStateMachine _connectionStateMachine;
-    
-    public void Initialize() => 
+
+    public void Initialize() =>
       _roleUi.Initialize();
 
     public void ConfigureUIForLobbyMode(RoleUiMode mode) => 
