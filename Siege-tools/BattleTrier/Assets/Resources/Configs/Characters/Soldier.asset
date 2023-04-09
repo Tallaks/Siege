@@ -25,3 +25,4 @@ MonoBehaviour:
   Name: Soldier
   ActionPoints: 10
   HealthPoints: 40
+  Prefab: {fileID: 9099577807979389012, guid: 59b3a59dabfbdbc46bd7efe3d070f34b, type: 3}

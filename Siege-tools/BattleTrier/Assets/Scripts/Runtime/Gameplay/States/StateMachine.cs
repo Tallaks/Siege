@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
@@ -9,27 +11,33 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
   public class StateMachine
   {
     private readonly RoleBase _role;
+    private readonly ICharacterSelection _characterSelection;
     private readonly GameplayMediator _mediator;
 
     private Dictionary<Type, IExitState> _states;
+    private ICharacterFactory _characterFactory;
 
     public IExitState CurrentState { get; private set; }
 
     public StateMachine(
       RoleBase role,
+      ICharacterSelection characterSelection,
+      ICharacterFactory characterFactory,
       GameplayMediator mediator)
     {
       _role = role;
+      _characterSelection = characterSelection;
+      _characterFactory = characterFactory;
       _mediator = mediator;
     }
 
     public void Initialize()
     {
-      _states = new Dictionary<Type, IExitState>()
+      _states = new Dictionary<Type, IExitState>
       {
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
         [typeof(CharacterSelectionState)] = new CharacterSelectionState(_role, _mediator),
-        [typeof(PlacingCharactersState)] = new PlacingCharactersState()
+        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_characterSelection, _characterFactory)
       };
     }
 

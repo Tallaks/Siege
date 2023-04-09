@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using UnityEngine;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection
 {
-  public class LocalCharacterRegistry : ICharacterRegistry
+  public class LocalCharacterSelection : ICharacterSelection
   {
     public IDictionary<CharacterConfig, int> Characters => _characterGroup;
 
@@ -17,8 +17,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
     public void AddCharacter(CharacterConfig config, int amount)
     {
       Debug.Log($"{config.Name} added by {amount.ToString()}");
-      if (!_selectedConfigs.Contains(config))
-        _selectedConfigs.Add(config);
+      _selectedConfigs.Add(config);
 
       if (!_characterGroup.ContainsKey(config))
         _characterGroup.Add(config, amount);

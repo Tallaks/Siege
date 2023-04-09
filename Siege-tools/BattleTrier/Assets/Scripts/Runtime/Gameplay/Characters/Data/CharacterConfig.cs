@@ -16,6 +16,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
     [ValidateInput(nameof(CheckHealthPoints), "ХП меньше или равно нулю")]
     public int HealthPoints;
 
+    [Required] [AssetSelector]
+    public Character Prefab;
+
     private bool CheckActionPoints() =>
       ActionPoints > 0;
     private bool CheckHealthPoints() =>

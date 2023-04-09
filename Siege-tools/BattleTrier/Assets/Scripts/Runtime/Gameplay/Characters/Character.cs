@@ -1,7 +1,9 @@
+using UnityEngine;
+
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters
 {
-  public class CharacterData
+  public class Character : MonoBehaviour
   {
-    
+    public SpriteRenderer Renderer;
   }
 }

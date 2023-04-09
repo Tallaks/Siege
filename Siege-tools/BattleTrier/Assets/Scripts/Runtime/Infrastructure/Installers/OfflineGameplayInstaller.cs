@@ -1,4 +1,5 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Sirenix.OdinInspector;
@@ -10,7 +11,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
   public class OfflineGameplayInstaller : MonoInstaller, IInitializable
   {
     [SerializeField, Required] private GameplayMediator _mediator;
-    
+
     public void Initialize()
     {
       Container.Resolve<StateMachine>().Initialize();
@@ -26,8 +27,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
         AsSingle();
 
       Container.
-        Bind<ICharacterRegistry>().
-        To<LocalCharacterRegistry>().
+        Bind<ICharacterSelection>().
+        To<LocalCharacterSelection>().
         FromNew().
         AsSingle();
 
@@ -38,6 +39,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 
       Container.
         Bind<StateMachine>().
+        FromNew().
+        AsSingle();
+
+      Container.
+        Bind<ICharacterFactory>().
+        To<CharacterFactory>().
         FromNew().
         AsSingle();
     }
