@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Tools.BattleTrier.Runtime.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Sirenix.OdinInspector;

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Kulinaria.Tools.BattleTrier.Runtime.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
 {

@@ -1,5 +1,6 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -17,13 +18,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     [SerializeField, Required, ChildGameObjectsOnly] private Button _submitButton;
 
     private DiContainer _container;
+    private IStaticDataProvider _staticDataProvider;
     private RoleBase _role;
     private CharacterSelectionNetwork _characterSelectionNetwork;
 
     [Inject]
-    private void Construct(DiContainer container, RoleBase role,  CharacterSelectionNetwork characterSelectionNetwork)
+    private void Construct(
+      DiContainer container,
+      IStaticDataProvider staticDataProvider,
+      RoleBase role,
+      CharacterSelectionNetwork characterSelectionNetwork)
     {
       _container = container;
+      _staticDataProvider = staticDataProvider;
       _role = role;
       _characterSelectionNetwork = characterSelectionNetwork;
     }
@@ -33,8 +40,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       DisableCharacterSelectSubmitButton();
       _submitButton.onClick.AddListener(OnSubmitButton);
       _selectedConfigInfo.Initialize();
-      CharacterConfig[] characterConfigs = Resources.LoadAll<CharacterConfig>("Configs/Characters/");
-      foreach (CharacterConfig config in characterConfigs)
+      foreach (CharacterConfig config in _staticDataProvider.GetAllCharacterConfigs())
       {
         var variant =
           _container.InstantiatePrefabForComponent<CharacterSelectionVariant>(_characterSelectionVariantPrefab,

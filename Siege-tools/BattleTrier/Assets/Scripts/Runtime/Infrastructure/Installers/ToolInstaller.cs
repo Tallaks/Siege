@@ -1,5 +1,6 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applications;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
 using UnityEngine.SceneManagement;
@@ -18,6 +19,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
         AsSingle();
       Container.Bind<ISceneLoader>().To<SceneLoader>().FromNew().AsSingle();
       Container.Bind<IApplicationService>().To<ApplicationService>().FromNew().AsSingle();
+      Container.Bind<IStaticDataProvider>().To<StaticDataProvider>().FromNew().AsSingle();
     }
 
     public void Initialize()

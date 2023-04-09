@@ -1,4 +1,4 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data;
 using Unity.Netcode;
 using UnityEngine;
 

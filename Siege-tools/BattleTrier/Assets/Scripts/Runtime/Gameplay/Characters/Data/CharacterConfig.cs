@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Data
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
 {
   [CreateAssetMenu(menuName = "Kulinaria/Character")]
   public class CharacterConfig : SerializedScriptableObject

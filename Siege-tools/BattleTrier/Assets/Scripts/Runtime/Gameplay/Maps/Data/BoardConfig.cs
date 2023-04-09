@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Data
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
 {
   [CreateAssetMenu(menuName = "Kulinaria/Board")]
   [Serializable]
@@ -119,14 +119,5 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Data
     }
 
 #endif
-  }
-
-  public enum TileType
-  {
-    None = 0,
-    Default = 1,
-    WeakCover = 2,
-    StrongCover = 3,
-    Obstacle = 4
   }
 }
