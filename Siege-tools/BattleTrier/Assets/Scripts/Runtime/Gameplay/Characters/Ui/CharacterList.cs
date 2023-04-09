@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Sirenix.OdinInspector;
@@ -30,22 +29,22 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void ChangeCharacterList()
     {
-      foreach (KeyValuePair<CharacterConfig, int> characterGroup in _characterSelection.Characters)
+      foreach (KeyValuePair<int, int> characterGroup in _characterSelection.Characters)
       {
         for (var index = 0; index < _characterList.Count; index++)
         {
-          if (!_characterSelection.Characters.ContainsKey(_characterList[index].Config))
+          if (!_characterSelection.Characters.ContainsKey(_characterList[index].Config.Id))
           {
             Destroy(_characterList[index].gameObject);
             _characterList.Remove(_characterList[index]);
             continue;
           }
 
-          if (_characterList[index].Config == characterGroup.Key)
+          if (_characterList[index].Config.Id == characterGroup.Key)
             _characterList[index].SetAmount(characterGroup.Value);
         }
 
-        if (!_characterList.Select(k => k.Config).Contains(characterGroup.Key))
+        if (!_characterList.Select(k => k.Config.Id).Contains(characterGroup.Key))
         {
           var listItem = _container.InstantiatePrefabForComponent<CharacterListItem>(_characterListItemPrefab, _listContainer);
           listItem.Initialize(characterGroup.Key);

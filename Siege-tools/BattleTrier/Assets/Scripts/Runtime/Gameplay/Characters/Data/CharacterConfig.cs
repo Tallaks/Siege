@@ -6,6 +6,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
   [CreateAssetMenu(menuName = "Kulinaria/Character")]
   public class CharacterConfig : SerializedScriptableObject
   {
+    public int Id => GetInstanceID();
     [PreviewField(100, ObjectFieldAlignment.Left)]
     [HideLabel]
     public Sprite Icon;

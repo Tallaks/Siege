@@ -1,4 +1,3 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
@@ -40,17 +39,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       DisableCharacterSelectSubmitButton();
       _submitButton.onClick.AddListener(OnSubmitButton);
       _selectedConfigInfo.Initialize();
-      foreach (CharacterConfig config in _staticDataProvider.GetAllCharacterConfigs())
+      foreach (int configId in _staticDataProvider.GetAllCharacterConfigIds())
       {
         var variant =
           _container.InstantiatePrefabForComponent<CharacterSelectionVariant>(_characterSelectionVariantPrefab,
             _gridLayout.transform);
-        variant.Initialize(config);
+        variant.Initialize(configId);
       }
     }
 
-    public void ShowConfigInfo(CharacterConfig config) =>
-      _selectedConfigInfo.ShowConfig(config);
+    public void ShowConfigInfo(int configId) =>
+      _selectedConfigInfo.ShowConfig(configId);
 
     public void ChangeCharacterList() =>
       _characterList.ChangeCharacterList();

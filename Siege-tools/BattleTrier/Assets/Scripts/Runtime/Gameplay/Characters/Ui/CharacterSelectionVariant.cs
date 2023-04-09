@@ -1,6 +1,6 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -18,22 +18,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     [SerializeField, Required, ChildGameObjectsOnly] private Button _subButton;
     [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _amountText;
 
+    private IStaticDataProvider _dataProvider;
     private ICharacterSelection _characterSelection;
     private GameplayMediator _mediator;
 
-    private CharacterConfig _config;
+    private int _id;
 
     [Inject]
-    private void Construct(ICharacterSelection characterSelection, GameplayMediator mediator)
+    private void Construct(IStaticDataProvider dataProvider, ICharacterSelection characterSelection,
+      GameplayMediator mediator)
     {
+      _dataProvider = dataProvider;
       _characterSelection = characterSelection;
       _mediator = mediator;
     }
 
-    public void Initialize(CharacterConfig config)
+    public void Initialize(int configId)
     {
-      _config = config;
-      _icon.sprite = config.Icon;
+      _id = configId;
+      _icon.sprite = _dataProvider.ConfigById(configId).Icon;
 
       _addButton.onClick.AddListener(OnAddButtonClicked);
       _subButton.onClick.AddListener(OnSubButtonClicked);
@@ -44,13 +47,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void OnPointerClick(PointerEventData eventData)
     {
-      if (!_characterSelection.PlayerHasCharactersOfConfig(_config))
+      if (!_characterSelection.PlayerHasCharactersOfConfig(_id))
       {
-        _characterSelection.AddCharacter(_config, 1);
+        _characterSelection.AddCharacter(_id, 1);
         ShowSelectionUi();
       }
 
-      _mediator.ShowConfigInfo(_config);
+      _mediator.ShowConfigInfo(_id);
       _mediator.ChangeCharacterList();
     }
 
@@ -60,7 +63,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       _addButton.gameObject.SetActive(true);
       _subButton.gameObject.SetActive(true);
       _amountText.gameObject.SetActive(true);
-      _amountText.text = _characterSelection.Characters[_config].ToString();
+      _amountText.text = _characterSelection.Characters[_id].ToString();
     }
 
     private void HideSelectionUi()
@@ -73,25 +76,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     private void OnAddButtonClicked()
     {
-      _characterSelection.AddCharacter(_config, 1);
-      _amountText.text = _characterSelection.Characters[_config].ToString();
+      _characterSelection.AddCharacter(_id, 1);
+      _amountText.text = _characterSelection.Characters[_id].ToString();
       _mediator.ChangeCharacterList();
     }
 
     private void OnSubButtonClicked()
     {
-      _characterSelection.RemoveCharacter(_config, 1);
-      if (!_characterSelection.PlayerHasCharactersOfConfig(_config))
+      _characterSelection.RemoveCharacter(_id, 1);
+      if (!_characterSelection.PlayerHasCharactersOfConfig(_id))
         HideSelectionUi();
       else
-        _amountText.text = _characterSelection.Characters[_config].ToString();
+        _amountText.text = _characterSelection.Characters[_id].ToString();
 
       _mediator.ChangeCharacterList();
     }
 
     private void OnDeselectButtonClicked()
     {
-      _characterSelection.RemoveCharacter(_config, _characterSelection.Characters[_config]);
+      _characterSelection.RemoveCharacter(_id, _characterSelection.Characters[_id]);
       HideSelectionUi();
       _mediator.ChangeCharacterList();
     }

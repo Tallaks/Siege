@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
 
@@ -18,7 +17,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
     public override void Enter()
     {
-      foreach (KeyValuePair<CharacterConfig, int> characterGroup in _characterSelection.Characters)
+      foreach (KeyValuePair<int, int> characterGroup in _characterSelection.Characters)
       {
         for (var i = 0; i < characterGroup.Value; i++)
           _characterFactory.Create(characterGroup.Key);

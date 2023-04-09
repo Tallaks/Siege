@@ -1,4 +1,3 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -22,8 +21,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
         _waitingAsSpectatorPanel.SetActive(true);
     }
 
-    public void ShowConfigInfo(CharacterConfig config) =>
-      _characterSelectionPanel.ShowConfigInfo(config);
+    public void ShowConfigInfo(int configId) =>
+      _characterSelectionPanel.ShowConfigInfo(configId);
 
     public void ChangeCharacterList() =>
       _characterSelectionPanel.ChangeCharacterList();

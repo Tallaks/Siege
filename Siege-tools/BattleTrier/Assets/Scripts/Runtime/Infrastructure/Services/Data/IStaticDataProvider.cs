@@ -5,6 +5,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data
 {
   public interface IStaticDataProvider
   {
-    IEnumerable<CharacterConfig> GetAllCharacterConfigs();
+    IEnumerable<int> GetAllCharacterConfigIds();
+    CharacterConfig ConfigById(int id);
   }
 }

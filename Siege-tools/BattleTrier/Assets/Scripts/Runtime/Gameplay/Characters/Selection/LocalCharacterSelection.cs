@@ -1,38 +1,37 @@
 using System.Collections.Generic;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection
 {
   public class LocalCharacterSelection : ICharacterSelection
   {
-    public IDictionary<CharacterConfig, int> Characters => _characterGroup;
+    public IDictionary<int, int> Characters => _characterGroup;
 
-    private readonly HashSet<CharacterConfig> _selectedConfigs = new();
-    private readonly Dictionary<CharacterConfig, int> _characterGroup = new();
+    private readonly HashSet<int> _selectedConfigs = new();
+    private readonly Dictionary<int, int> _characterGroup = new();
 
-    public bool PlayerHasCharactersOfConfig(CharacterConfig config) =>
-      _selectedConfigs.Contains(config);
+    public bool PlayerHasCharactersOfConfig(int configId) =>
+      _selectedConfigs.Contains(configId);
 
-    public void AddCharacter(CharacterConfig config, int amount)
+    public void AddCharacter(int configId, int amount)
     {
-      Debug.Log($"{config.Name} added by {amount.ToString()}");
-      _selectedConfigs.Add(config);
+      Debug.Log($"Id {configId} added by {amount.ToString()}");
+      _selectedConfigs.Add(configId);
 
-      if (!_characterGroup.ContainsKey(config))
-        _characterGroup.Add(config, amount);
+      if (!_characterGroup.ContainsKey(configId))
+        _characterGroup.Add(configId, amount);
       else
-        _characterGroup[config] += amount;
+        _characterGroup[configId] += amount;
     }
 
-    public void RemoveCharacter(CharacterConfig config, int amount)
+    public void RemoveCharacter(int configId, int amount)
     {
-      Debug.Log($"{config.Name} removed by {amount.ToString()}");
-      _characterGroup[config] -= amount;
-      if (_characterGroup[config] <= 0)
+      Debug.Log($"Id {configId} removed by {amount.ToString()}");
+      _characterGroup[configId] -= amount;
+      if (_characterGroup[configId] <= 0)
       {
-        _characterGroup.Remove(config);
-        _selectedConfigs.Remove(config);
+        _characterGroup.Remove(configId);
+        _selectedConfigs.Remove(configId);
       }
     }
   }
