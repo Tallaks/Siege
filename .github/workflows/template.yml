@@ -50,6 +50,7 @@ jobs:
       - uses: webbertakken/unity-test-runner@v2
         id: testRunner
         with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
           projectPath: Siege-client/
           testMode: all
 
