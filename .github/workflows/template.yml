@@ -8,7 +8,7 @@ env:
 jobs:
   checkLicense:
     name: Check for the Unity license ☑️
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Fail - No license ☠️
         if: ${{ !startsWith(env.UNITY_LICENSE, '<') }}
@@ -17,7 +17,7 @@ jobs:
   testRunner:
     needs: checkLicense
     name: Test all modes 📝
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -41,18 +41,20 @@ jobs:
       - name: Restore Library cache
         uses: actions/cache@v2
         with:
-          path: Library
-          key: Library-test-project
+          path: Siege-client/Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-test-project-
             Library-
-
+            
+      - name: Run tests
       - uses: game-ci/unity-test-runner@v2
         id: testRunner
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          projectPath: Siege-client/
           testMode: all
+          projectPath: Siege-client/
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/upload-artifact@v2
         with:
