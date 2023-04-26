@@ -4,6 +4,7 @@ using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
 
@@ -11,8 +12,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class StateMachine
   {
+    private readonly ICoroutineRunner _coroutineRunner;
     private readonly RoleBase _role;
     private readonly ICharacterSelection _characterSelection;
+    private readonly ICharacterFactory _characterFactory;
     private readonly GameplayMediator _mediator;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
 
@@ -21,13 +24,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     public IExitState CurrentState { get; private set; }
 
     public StateMachine(
+      ICoroutineRunner coroutineRunner,
       RoleBase role,
       ICharacterSelection characterSelection,
+      ICharacterFactory characterFactory,
       GameplayMediator mediator,
       CharacterRegistryNetwork characterRegistryNetwork)
     {
+      _coroutineRunner = coroutineRunner;
       _role = role;
       _characterSelection = characterSelection;
+      _characterFactory = characterFactory;
       _mediator = mediator;
       _characterRegistryNetwork = characterRegistryNetwork;
     }
@@ -38,7 +45,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       {
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
         [typeof(CharacterSelectionState)] = new CharacterSelectionState(_role, _mediator),
-        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_characterSelection, _characterRegistryNetwork, _role)
+        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_coroutineRunner, _characterSelection, _characterFactory, _characterRegistryNetwork, _role)
       };
     }
 

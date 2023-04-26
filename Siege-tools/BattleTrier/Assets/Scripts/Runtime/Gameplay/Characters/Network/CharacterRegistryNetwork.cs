@@ -1,3 +1,4 @@
+using System;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Unity.Netcode;
@@ -6,10 +7,10 @@ using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
 {
-  public class CharacterRegistryNetwork : NetworkBehaviour, IInitializable
+  public class CharacterRegistryNetwork : NetworkBehaviour
   {
-    private readonly NetworkList<CharacterNetworkData> _firstPlayerCharacters = new();
-    private readonly NetworkList<CharacterNetworkData> _secondPlayerCharacters = new();
+    public NetworkList<CharacterNetworkData> FirstPlayerCharacters;
+    public NetworkList<CharacterNetworkData> SecondPlayerCharacters;
 
     private IStaticDataProvider _dataProvider;
     private RoleBase _playerRole;
@@ -18,26 +19,33 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
     private void Construct(IStaticDataProvider dataProvider) =>
       _dataProvider = dataProvider;
 
-    public void Initialize()
+    private void Awake()
     {
-      _firstPlayerCharacters.OnListChanged += OnFirstListChanged;
-      _secondPlayerCharacters.OnListChanged += OnSecondListChanged;
+      FirstPlayerCharacters = new();
+      SecondPlayerCharacters = new();
+    }
+
+    public override void OnDestroy()
+    {
+      base.OnDestroy();
+      FirstPlayerCharacters?.Dispose();
+      SecondPlayerCharacters?.Dispose();
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void RegisterByIdServerRpc(int characterId, RoleState role)
     {
       var networkData = new CharacterNetworkData(characterId, role, _dataProvider);
-      if(role == RoleState.ChosenFirst)
-        _firstPlayerCharacters.Add(networkData);
+      if (role == RoleState.ChosenFirst)
+      {
+        Debug.Log($"Added character with {characterId} for first player");
+        FirstPlayerCharacters.Add(networkData);
+      }
       else
-        _secondPlayerCharacters.Add(networkData);
+      {
+        Debug.Log($"Added character with {characterId} for second player");
+        SecondPlayerCharacters.Add(networkData);
+      }
     }
-
-    private void OnFirstListChanged(NetworkListEvent<CharacterNetworkData> changeEvent) =>
-      Debug.Log("Character with id " + changeEvent.Value.TypeId + " registered as first player char");
-
-    private void OnSecondListChanged(NetworkListEvent<CharacterNetworkData> changeEvent) =>
-      Debug.Log("Character with id " + changeEvent.Value.TypeId + " registered as second player char");
   }
 }

@@ -10,13 +10,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
 
     public void SpawnTiles(TileType[,] mapTiles)
     {
-      Debug.Log("SpawnTiles");
+      Debug.Log("Spawn Tiles");
       for(var col = 0; col < mapTiles.GetLength(0); col++)
       for (var row = 0; row < mapTiles.GetLength(1); row++)
       {
         if (mapTiles[col, row] == TileType.Default)
         {
-          Tile tile = Instantiate(_tilePrefab, new Vector3(-7.5f, -4, 0) + new Vector3(col, row) * 0.7f, Quaternion.identity);
+          Tile tile = Instantiate(_tilePrefab, new Vector3(-4f, -1.5f, 0) + new Vector3(col, row) * 0.7f, Quaternion.identity);
           tile.NetworkObject.Spawn();
           tile.NetworkObject.TrySetParent(NetworkObject);
         }

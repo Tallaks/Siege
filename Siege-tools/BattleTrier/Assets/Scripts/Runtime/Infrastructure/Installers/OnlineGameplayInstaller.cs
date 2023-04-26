@@ -29,7 +29,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
         AsSingle();
 
       Container.
-        BindInterfacesAndSelfTo<CharacterRegistryNetwork>().
+        Bind<CharacterRegistryNetwork>().
         FromInstance(_characterRegistryNetwork).
         AsSingle();
 
