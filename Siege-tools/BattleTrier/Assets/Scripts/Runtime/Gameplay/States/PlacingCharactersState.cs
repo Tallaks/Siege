@@ -1,18 +1,24 @@
 using System.Collections.Generic;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class PlacingCharactersState : ParameterlessState
   {
     private readonly ICharacterSelection _characterSelection;
-    private readonly ICharacterFactory _characterFactory;
+    private readonly CharacterRegistryNetwork _characterRegistryNetwork;
+    private readonly RoleBase _roleBase;
 
-    public PlacingCharactersState(ICharacterSelection characterSelection, ICharacterFactory characterFactory)
+    public PlacingCharactersState(
+      ICharacterSelection characterSelection,
+      CharacterRegistryNetwork characterRegistryNetwork, 
+      RoleBase roleBase)
     {
       _characterSelection = characterSelection;
-      _characterFactory = characterFactory;
+      _characterRegistryNetwork = characterRegistryNetwork;
+      _roleBase = roleBase;
     }
 
     public override void Enter()
@@ -20,13 +26,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       foreach (KeyValuePair<int, int> characterGroup in _characterSelection.Characters)
       {
         for (var i = 0; i < characterGroup.Value; i++)
-          _characterFactory.Create(characterGroup.Key);
+        {
+          _characterRegistryNetwork.RegisterByIdServerRpc(characterGroup.Key, _roleBase.State.Value);
+        }
       }
     }
 
     public override void Exit()
     {
-      
     }
   }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -6,7 +7,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
   [CreateAssetMenu(menuName = "Kulinaria/Character")]
   public class CharacterConfig : SerializedScriptableObject
   {
-    public int Id => GetInstanceID();
+    private const string ConfigsCharactersPath = "Configs/Characters/";
+
+    [ValidateInput(nameof(CheckIds))]
+    public int Id;
     [PreviewField(100, ObjectFieldAlignment.Left)]
     [HideLabel]
     public Sprite Icon;
@@ -24,5 +28,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
       ActionPoints > 0;
     private bool CheckHealthPoints() =>
       HealthPoints > 0;
+
+    private bool CheckIds()
+    {
+      CharacterConfig[] configs = Resources.LoadAll<CharacterConfig>(ConfigsCharactersPath);
+      return configs.Select(k => k.Id).Distinct().Count() == configs.Select(k => k.Id).Count();
+    }
   }
 }

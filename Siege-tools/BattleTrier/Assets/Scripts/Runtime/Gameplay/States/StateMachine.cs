@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
@@ -13,22 +14,22 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     private readonly RoleBase _role;
     private readonly ICharacterSelection _characterSelection;
     private readonly GameplayMediator _mediator;
+    private readonly CharacterRegistryNetwork _characterRegistryNetwork;
 
     private Dictionary<Type, IExitState> _states;
-    private ICharacterFactory _characterFactory;
 
     public IExitState CurrentState { get; private set; }
 
     public StateMachine(
       RoleBase role,
       ICharacterSelection characterSelection,
-      ICharacterFactory characterFactory,
-      GameplayMediator mediator)
+      GameplayMediator mediator,
+      CharacterRegistryNetwork characterRegistryNetwork)
     {
       _role = role;
       _characterSelection = characterSelection;
-      _characterFactory = characterFactory;
       _mediator = mediator;
+      _characterRegistryNetwork = characterRegistryNetwork;
     }
 
     public void Initialize()
@@ -37,7 +38,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       {
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
         [typeof(CharacterSelectionState)] = new CharacterSelectionState(_role, _mediator),
-        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_characterSelection, _characterFactory)
+        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_characterSelection, _characterRegistryNetwork, _role)
       };
     }
 

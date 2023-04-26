@@ -12,6 +12,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
   {
     [SerializeField, Required] private MapSelectionNetwork _mapSelectionNetwork;
     [SerializeField, Required] private CharacterSelectionNetwork _characterSelectionNetwork;
+    [SerializeField, Required] private CharacterRegistryNetwork _characterRegistryNetwork;
 
     [Inject] private NetworkManager _networkManager;
 
@@ -25,6 +26,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.
         Bind<CharacterSelectionNetwork>().
         FromInstance(_characterSelectionNetwork).
+        AsSingle();
+
+      Container.
+        BindInterfacesAndSelfTo<CharacterRegistryNetwork>().
+        FromInstance(_characterRegistryNetwork).
         AsSingle();
 
       Container.
