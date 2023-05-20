@@ -26,7 +26,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
     public void Initialize(BoardConfig config)
     {
       _icon.sprite = config.Icon;
-      _button.onClick.AddListener(() => OnMapSelected(config));
+      _button.onClick.AddListener(() => OnMapSelected(config.name));
     }
 
     public void Deselect() =>
@@ -35,9 +35,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
     public void Select() =>
       _background.color = Color.yellow;
 
-    private void OnMapSelected(BoardConfig config)
+    private void OnMapSelected(string config)
     {
-      _mapSelectionNetwork.Select(config.name);
+      _mapSelectionNetwork.Select(config);
       _mediator.SetSelectedMap(this);
     }
   }

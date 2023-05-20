@@ -44,9 +44,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       _states = new Dictionary<Type, IExitState>
       {
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
-        [typeof(CharacterSelectionState)] = new CharacterSelectionState(_role, _mediator),
-        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_coroutineRunner, _characterSelection,
-          _characterFactory, _characterRegistryNetwork, _role)
+        [typeof(CharacterSelectionState)] = new CharacterSelectionState(_coroutineRunner, _characterSelection,
+          _characterFactory, _characterRegistryNetwork, _role, _mediator),
+        [typeof(PlacingCharactersState)] = new PlacingCharactersState()
       };
     }
 

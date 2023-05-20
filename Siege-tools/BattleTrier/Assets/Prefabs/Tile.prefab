@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 686411533685628023}
-  - component: {fileID: 686411533685628011}
   - component: {fileID: 686411533685628008}
   - component: {fileID: 686411533685628020}
+  - component: {fileID: 3778179426085232199}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -34,22 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &686411533685628011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686411533685628013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &686411533685628008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70431c4d06e4e589815b9d20494e2d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selectedColor: {r: 0.2816975, g: 1, b: 0, a: 1}
+  _neighbourColor: {r: 1, g: 0.9349535, b: 0, a: 1}
 --- !u!212 &686411533685628020
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -114,3 +100,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!65 &3778179426085232199
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686411533685628013}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.13015597, y: 0.13370891, z: 0.2}
+  m_Center: {x: 0.000000011920929, y: 0.00035527945, z: 0}
