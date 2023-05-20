@@ -1,8 +1,8 @@
-using Unity.Netcode;
+using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
 {
-  public class Tile : NetworkBehaviour
+  public class Tile : MonoBehaviour
   {
   }
 }

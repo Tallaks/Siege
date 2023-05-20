@@ -33,7 +33,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
       MapSelected.Value = true;
       Map map = Instantiate(_mapPrefab);
       map.NetworkObject.Spawn();
-      map.SpawnTiles(_config.MapTiles);
+      map.SpawnTilesClientRpc(_config.name);
     }
 
     public void Select(string configName)

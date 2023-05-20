@@ -8,8 +8,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
   {
     [SerializeField] private Tile _tilePrefab;
 
-    public void SpawnTiles(TileType[,] mapTiles)
+    [ClientRpc]
+    public void SpawnTilesClientRpc(string configName)
     {
+      var config = Resources.Load<BoardConfig>("Configs/Boards/" + configName);
+      TileType[,] mapTiles = config.MapTiles;
       Debug.Log("Spawn Tiles");
       for (var col = 0; col < mapTiles.GetLength(0); col++)
       for (var row = 0; row < mapTiles.GetLength(1); row++)
@@ -17,8 +20,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
         {
           Tile tile = Instantiate(_tilePrefab, new Vector3(-4f, -1.5f, 0) + new Vector3(col, row) * 0.7f,
             Quaternion.identity);
-          tile.NetworkObject.Spawn();
-          tile.NetworkObject.TrySetParent(NetworkObject);
         }
     }
   }
