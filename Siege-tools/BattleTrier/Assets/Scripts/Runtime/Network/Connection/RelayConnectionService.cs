@@ -17,10 +17,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
 {
   public class RelayConnectionService : IConnectionService
   {
+    private readonly LobbyInfo _currentLobby;
     private readonly LobbyServiceFacade _lobbyService;
     private readonly NetworkManager _networkManager;
-    private readonly LobbyInfo _currentLobby;
-    
+
     [Inject] private IConnectionStateMachine _connectionStateMachine;
 
     public RelayConnectionService(
@@ -41,7 +41,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
         userName); // Need to set connection payload for host as well, as host is a client too
 
       // Create relay allocation
-      Allocation hostAllocation = await RelayService.Instance.CreateAllocationAsync(8, region: null);
+      Allocation hostAllocation = await RelayService.Instance.CreateAllocationAsync(8);
       string joinCode = await RelayService.Instance.GetJoinCodeAsync(hostAllocation.AllocationId);
 
       Debug.Log($"server: connection data: {hostAllocation.ConnectionData[0]} {hostAllocation.ConnectionData[1]}, " +
@@ -86,9 +86,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
       SetConnectionPayload(GetPlayerId(), playerName);
 
       if (_lobbyService.CurrentLobby == null)
-      {
         throw new Exception("Trying to start relay while Lobby isn't set");
-      }
 
       Debug.Log($"Setting Unity Relay client with join code {_currentLobby.RelayJoinCode}");
 
@@ -108,7 +106,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
 
     private void SetConnectionPayload(string playerId, string userName)
     {
-      string payload = JsonUtility.ToJson(new ConnectionPayload()
+      string payload = JsonUtility.ToJson(new ConnectionPayload
       {
         PlayerId = playerId,
         PlayerName = userName,
@@ -132,7 +130,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
     {
       string disconnectReason = _networkManager.DisconnectReason;
       if (string.IsNullOrEmpty(disconnectReason))
+      {
         Debug.Log("Connection Failed!!!");
+      }
       else
       {
         var connectStatus = JsonUtility.FromJson<ConnectStatus>(disconnectReason);

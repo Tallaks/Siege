@@ -9,16 +9,16 @@ using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
 {
-  public class LobbyList : MonoBehaviour
+  public class LobbyList : MonoBehaviour, IInitializable
   {
-    [SerializeField] private LobbyItem _lobbyItemPrefab;
     [SerializeField] private Transform _content;
+    [SerializeField] private LobbyItem _lobbyItemPrefab;
     [SerializeField] private Button _refreshButton;
+    private DiContainer _container;
+    private List<LobbyItem> _lobbyItems = new();
+    private LobbyMediator _mediator;
 
     private IUpdateRunner _updateRunner;
-    private List<LobbyItem> _lobbyItems = new();
-    private DiContainer _container;
-    private LobbyMediator _mediator;
 
     [Inject]
     private void Construct(DiContainer container, IUpdateRunner updateRunner, LobbyMediator mediator)
@@ -28,16 +28,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       _updateRunner = updateRunner;
     }
 
-    public void Initialize()
-    {
-      _refreshButton.onClick.AddListener(() => _mediator.QueryLobbiesRequest(true));
-      _updateRunner.Subscribe(Refresh, 10);
-    }
-
     private void OnDestroy()
     {
       _refreshButton.onClick.RemoveAllListeners();
       _updateRunner.Unsubscribe(Refresh);
+    }
+
+    public void Initialize()
+    {
+      _refreshButton.onClick.AddListener(() => _mediator.QueryLobbiesRequest(true));
+      _updateRunner.Subscribe(Refresh, 10);
     }
 
     public void UpdateList(IEnumerable<Lobby> lobbies)

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Tools.BattleTrier.Runtime.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
@@ -12,14 +12,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
   public class MapSelectionUi : MonoBehaviour
   {
     [SerializeField] private GameObject _firstRoleUi;
-    [SerializeField] private GameObject _otherRoleUi;
-    [SerializeField] private Button _selectMapButton;
     [SerializeField] private Transform _mapSelectionContainer;
     [SerializeField] private MapSelectionButton _mapSelectionPrefab;
+    [SerializeField] private GameObject _otherRoleUi;
+    [SerializeField] private Button _selectMapButton;
+    private readonly List<MapSelectionButton> _mapSelectionButtons = new();
 
     private DiContainer _container;
-
-    private readonly List<MapSelectionButton> _mapSelectionButtons = new();
     private MapSelectionNetwork _mapSelectionNetwork;
 
     [Inject]
@@ -45,7 +44,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
         }
       }
       else
+      {
         _otherRoleUi.SetActive(true);
+      }
     }
 
     public void HideMapSelectionUi()

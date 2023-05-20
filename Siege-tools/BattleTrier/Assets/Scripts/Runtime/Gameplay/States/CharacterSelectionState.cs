@@ -6,8 +6,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class CharacterSelectionState : ParameterlessState
   {
-    private readonly RoleBase _role;
     private readonly GameplayMediator _mediator;
+    private readonly RoleBase _role;
 
     public CharacterSelectionState(
       RoleBase role,

@@ -7,6 +7,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
   [Serializable]
   public class UserProfile
   {
+    [Flags]
+    public enum ChangedFields
+    {
+      IsHost = 1,
+      DisplayName = 2,
+      ID = 4
+    }
+
+    private string _id;
+    private bool _isHost;
+    private string _name;
+
     public bool IsHost
     {
       get => _isHost;
@@ -37,19 +49,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       }
     }
 
-    private string _id;
-    private bool _isHost;
-    private string _name;
-
     public event Action<UserProfile> OnChanged;
-
-    [Flags]
-    public enum ChangedFields
-    {
-      IsHost = 1,
-      DisplayName = 2,
-      ID = 4,
-    }
 
     public void CopyDataFrom(UserProfile lobbyUser)
     {
@@ -74,7 +74,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
     public Dictionary<string, PlayerDataObject> GetDataForUnityServices() =>
       new()
       {
-        { "DisplayName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, Name) },
+        { "DisplayName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, Name) }
       };
   }
 }

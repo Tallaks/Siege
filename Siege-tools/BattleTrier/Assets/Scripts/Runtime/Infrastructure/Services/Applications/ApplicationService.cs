@@ -9,9 +9,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applicatio
 {
   public class ApplicationService : IApplicationService
   {
-    private readonly ICoroutineRunner _runner;
     private readonly LobbyInfo _lobbyInfo;
     private readonly LobbyServiceFacade _lobbyServiceFacade;
+    private readonly ICoroutineRunner _runner;
 
     public ApplicationService(ICoroutineRunner runner, LobbyInfo lobbyInfo, LobbyServiceFacade lobbyServiceFacade)
     {
@@ -50,6 +50,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applicatio
       {
         Debug.LogError(e.Message);
       }
+
       yield return null;
       QuitApplication();
     }

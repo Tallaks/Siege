@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Kulinaria.Tools.BattleTrier.Runtime.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -13,47 +12,47 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
   {
     [SerializeField, Required, AssetSelector] private CharacterListItem _characterListItemPrefab;
     [SerializeField, Required, SceneObjectsOnly] private Transform _listContainer;
-
     private readonly List<CharacterListItem> _characterList = new();
 
-    private ICharacterRegistry _characterRegistry;
+    private ICharacterSelection _characterSelection;
     private DiContainer _container;
     private GameplayMediator _mediator;
 
     [Inject]
-    private void Construct(DiContainer container, ICharacterRegistry characterRegistry, GameplayMediator mediator)
+    private void Construct(DiContainer container, ICharacterSelection characterSelection, GameplayMediator mediator)
     {
       _container = container;
-      _characterRegistry = characterRegistry;
+      _characterSelection = characterSelection;
       _mediator = mediator;
     }
 
     public void ChangeCharacterList()
     {
-      foreach (KeyValuePair<CharacterConfig, int> characterGroup in _characterRegistry.Characters)
+      foreach (KeyValuePair<int, int> characterGroup in _characterSelection.Characters)
       {
         for (var index = 0; index < _characterList.Count; index++)
         {
-          if (!_characterRegistry.Characters.ContainsKey(_characterList[index].Config))
+          if (!_characterSelection.Characters.ContainsKey(_characterList[index].Config.Id))
           {
             Destroy(_characterList[index].gameObject);
             _characterList.Remove(_characterList[index]);
             continue;
           }
 
-          if (_characterList[index].Config == characterGroup.Key)
+          if (_characterList[index].Config.Id == characterGroup.Key)
             _characterList[index].SetAmount(characterGroup.Value);
         }
 
-        if (!_characterList.Select(k => k.Config).Contains(characterGroup.Key))
+        if (!_characterList.Select(k => k.Config.Id).Contains(characterGroup.Key))
         {
-          var listItem = _container.InstantiatePrefabForComponent<CharacterListItem>(_characterListItemPrefab, _listContainer);
+          var listItem =
+            _container.InstantiatePrefabForComponent<CharacterListItem>(_characterListItemPrefab, _listContainer);
           listItem.Initialize(characterGroup.Key);
           _characterList.Add(listItem);
         }
       }
 
-      if (_characterRegistry.Characters.Count == 0)
+      if (_characterSelection.Characters.Count == 0)
         _mediator.DisableCharacterSelectSubmitButton();
       else
         _mediator.EnableCharacterSelectSubmitButton();

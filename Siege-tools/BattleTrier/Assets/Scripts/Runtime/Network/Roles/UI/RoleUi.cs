@@ -8,16 +8,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
 {
   public class RoleUi : MonoBehaviour
   {
-    [SerializeField] private RoleSelectionButton[] _roleButtons;
+    [SerializeField] private Button _backButton;
     [SerializeField] private TMP_Text _playerCounter;
+    [SerializeField] private RoleSelectionButton[] _roleButtons;
     [SerializeField] private List<GameObject> _uiElementsForChooseSeat;
     [SerializeField] private List<GameObject> _uiElementsForFatalError;
     [SerializeField] private List<GameObject> _uiElementsForLobbyEnding;
     [SerializeField] private List<GameObject> _uiElementsForSeatChosen;
-    [SerializeField] private Button _backButton;
+    private int _lastSeatSelected;
 
     private Dictionary<RoleUiMode, List<GameObject>> _lobbyUiElementsByMode;
-    private int _lastSeatSelected;
     private RoleMediator _mediator;
 
     [Inject]
@@ -31,10 +31,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
         Debug.Log("Role Ui Initialization");
         _lobbyUiElementsByMode = new Dictionary<RoleUiMode, List<GameObject>>
         {
-          [RoleUiMode.ChooseSeat]  = _uiElementsForChooseSeat,
-          [RoleUiMode.FatalError]  = _uiElementsForFatalError,
+          [RoleUiMode.ChooseSeat] = _uiElementsForChooseSeat,
+          [RoleUiMode.FatalError] = _uiElementsForFatalError,
           [RoleUiMode.LobbyEnding] = _uiElementsForLobbyEnding,
-          [RoleUiMode.SeatChosen]  = _uiElementsForSeatChosen
+          [RoleUiMode.SeatChosen] = _uiElementsForSeatChosen
         };
 
         _backButton.onClick.AddListener(_mediator.OnRequestedShutdown);

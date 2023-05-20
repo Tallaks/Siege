@@ -1,24 +1,14 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI;
-using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applications;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
-using UnityEngine.UI;
-using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 {
   public class GameplayMediator : MonoBehaviour
   {
-    [SerializeField] private MapSelectionUi _mapSelectionUi;
-    [SerializeField] private Button _quitButton;
     [SerializeField] private CharacterSelectionUi _characterSelectionUi;
-
-    [Inject] private IApplicationService _applicationService;
-
-    private void Awake() =>
-      _quitButton.onClick.AddListener(_applicationService.QuitApplication);
+    [SerializeField] private MapSelectionUi _mapSelectionUi;
 
     public void InitializeMapSelectionUi(RoleState stateValue) =>
       _mapSelectionUi.Initialize(stateValue);
@@ -35,8 +25,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     public void SetSelectedMap(MapSelectionButton selected) =>
       _mapSelectionUi.SetMap(selected);
 
-    public void ShowConfigInfo(CharacterConfig config) =>
-      _characterSelectionUi.ShowConfigInfo(config);
+    public void ShowConfigInfo(int configId) =>
+      _characterSelectionUi.ShowConfigInfo(configId);
 
     public void ChangeCharacterList() =>
       _characterSelectionUi.ChangeCharacterList();

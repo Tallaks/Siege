@@ -1,5 +1,5 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -10,20 +10,26 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterSelectionPanel : MonoBehaviour
   {
-    [SerializeField, Required, AssetSelector] private CharacterSelectionVariant _characterSelectionVariantPrefab;
-    [SerializeField, Required, ChildGameObjectsOnly] private SelectedConfigInfo _selectedConfigInfo;
-    [SerializeField, Required, ChildGameObjectsOnly] private GridLayoutGroup _gridLayout;
     [SerializeField, Required, ChildGameObjectsOnly] private CharacterList _characterList;
+    [SerializeField, Required, AssetSelector] private CharacterSelectionVariant _characterSelectionVariantPrefab;
+    [SerializeField, Required, ChildGameObjectsOnly] private GridLayoutGroup _gridLayout;
+    [SerializeField, Required, ChildGameObjectsOnly] private SelectedConfigInfo _selectedConfigInfo;
     [SerializeField, Required, ChildGameObjectsOnly] private Button _submitButton;
+    private CharacterSelectionNetwork _characterSelectionNetwork;
 
     private DiContainer _container;
     private RoleBase _role;
-    private CharacterSelectionNetwork _characterSelectionNetwork;
+    private IStaticDataProvider _staticDataProvider;
 
     [Inject]
-    private void Construct(DiContainer container, RoleBase role,  CharacterSelectionNetwork characterSelectionNetwork)
+    private void Construct(
+      DiContainer container,
+      IStaticDataProvider staticDataProvider,
+      RoleBase role,
+      CharacterSelectionNetwork characterSelectionNetwork)
     {
       _container = container;
+      _staticDataProvider = staticDataProvider;
       _role = role;
       _characterSelectionNetwork = characterSelectionNetwork;
     }
@@ -33,18 +39,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       DisableCharacterSelectSubmitButton();
       _submitButton.onClick.AddListener(OnSubmitButton);
       _selectedConfigInfo.Initialize();
-      CharacterConfig[] characterConfigs = Resources.LoadAll<CharacterConfig>("Configs/Characters/");
-      foreach (CharacterConfig config in characterConfigs)
+      foreach (int configId in _staticDataProvider.GetAllCharacterConfigIds())
       {
         var variant =
           _container.InstantiatePrefabForComponent<CharacterSelectionVariant>(_characterSelectionVariantPrefab,
             _gridLayout.transform);
-        variant.Initialize(config);
+        variant.Initialize(configId);
       }
     }
 
-    public void ShowConfigInfo(CharacterConfig config) =>
-      _selectedConfigInfo.ShowConfig(config);
+    public void ShowConfigInfo(int configId) =>
+      _selectedConfigInfo.ShowConfig(configId);
 
     public void ChangeCharacterList() =>
       _characterList.ChangeCharacterList();

@@ -8,7 +8,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
   [Serializable]
   public sealed class LobbyInfo
   {
-    public event Action<LobbyInfo> OnLobbyChanged;
+    private Dictionary<string, UserProfile> _lobbyUsers = new();
 
     public string Id { get; set; }
     public string Code { get; set; }
@@ -16,14 +16,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
     public string Name { get; set; }
     public IDictionary<string, UserProfile> LobbyUsers => _lobbyUsers;
 
-    private Dictionary<string, UserProfile> _lobbyUsers = new();
-
     public LobbyInfo()
     {
     }
 
     public LobbyInfo(Lobby lobby) =>
       ApplyRemoteData(lobby);
+
+    public event Action<LobbyInfo> OnLobbyChanged;
 
     public void ApplyRemoteData(Lobby lobby)
     {
@@ -39,19 +39,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       foreach (Player player in lobby.Players)
       {
         if (player.Data == null)
-        {
           if (LobbyUsers.ContainsKey(player.Id))
           {
             lobbyUsers.Add(player.Id, LobbyUsers[player.Id]);
             continue;
           }
-        }
 
         var incomingData = new UserProfile
         {
           IsHost = lobby.HostId.Equals(player.Id),
           Id = player.Id,
-          Name = player.Data?.ContainsKey("DisplayName") == true ? player.Data["DisplayName"].Value : default,
+          Name = player.Data?.ContainsKey("DisplayName") == true ? player.Data["DisplayName"].Value : default
         };
 
         lobbyUsers.Add(incomingData.Id, incomingData);
@@ -84,26 +82,24 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
     private void CopyDataFrom(Dictionary<string, UserProfile> lobbyUsers)
     {
       if (lobbyUsers == null)
+      {
         _lobbyUsers = new Dictionary<string, UserProfile>();
+      }
       else
       {
         var toRemove = new List<UserProfile>();
         foreach (KeyValuePair<string, UserProfile> oldUser in _lobbyUsers)
-        {
           if (lobbyUsers.ContainsKey(oldUser.Key))
             oldUser.Value.CopyDataFrom(lobbyUsers[oldUser.Key]);
           else
             toRemove.Add(oldUser.Value);
-        }
 
         foreach (UserProfile remove in toRemove)
           DoRemoveUser(remove);
 
         foreach (KeyValuePair<string, UserProfile> currUser in lobbyUsers)
-        {
           if (!_lobbyUsers.ContainsKey(currUser.Key))
             DoAddUser(currUser.Value);
-        }
       }
 
       OnLobbyChanged?.Invoke(this);

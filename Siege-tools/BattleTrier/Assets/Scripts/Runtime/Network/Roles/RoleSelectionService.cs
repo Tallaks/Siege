@@ -6,12 +6,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 {
   public class RoleSelectionService : NetworkBehaviour
   {
-    public event Action<ulong, int> OnClientChoseRole;
-    public NetworkVariable<bool> LobbyIsClosed { get; } = new();
     public NetworkList<PlayerRoleState> PlayerRoles;
+    public NetworkVariable<bool> LobbyIsClosed { get; } = new();
 
-    private void Awake() => 
+    private void Awake() =>
       PlayerRoles = new NetworkList<PlayerRoleState>();
+
+    public event Action<ulong, int> OnClientChoseRole;
 
     [ServerRpc(RequireOwnership = false)]
     public void ChangeSeatServerRpc(ulong clientId, int seatIdx)

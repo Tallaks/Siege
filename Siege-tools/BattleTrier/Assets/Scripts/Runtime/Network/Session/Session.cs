@@ -5,8 +5,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Session
 {
   public class Session<T> where T : struct, ISessionPlayerData
   {
-    private Dictionary<string, T> _clientData = new();
-    private Dictionary<ulong, string> _clientIdToPlayerId = new();
+    private readonly Dictionary<string, T> _clientData = new();
+    private readonly Dictionary<ulong, string> _clientIdToPlayerId = new();
     private bool _hasSessionStarted;
 
     public void SetupConnectingPlayerSessionData(ulong clientId, string playerId, T sessionPlayerData)
@@ -39,19 +39,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Session
     {
       if (_hasSessionStarted)
       {
-        if (_clientIdToPlayerId.TryGetValue(clientId, out var playerId))
-        {
+        if (_clientIdToPlayerId.TryGetValue(clientId, out string playerId))
           if (GetPlayerData(playerId)?.ClientID == clientId)
           {
             T clientData = _clientData[playerId];
             clientData.IsConnected = false;
             _clientData[playerId] = clientData;
           }
-        }
       }
       else
       {
-        if (_clientIdToPlayerId.TryGetValue(clientId, out var playerId))
+        if (_clientIdToPlayerId.TryGetValue(clientId, out string playerId))
         {
           _clientIdToPlayerId.Remove(clientId);
           if (GetPlayerData(playerId)?.ClientID == clientId)
@@ -68,7 +66,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Session
         Debug.LogError($"No client player ID found mapped to the given client ID: {clientId}");
     }
 
-    public void OnSessionStarted() => 
+    public void OnSessionStarted() =>
       _hasSessionStarted = true;
 
     public void OnSessionEnded()
@@ -85,7 +83,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Session
       _hasSessionStarted = false;
     }
 
-    public bool IsDuplicateConnection(string playerId) => 
+    public bool IsDuplicateConnection(string playerId) =>
       _clientData.ContainsKey(playerId) && _clientData[playerId].IsConnected;
 
     public string GetPlayerId(ulong clientId)
@@ -106,7 +104,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Session
       Debug.Log($"No client player ID found mapped to the given client ID: {clientId}");
       return null;
     }
-    
+
     public T? GetPlayerData(string playerId)
     {
       if (_clientData.TryGetValue(playerId, out T data))
@@ -115,7 +113,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Session
       Debug.Log($"No PlayerData of matching player ID found: {playerId}");
       return null;
     }
-    
+
     private void ReinitializePlayersData()
     {
       foreach (ulong id in _clientIdToPlayerId.Keys)

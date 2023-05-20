@@ -7,8 +7,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
   public class ClientConnectedState : ParameterConnectionState<ulong, ConnectionState>, IOnlineState, IClientDisconnect
   {
     private readonly IConnectionStateMachine _connectionStateMachine;
+    private readonly UserProfile _localUser;
     private readonly NetworkManager _networkManager;
-    private UserProfile _localUser;
 
     public ClientConnectedState(
       IConnectionStateMachine connectionStateMachine,
@@ -20,27 +20,27 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _localUser = localUser;
     }
 
-    public override void Enter<T1, T2>(T1 clientId, T2 previousState)
+    public void ReactToClientDisconnect(ulong clientId)
     {
-      if (previousState is HostingState)
-        _connectionStateMachine.Enter<HostingState, bool>(false);
-      
-      Debug.Log($"Client with id {clientId} connected");
+      string disconnectReason = _networkManager.DisconnectReason;
+      if (string.IsNullOrEmpty(disconnectReason))
+        _connectionStateMachine.Enter<ClientReconnectingState, string>(_localUser.Name);
+      else
+        _connectionStateMachine.Enter<OfflineState>();
     }
 
-    public void OnTransportFailure() => 
+    public void OnTransportFailure() =>
       _connectionStateMachine.Enter<OfflineState>();
 
     public void OnUserRequestedShutdown() =>
       _connectionStateMachine.Enter<OfflineState>();
 
-    public void ReactToClientDisconnect(ulong clientId)
+    public override void Enter<T1, T2>(T1 clientId, T2 previousState)
     {
-      var disconnectReason = _networkManager.DisconnectReason;
-      if (string.IsNullOrEmpty(disconnectReason))
-        _connectionStateMachine.Enter<ClientReconnectingState, string>(_localUser.Name);
-      else
-        _connectionStateMachine.Enter<OfflineState>();
+      if (previousState is HostingState)
+        _connectionStateMachine.Enter<HostingState, bool>(false);
+
+      Debug.Log($"Client with id {clientId} connected");
     }
 
     public override void Exit()

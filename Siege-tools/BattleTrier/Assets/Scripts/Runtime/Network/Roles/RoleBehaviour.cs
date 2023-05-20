@@ -6,7 +6,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
   {
     public string PlayerId { get; private set; }
 
-    public virtual void TakeRole(string playerId) => 
+    public virtual void TakeRole(string playerId) =>
       PlayerId = playerId;
   }
 }
