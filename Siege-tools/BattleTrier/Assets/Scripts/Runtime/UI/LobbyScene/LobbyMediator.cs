@@ -12,14 +12,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
 {
   public class LobbyMediator : MonoBehaviour
   {
-    [SerializeField] private LobbyUi _lobbyUi;
     [SerializeField] private LobbyList _lobbyList;
+    [SerializeField] private LobbyUi _lobbyUi;
+    private IConnectionService _connectionService;
+    private IConnectionStateMachine _connectionStateMachine;
+    private LobbyInfo _lobbyInfo;
 
     private LobbyServiceFacade _lobbyService;
     private UserProfile _localUser;
-    private LobbyInfo _lobbyInfo;
-    private IConnectionStateMachine _connectionStateMachine;
-    private IConnectionService _connectionService;
 
     [Inject]
     private void Construct(LobbyServiceFacade lobbyService, UserProfile userProfile, LobbyInfo lobbyInfo,

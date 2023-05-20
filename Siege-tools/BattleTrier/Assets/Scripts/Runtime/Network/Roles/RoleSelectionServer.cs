@@ -15,14 +15,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
   public class RoleSelectionServer : MonoBehaviour
   {
     [SerializeField] private NetCodeHook _hook;
-
     private ICoroutineRunner _coroutineRunner;
-    private ISceneLoader _sceneLoader;
-    private NetworkManager _networkManager;
-    private Session<SessionPlayerData> _session;
     private RoleMediator _mediator;
+    private NetworkManager _networkManager;
     private RoleSelectionClient _roleSelectionClient;
     private RoleSelectionService _roleSelectionService;
+    private ISceneLoader _sceneLoader;
+    private Session<SessionPlayerData> _session;
 
     private Coroutine _waitToEndLobbyCoroutine;
 
@@ -82,8 +81,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void OnClientChoseRole(ulong clientId, int roleButtonId)
     {
-      for (int i = 0; i < _roleSelectionService.PlayerRoles.Count; i++)
-      {
+      for (var i = 0; i < _roleSelectionService.PlayerRoles.Count; i++)
         if (_roleSelectionService.PlayerRoles[i].ClientId == clientId &&
             _roleSelectionService.PlayerRoles[i].State != (RoleState)roleButtonId)
         {
@@ -95,21 +93,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
           if (_roleSelectionService.PlayerRoles[i].ClientId != clientId &&
               _roleSelectionService.PlayerRoles[i].State == (RoleState)roleButtonId)
-          {
             _roleSelectionService.PlayerRoles[i] = new PlayerRoleState(
               clientId,
               (RoleState)roleButtonId,
               Time.time
             );
-          }
 
           foreach (NetworkClient client in _networkManager.ConnectedClientsList)
-          {
             if (client.ClientId == clientId)
               client.PlayerObject.GetComponent<RoleBase>().State.Value = (RoleState)roleButtonId;
-          }
         }
-      }
 
       CloseLobbyIfReady();
     }
@@ -124,13 +117,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private void OnClientDisconnectCallback(ulong clientId)
     {
       for (var i = 0; i < _roleSelectionService.PlayerRoles.Count; ++i)
-      {
         if (_roleSelectionService.PlayerRoles[i].ClientId == clientId)
         {
           _roleSelectionService.PlayerRoles.RemoveAt(i);
           break;
         }
-      }
 
       if (!_roleSelectionService.LobbyIsClosed.Value)
         CloseLobbyIfReady();
@@ -170,7 +161,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private void SeatNewPlayer(ulong clientId)
     {
       Debug.Log($"Seat new player {clientId}");
-      if (_roleSelectionService.LobbyIsClosed.Value == true)
+      if (_roleSelectionService.LobbyIsClosed.Value)
         CancelCloseLobby();
 
       SessionPlayerData? sessionPlayerData = _session.GetPlayerData(clientId);

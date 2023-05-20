@@ -15,17 +15,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
   public class LobbyServiceFacade
   {
     private readonly AuthenticationServiceFacade _authentication;
+    private readonly RateLimitCooldown _joinLobbyLimit;
     private readonly UnityLobbyApi _lobbyApi;
     private readonly LobbyInfo _lobbyInfo;
-    private readonly IUpdateRunner _updateRunner;
     private readonly UserProfile _localUser;
-    [Inject] private LobbyHeartbeat _lobbyHeartbeat;
 
     private readonly RateLimitCooldown _queryForLobbiesLimit;
-    private RateLimitCooldown _joinLobbyLimit;
-    private bool _isTracking;
+    private readonly IUpdateRunner _updateRunner;
     private float _heartbeatTime;
-    public Lobby CurrentLobby { get; set; }
+    private bool _isTracking;
+    [Inject] private LobbyHeartbeat _lobbyHeartbeat;
 
     public LobbyServiceFacade(
       IUpdateRunner updateRunner,
@@ -43,6 +42,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       _queryForLobbiesLimit = new RateLimitCooldown(1f);
       _joinLobbyLimit = new RateLimitCooldown(3f);
     }
+
+    public Lobby CurrentLobby { get; set; }
 
     public async Task<(bool Success, Lobby Lobby)> TryCreateLobby(string lobbyName)
     {
@@ -97,17 +98,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     {
       Dictionary<string, DataObject> dataCurr = CurrentLobby.Data ?? new Dictionary<string, DataObject>();
 
-      foreach (var dataNew in dataObjects)
-      {
+      foreach (KeyValuePair<string, DataObject> dataNew in dataObjects)
         if (dataCurr.ContainsKey(dataNew.Key))
-        {
           dataCurr[dataNew.Key] = dataNew.Value;
-        }
         else
-        {
           dataCurr.Add(dataNew.Key, dataNew.Value);
-        }
-      }
 
       //we would want to lock lobbies from appearing in queries if we're in relay mode and the relay isn't fully set up yet
       bool shouldLock = string.IsNullOrEmpty(_lobbyInfo.RelayJoinCode);
@@ -117,9 +112,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         Lobby result = await _lobbyApi.UpdateLobby(CurrentLobby.Id, dataCurr, shouldLock);
 
         if (result != null)
-        {
           CurrentLobby = result;
-        }
       }
       catch (LobbyServiceException e)
       {
@@ -159,7 +152,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     public async void RemovePlayerFromLobbyAsync(string playerId, string currentLobbyId)
     {
       if (_localUser.IsHost)
-      {
         try
         {
           await _lobbyApi.RemovePlayerFromLobby(playerId, currentLobbyId);
@@ -168,11 +160,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         {
           Debug.LogError(e.Reason);
         }
-      }
       else
-      {
         Debug.LogError("Only the host can remove other players from the lobby.");
-      }
     }
 
     public async Task UpdatePlayerDataAsync(Dictionary<string, PlayerDataObject> data)
@@ -186,21 +175,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
           _authentication.PlayerId, data, null, null);
 
         if (result != null)
-        {
           CurrentLobby =
             result; // Store the most up-to-date lobby now since we have it, instead of waiting for the next heartbeat.
-        }
       }
       catch (LobbyServiceException e)
       {
         if (e.Reason == LobbyExceptionReason.RateLimited)
           _queryForLobbiesLimit.PutOnCooldown();
         else if (e.Reason != LobbyExceptionReason.LobbyNotFound &&
-                 !_localUser.
-                   IsHost) // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
-        {
+                 !_localUser.IsHost) // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
           Debug.LogError(e.Reason);
-        }
       }
     }
 
@@ -218,10 +202,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         if (!_localUser.IsHost)
         {
           foreach (KeyValuePair<string, UserProfile> lobbyUser in _lobbyInfo.LobbyUsers)
-          {
             if (lobbyUser.Value.IsHost)
               return;
-          }
 
           Debug.LogWarning("Host left the lobby, disconnecting...");
           await EndTracking();
@@ -282,7 +264,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     private async Task DeleteLobbyAsync(string lobbyId)
     {
       if (_localUser.IsHost)
-      {
         try
         {
           await _lobbyApi.DeleteLobby(lobbyId);
@@ -291,7 +272,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         {
           Debug.LogError(e.Reason);
         }
-      }
     }
 
     public async Task<List<Lobby>> RetrieveAndPublishLobbyListAsync()

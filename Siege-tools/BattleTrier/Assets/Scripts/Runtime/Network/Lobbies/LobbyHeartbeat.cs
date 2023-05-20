@@ -5,13 +5,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
 {
   public class LobbyHeartbeat
   {
-    private readonly IUpdateRunner _updateRunner;
+    private readonly LobbyServiceFacade _lobbyService;
     private readonly LobbyInfo _localLobby;
     private readonly UserProfile _localUser;
-    private readonly LobbyServiceFacade _lobbyService;
+    private readonly IUpdateRunner _updateRunner;
+    private int _awaitingQueryCount;
 
-    bool _shouldPushData;
-    int _awaitingQueryCount;
+    private bool _shouldPushData;
 
     public LobbyHeartbeat(IUpdateRunner updateRunner, LobbyInfo localLobby, UserProfile userProfile,
       LobbyServiceFacade lobbyService)
@@ -21,12 +21,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       _localUser = userProfile;
       _lobbyService = lobbyService;
     }
-    
+
     public void BeginTracking()
     {
       _updateRunner.Subscribe(OnUpdate, 1.5f);
       _localLobby.OnLobbyChanged += OnLocalLobbyChanged;
-      _shouldPushData = true; // Ensure the initial presence of a new player is pushed to the lobby; otherwise, when a non-host joins, the LocalLobby never receives their data until they push something new.
+      _shouldPushData =
+        true; // Ensure the initial presence of a new player is pushed to the lobby; otherwise, when a non-host joins, the LocalLobby never receives their data until they push something new.
     }
 
     public void EndTracking()

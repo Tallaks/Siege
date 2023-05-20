@@ -9,10 +9,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class SelectedConfigInfo : MonoBehaviour
   {
-    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _nameLabel;
-    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _hpAmountLabel;
     [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _apAmountLabel;
-    
+    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _hpAmountLabel;
+    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _nameLabel;
+
     private IStaticDataProvider _dataProvider;
 
     [Inject]

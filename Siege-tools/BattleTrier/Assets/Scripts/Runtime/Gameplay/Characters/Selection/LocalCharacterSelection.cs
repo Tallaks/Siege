@@ -5,10 +5,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection
 {
   public class LocalCharacterSelection : ICharacterSelection
   {
-    public IDictionary<int, int> Characters => _characterGroup;
+    private readonly Dictionary<int, int> _characterGroup = new();
 
     private readonly HashSet<int> _selectedConfigs = new();
-    private readonly Dictionary<int, int> _characterGroup = new();
+    public IDictionary<int, int> Characters => _characterGroup;
 
     public bool PlayerHasCharactersOfConfig(int configId) =>
       _selectedConfigs.Contains(configId);

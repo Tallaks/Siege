@@ -12,17 +12,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterSelectionVariant : MonoBehaviour, IPointerClickHandler
   {
-    [SerializeField, Required, ChildGameObjectsOnly] private Image _icon;
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _deselectAllButton;
     [SerializeField, Required, ChildGameObjectsOnly] private Button _addButton;
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _subButton;
     [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _amountText;
+    [SerializeField, Required, ChildGameObjectsOnly] private Button _deselectAllButton;
+    [SerializeField, Required, ChildGameObjectsOnly] private Image _icon;
+    [SerializeField, Required, ChildGameObjectsOnly] private Button _subButton;
+    private ICharacterSelection _characterSelection;
 
     private IStaticDataProvider _dataProvider;
-    private ICharacterSelection _characterSelection;
-    private GameplayMediator _mediator;
 
     private int _id;
+    private GameplayMediator _mediator;
 
     [Inject]
     private void Construct(IStaticDataProvider dataProvider, ICharacterSelection characterSelection,
@@ -31,18 +31,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       _dataProvider = dataProvider;
       _characterSelection = characterSelection;
       _mediator = mediator;
-    }
-
-    public void Initialize(int configId)
-    {
-      _id = configId;
-      _icon.sprite = _dataProvider.ConfigById(configId).Icon;
-
-      _addButton.onClick.AddListener(OnAddButtonClicked);
-      _subButton.onClick.AddListener(OnSubButtonClicked);
-      _deselectAllButton.onClick.AddListener(OnDeselectButtonClicked);
-
-      HideSelectionUi();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -55,6 +43,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
       _mediator.ShowConfigInfo(_id);
       _mediator.ChangeCharacterList();
+    }
+
+    public void Initialize(int configId)
+    {
+      _id = configId;
+      _icon.sprite = _dataProvider.ConfigById(configId).Icon;
+
+      _addButton.onClick.AddListener(OnAddButtonClicked);
+      _subButton.onClick.AddListener(OnSubButtonClicked);
+      _deselectAllButton.onClick.AddListener(OnDeselectButtonClicked);
+
+      HideSelectionUi();
     }
 
     private void ShowSelectionUi()

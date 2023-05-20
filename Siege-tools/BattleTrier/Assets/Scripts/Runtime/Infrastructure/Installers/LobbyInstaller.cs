@@ -7,7 +7,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
   public class LobbyInstaller : MonoInstaller, IInitializable
   {
     [SerializeField] private LobbyMediator _lobbyMediator;
-    
+
     public void Initialize() => Container.Resolve<LobbyMediator>().Initialize();
 
     public override void InstallBindings()

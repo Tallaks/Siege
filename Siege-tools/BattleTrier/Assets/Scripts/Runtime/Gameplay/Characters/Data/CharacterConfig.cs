@@ -9,23 +9,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
   {
     private const string ConfigsCharactersPath = "Configs/Characters/";
 
-    [ValidateInput(nameof(CheckIds))]
-    public int Id;
-    [PreviewField(100, ObjectFieldAlignment.Left)]
-    [HideLabel]
-    public Sprite Icon;
+    [ValidateInput(nameof(CheckActionPoints), "ОД меньше или равно нулю")] public int ActionPoints;
+
+    [ValidateInput(nameof(CheckHealthPoints), "ХП меньше или равно нулю")] public int HealthPoints;
+
+    [PreviewField(100, ObjectFieldAlignment.Left), HideLabel] public Sprite Icon;
+
+    [ValidateInput(nameof(CheckIds))] public int Id;
 
     public string Name;
-    [ValidateInput(nameof(CheckActionPoints), "ОД меньше или равно нулю")]
-    public int ActionPoints;
-    [ValidateInput(nameof(CheckHealthPoints), "ХП меньше или равно нулю")]
-    public int HealthPoints;
 
-    [Required] [AssetSelector]
-    public Character Prefab;
+    [Required, AssetSelector] public Character Prefab;
 
     private bool CheckActionPoints() =>
       ActionPoints > 0;
+
     private bool CheckHealthPoints() =>
       HealthPoints > 0;
 

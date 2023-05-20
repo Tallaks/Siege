@@ -38,7 +38,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
 
     private void OnFirstPlayerReady(bool previousValue, bool newValue)
     {
-      if (newValue == true && _secondPlayerReady.Value == true)
+      if (newValue && _secondPlayerReady.Value)
         _gameStateMachine.Enter<PlacingCharactersState>();
       else
         _mediator.ChangeCharacterSelectionUiOnFirstPlayerReady();
@@ -46,7 +46,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
 
     private void OnSecondPlayerReady(bool previousValue, bool newValue)
     {
-      if (newValue == true && _firstPlayerReady.Value == true)
+      if (newValue && _firstPlayerReady.Value)
         _gameStateMachine.Enter<PlacingCharactersState>();
       else
         _mediator.ChangeCharacterSelectionUiOnSecondPlayerReady();

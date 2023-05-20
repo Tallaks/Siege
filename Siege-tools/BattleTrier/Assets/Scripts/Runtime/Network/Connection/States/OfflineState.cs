@@ -7,9 +7,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
   public class OfflineState : NonParameterConnectionState
   {
+    private readonly LobbyServiceFacade _lobbyServiceFacade;
     private readonly NetworkManager _networkManager;
     private readonly ISceneLoader _sceneLoader;
-    private readonly LobbyServiceFacade _lobbyServiceFacade;
 
     public OfflineState(NetworkManager networkManager, ISceneLoader sceneLoader, LobbyServiceFacade lobbyServiceFacade)
     {
@@ -22,7 +22,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     {
       _lobbyServiceFacade.EndTracking();
       _networkManager.Shutdown();
-      if(SceneManager.GetActiveScene().name == "RoleSelection")
+      if (SceneManager.GetActiveScene().name == "RoleSelection")
         _sceneLoader.LoadScene("Lobby", false, LoadSceneMode.Single);
     }
 

@@ -9,14 +9,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
 {
   public class LobbyUi : MonoBehaviour
   {
-    [SerializeField] private Button _createLobbyButton;
-    [SerializeField] private Button _quitButton;
-    [SerializeField] private GameObject _lobbyCreationPanel;
-    [SerializeField] private Button _openLobbyCreationPanelButton;
-    [SerializeField] private TMP_InputField _lobbyNameInput;
-    [SerializeField] private TMP_Text _errorSign;
     [SerializeField] private GameObject _blockScreen;
-
+    [SerializeField] private Button _createLobbyButton;
+    [SerializeField] private TMP_Text _errorSign;
+    [SerializeField] private GameObject _lobbyCreationPanel;
+    [SerializeField] private TMP_InputField _lobbyNameInput;
+    [SerializeField] private Button _openLobbyCreationPanelButton;
+    [SerializeField] private Button _quitButton;
     private IApplicationService _applicationService;
     private LobbyMediator _mediator;
 
@@ -49,10 +48,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
     private void OnQuitButtonClicked() =>
       _applicationService.QuitApplication();
 
-    public void Block() => 
+    public void Block() =>
       _blockScreen.SetActive(true);
 
-    public void Unblock() => 
+    public void Unblock() =>
       _blockScreen.SetActive(false);
 
     private IEnumerator ShowErrorSign()

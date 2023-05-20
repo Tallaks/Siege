@@ -17,9 +17,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication
         await UnityServices.InitializeAsync();
 
         if (!AuthenticationService.Instance.IsSignedIn)
-        {
           await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        }
       }
       catch (Exception e)
       {

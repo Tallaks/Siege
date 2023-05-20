@@ -1,24 +1,26 @@
 using System.Collections;
+using System.Threading.Tasks;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
   public class ClientReconnectingState : ParameterConnectionState<string>, IOnlineState, IClientDisconnect
   {
-    private readonly NetworkManager _networkManager;
+    private readonly IConnectionService _connectionService;
     private readonly IConnectionStateMachine _connectionStateMachine;
     private readonly ICoroutineRunner _coroutineRunner;
-    private readonly IConnectionService _connectionService;
+    private readonly LobbyInfo _lobbyInfo;
+    private readonly LobbyServiceFacade _lobbyService;
+    private readonly NetworkManager _networkManager;
 
     private int _attempts;
     private string _lobbyCode;
     private Coroutine _reconnectCoroutine;
-    private LobbyServiceFacade _lobbyService;
-    private LobbyInfo _lobbyInfo;
 
     private string _userName;
 
@@ -36,14 +38,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _coroutineRunner = coroutineRunner;
       _connectionService = connectionService;
       _networkManager = networkManager;
-    }
-
-    public override void Enter(string userName)
-    {
-      _attempts = 0;
-      _lobbyCode = _lobbyService.CurrentLobby != null ? _lobbyService.CurrentLobby.LobbyCode : "";
-      _reconnectCoroutine = _coroutineRunner.StartCoroutine(ReconnectCoroutine());
-      _userName = userName;
     }
 
     public void ReactToClientDisconnect(ulong clientId)
@@ -94,6 +88,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     public void OnUserRequestedShutdown() =>
       _connectionStateMachine.Enter<OfflineState>();
 
+    public override void Enter(string userName)
+    {
+      _attempts = 0;
+      _lobbyCode = _lobbyService.CurrentLobby != null ? _lobbyService.CurrentLobby.LobbyCode : "";
+      _reconnectCoroutine = _coroutineRunner.StartCoroutine(ReconnectCoroutine());
+      _userName = userName;
+    }
+
     public override void Exit()
     {
       if (_reconnectCoroutine != null)
@@ -127,14 +129,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
         // then have some time to attempt to reconnect (defined by the "Disconnect removal time" parameter on
         // the dashboard), after which they will be removed from the lobby completely.
         // See https://docs.unity.com/lobby/reconnect-to-lobby.html
-        var reconnectingToLobby = _lobbyService.ReconnectToLobbyAsync(_lobbyInfo?.Id);
+        Task<Lobby> reconnectingToLobby = _lobbyService.ReconnectToLobbyAsync(_lobbyInfo?.Id);
         yield return new WaitUntil(() => reconnectingToLobby.IsCompleted);
 
         // If succeeded, attempt to connect to Relay
         if (!reconnectingToLobby.IsFaulted && reconnectingToLobby.Result != null)
         {
           // If this fails, the OnClientDisconnect callback will be invoked by Netcode
-          var connectingToRelay = _connectionService.ConnectClientAsync(_userName);
+          Task connectingToRelay = _connectionService.ConnectClientAsync(_userName);
           yield return new WaitUntil(() => connectingToRelay.IsCompleted);
         }
         else
@@ -148,7 +150,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       else // If not using Lobby, simply try to reconnect to the server directly
       {
         // If this fails, the OnClientDisconnect callback will be invoked by Netcode
-        var connectingClient = _connectionService.ConnectClientAsync(_userName);
+        Task connectingClient = _connectionService.ConnectClientAsync(_userName);
         yield return new WaitUntil(() => connectingClient.IsCompleted);
       }
     }

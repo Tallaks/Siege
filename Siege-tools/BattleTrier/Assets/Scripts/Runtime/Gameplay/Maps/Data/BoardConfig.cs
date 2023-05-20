@@ -5,20 +5,17 @@ using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
 {
-  [CreateAssetMenu(menuName = "Kulinaria/Board")]
-  [Serializable]
+  [CreateAssetMenu(menuName = "Kulinaria/Board"), Serializable]
   public class BoardConfig : SerializedScriptableObject
   {
+    public Sprite Icon;
+
+    public string Name;
     private int _cols;
     private int _rows;
 
-    [Button]
-    public void SetMap(int cols, int rows)
-    {
-      Cols = cols;
-      Rows = rows;
-      OnValidate();
-    }
+    [Space, TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = "DrawColoredEnumElement")]
+    public TileType[,] MapTiles;
 
     public int Cols
     {
@@ -52,9 +49,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
       }
     }
 
-    public string Name;
-    public Sprite Icon;
-
     public BoardConfig() =>
       MapTiles = new TileType[1, 1];
 
@@ -71,14 +65,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
       MapTiles = new TileType[Cols, Rows];
     }
 
-    [Space] [TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = "DrawColoredEnumElement")]
-    public TileType[,] MapTiles;
+    [Button]
+    public void SetMap(int cols, int rows)
+    {
+      Cols = cols;
+      Rows = rows;
+      OnValidate();
+    }
 
     [Button]
     public void SetAllTilesDefault()
     {
-      for (int i = 0; i < MapTiles.GetLength(0); i++)
-      for (int j = 0; j < MapTiles.GetLength(1); j++)
+      for (var i = 0; i < MapTiles.GetLength(0); i++)
+      for (var j = 0; j < MapTiles.GetLength(1); j++)
         MapTiles[i, j] = TileType.Default;
     }
 

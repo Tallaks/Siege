@@ -6,8 +6,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
   public class ClientConnectingState : ParameterConnectionState<string>, IOnlineState, IClientDisconnect
   {
-    private readonly IConnectionStateMachine _connectionStateMachine;
     private readonly IConnectionService _connectionService;
+    private readonly IConnectionStateMachine _connectionStateMachine;
     private readonly NetworkManager _networkManager;
 
     public ClientConnectingState(
@@ -20,8 +20,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _connectionService = connectionService;
     }
 
-    public override void Enter(string displayName) =>
-      _connectionService.ConnectClientAsync(displayName);
+    public void ReactToClientDisconnect(ulong clientId)
+    {
+      string disconnectReason = _networkManager.DisconnectReason;
+      if (string.IsNullOrEmpty(disconnectReason))
+      {
+        Debug.LogError($"{ConnectStatus.StartClientFailed}");
+      }
+      else
+      {
+        var connectStatus = JsonUtility.FromJson<ConnectStatus>(disconnectReason);
+        Debug.LogError(connectStatus);
+      }
+
+      _connectionStateMachine.Enter<OfflineState>();
+    }
 
     public void OnTransportFailure() =>
       _connectionStateMachine.Enter<OfflineState>();
@@ -29,18 +42,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     public void OnUserRequestedShutdown() =>
       _connectionStateMachine.Enter<OfflineState>();
 
-    public void ReactToClientDisconnect(ulong clientId)
-    {
-      var disconnectReason = _networkManager.DisconnectReason;
-      if (string.IsNullOrEmpty(disconnectReason))
-        Debug.LogError($"{ConnectStatus.StartClientFailed}");
-      else
-      {
-        var connectStatus = JsonUtility.FromJson<ConnectStatus>(disconnectReason);
-        Debug.LogError(connectStatus);
-      }
-      _connectionStateMachine.Enter<OfflineState>();
-    }
+    public override void Enter(string displayName) =>
+      _connectionService.ConnectClientAsync(displayName);
 
     public override void Exit()
     {

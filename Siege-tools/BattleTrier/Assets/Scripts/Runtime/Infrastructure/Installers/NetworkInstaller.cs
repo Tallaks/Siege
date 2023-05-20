@@ -13,8 +13,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
   public class NetworkInstaller : MonoInstaller, IInitializable, IDisposable
   {
-    private NetworkManager _networkManager;
     private IConnectionStateMachine _connectionStateMachine;
+    private NetworkManager _networkManager;
+
+    public void Dispose()
+    {
+      _networkManager.OnServerStarted -= OnServerStarted;
+      _networkManager.OnClientConnectedCallback -= OnClientConnectedCallback;
+      _networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
+      _networkManager.ConnectionApprovalCallback -= ApprovalCheck;
+      _networkManager.OnTransportFailure -= OnTransportFailure;
+    }
 
     public void Initialize()
     {
@@ -49,15 +58,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind<Session<SessionPlayerData>>().FromNew().AsSingle();
     }
 
-    public void Dispose()
-    {
-      _networkManager.OnServerStarted -= OnServerStarted;
-      _networkManager.OnClientConnectedCallback -= OnClientConnectedCallback;
-      _networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
-      _networkManager.ConnectionApprovalCallback -= ApprovalCheck;
-      _networkManager.OnTransportFailure -= OnTransportFailure;
-    }
-
     private void OnTransportFailure() =>
       _connectionStateMachine.Enter<OfflineState>();
 
@@ -73,7 +73,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 
     private void OnClientConnectedCallback(ulong clientId)
     {
-      if(_connectionStateMachine.CurrentState is StartingHostState)
+      if (_connectionStateMachine.CurrentState is StartingHostState)
         return;
       _connectionStateMachine.Enter<ClientConnectedState, ulong, ConnectionState>(clientId,
         _connectionStateMachine.CurrentState);

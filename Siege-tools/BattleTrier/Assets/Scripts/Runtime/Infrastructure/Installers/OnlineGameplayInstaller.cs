@@ -10,33 +10,22 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
   public class OnlineGameplayInstaller : MonoInstaller
   {
-    [SerializeField, Required] private MapSelectionNetwork _mapSelectionNetwork;
-    [SerializeField, Required] private CharacterSelectionNetwork _characterSelectionNetwork;
     [SerializeField, Required] private CharacterRegistryNetwork _characterRegistryNetwork;
+    [SerializeField, Required] private CharacterSelectionNetwork _characterSelectionNetwork;
+    [SerializeField, Required] private MapSelectionNetwork _mapSelectionNetwork;
 
     [Inject] private NetworkManager _networkManager;
 
     public override void InstallBindings()
     {
-      Container.
-        Bind<MapSelectionNetwork>().
-        FromInstance(_mapSelectionNetwork).
-        AsSingle();
+      Container.Bind<MapSelectionNetwork>().FromInstance(_mapSelectionNetwork).AsSingle();
 
-      Container.
-        Bind<CharacterSelectionNetwork>().
-        FromInstance(_characterSelectionNetwork).
-        AsSingle();
+      Container.Bind<CharacterSelectionNetwork>().FromInstance(_characterSelectionNetwork).AsSingle();
 
-      Container.
-        Bind<CharacterRegistryNetwork>().
-        FromInstance(_characterRegistryNetwork).
-        AsSingle();
+      Container.Bind<CharacterRegistryNetwork>().FromInstance(_characterRegistryNetwork).AsSingle();
 
-      Container.
-        Bind<RoleBase>().
-        FromInstance(_networkManager.LocalClient.PlayerObject.GetComponent<RoleBase>()).
-        AsSingle();
+      Container.Bind<RoleBase>().FromInstance(_networkManager.LocalClient.PlayerObject.GetComponent<RoleBase>())
+        .AsSingle();
     }
   }
 }

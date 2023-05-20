@@ -13,11 +13,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     [SerializeField] private MainMenuMediator _mainMenuMediator;
 
     private AuthenticationServiceFacade _authenticationService;
-    private UserProfile _localUser;
     private LobbyInfo _lobbyInfo;
+    private UserProfile _localUser;
 
     [Inject]
-    private void Construct(AuthenticationServiceFacade authenticationService, UserProfile localUser, LobbyInfo lobbyInfo)
+    private void Construct(AuthenticationServiceFacade authenticationService, UserProfile localUser,
+      LobbyInfo lobbyInfo)
     {
       _authenticationService = authenticationService;
       _localUser = localUser;

@@ -12,7 +12,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
   {
     [SerializeField, Required, AssetSelector] private CharacterListItem _characterListItemPrefab;
     [SerializeField, Required, SceneObjectsOnly] private Transform _listContainer;
-
     private readonly List<CharacterListItem> _characterList = new();
 
     private ICharacterSelection _characterSelection;
@@ -46,7 +45,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
         if (!_characterList.Select(k => k.Config.Id).Contains(characterGroup.Key))
         {
-          var listItem = _container.InstantiatePrefabForComponent<CharacterListItem>(_characterListItemPrefab, _listContainer);
+          var listItem =
+            _container.InstantiatePrefabForComponent<CharacterListItem>(_characterListItemPrefab, _listContainer);
           listItem.Initialize(characterGroup.Key);
           _characterList.Add(listItem);
         }

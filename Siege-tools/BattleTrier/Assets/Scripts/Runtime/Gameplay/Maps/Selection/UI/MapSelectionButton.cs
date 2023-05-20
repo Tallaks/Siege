@@ -9,12 +9,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
 {
   public class MapSelectionButton : MonoBehaviour
   {
-    [SerializeField] private Image _icon;
     [SerializeField] private Image _background;
     [SerializeField] private Button _button;
+    [SerializeField] private Image _icon;
+    private MapSelectionNetwork _mapSelectionNetwork;
 
     private GameplayMediator _mediator;
-    private MapSelectionNetwork _mapSelectionNetwork;
 
     [Inject]
     private void Construct(GameplayMediator mediator, MapSelectionNetwork mapSelectionNetwork)
@@ -29,7 +29,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
       _button.onClick.AddListener(() => OnMapSelected(config));
     }
 
-    public void Deselect() => 
+    public void Deselect() =>
       _background.color = new Color(0.4745098f, 0.8377303f, 1, 1);
 
     public void Select() =>

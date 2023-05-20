@@ -8,15 +8,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
 {
   public class LobbyItem : MonoBehaviour
   {
-    [SerializeField] private TMP_Text _name;
     [SerializeField] private Button _joinButton;
     [SerializeField] private LobbyInfo _lobby;
+    [SerializeField] private TMP_Text _name;
 
     private LobbyMediator _mediator;
 
     [Inject]
-    private void Construct(LobbyMediator mediator) => 
+    private void Construct(LobbyMediator mediator) =>
       _mediator = mediator;
+
+    private void OnDestroy() =>
+      _joinButton.onClick.RemoveAllListeners();
 
     public void Initialize(LobbyInfo lobby)
     {
@@ -24,8 +27,5 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       _name.text = lobby.Name;
       _joinButton.onClick.AddListener(() => _mediator.JoinLobbyRequest(_lobby));
     }
-
-    private void OnDestroy() => 
-      _joinButton.onClick.RemoveAllListeners();
   }
 }

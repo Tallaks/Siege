@@ -13,18 +13,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
   public class ConnectionStateMachine : IConnectionStateMachine
   {
-    private Dictionary<Type, ConnectionState> _connections;
-
-    private NetworkManager _networkManager;
+    private readonly ICoroutineRunner _coroutineRunner;
     private readonly LobbyInfo _lobbyInfo;
     private readonly LobbyServiceFacade _lobbyService;
-    private ICoroutineRunner _coroutineRunner;
-    [Inject] private IConnectionService _connectionService;
-    private Session<SessionPlayerData> _session;
-    private ISceneLoader _sceneLoader;
-    private UserProfile _localUser;
+    private readonly UserProfile _localUser;
 
-    public ConnectionState CurrentState { get; private set; }
+    private readonly NetworkManager _networkManager;
+    private readonly ISceneLoader _sceneLoader;
+    private readonly Session<SessionPlayerData> _session;
+    private Dictionary<Type, ConnectionState> _connections;
+    [Inject] private IConnectionService _connectionService;
 
     public ConnectionStateMachine(
       ICoroutineRunner coroutineRunner,
@@ -44,16 +42,20 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _lobbyService = lobbyService;
     }
 
+    public ConnectionState CurrentState { get; private set; }
+
     public void Initialize()
     {
-      _connections = new()
+      _connections = new Dictionary<Type, ConnectionState>
       {
         [typeof(OfflineState)] = new OfflineState(_networkManager, _sceneLoader, _lobbyService),
-        [typeof(ClientReconnectingState)] = new ClientReconnectingState(this, _coroutineRunner, _connectionService, _networkManager, _lobbyService, _lobbyInfo),
+        [typeof(ClientReconnectingState)] = new ClientReconnectingState(this, _coroutineRunner, _connectionService,
+          _networkManager, _lobbyService, _lobbyInfo),
         [typeof(ClientConnectingState)] = new ClientConnectingState(_networkManager, this, _connectionService),
         [typeof(ClientConnectedState)] = new ClientConnectedState(this, _networkManager, _localUser),
         [typeof(HostingState)] = new HostingState(this, _sceneLoader, _networkManager, _session, _lobbyService),
-        [typeof(StartingHostState)] = new StartingHostState(this, _connectionService, _networkManager, _session, _lobbyInfo)
+        [typeof(StartingHostState)] =
+          new StartingHostState(this, _connectionService, _networkManager, _session, _lobbyInfo)
       };
     }
 

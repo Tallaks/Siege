@@ -11,10 +11,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
   public class HostingState : ParameterConnectionState<bool>, IOnlineState, IApprovalCheck, IClientDisconnect
   {
     private readonly IConnectionStateMachine _connectionStateMachine;
-    private readonly NetworkManager _networkManager;
     private readonly LobbyServiceFacade _lobbyService;
-    private readonly Session<SessionPlayerData> _session;
+    private readonly NetworkManager _networkManager;
     private readonly ISceneLoader _sceneLoader;
+    private readonly Session<SessionPlayerData> _session;
 
     public HostingState(IConnectionStateMachine connectionStateMachine,
       ISceneLoader sceneLoader,
@@ -27,16 +27,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _networkManager = networkManager;
       _session = session;
       _lobbyService = lobbyService;
-    }
-
-    public override void Enter(bool loadScene)
-    {
-      if (loadScene)
-      {
-        _sceneLoader.LoadScene("RoleSelection", true, LoadSceneMode.Single);
-        if (_lobbyService.CurrentLobby != null)
-          _lobbyService.StartTracking();
-      }
     }
 
 
@@ -55,9 +45,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 
       string payload = System.Text.Encoding.UTF8.GetString(connectionData);
       var connectionPayload =
-        JsonUtility.
-          FromJson<ConnectionPayload>(
-            payload); // https://docs.unity3d.com/2020.2/Documentation/Manual/JSONSerialization.html
+        JsonUtility.FromJson<ConnectionPayload>(
+          payload); // https://docs.unity3d.com/2020.2/Documentation/Manual/JSONSerialization.html
       ConnectStatus gameReturnStatus = GetConnectStatus(connectionPayload);
 
       if (gameReturnStatus == ConnectStatus.Success)
@@ -79,25 +68,27 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
         _lobbyService.RemovePlayerFromLobbyAsync(connectionPayload.PlayerId, _lobbyService.CurrentLobby.Id);
     }
 
-    public void OnTransportFailure() =>
-      _connectionStateMachine.Enter<OfflineState>();
-
     public void ReactToClientDisconnect(ulong clientId)
     {
       if (clientId == _networkManager.LocalClientId)
+      {
         _connectionStateMachine.Enter<OfflineState>();
+      }
       else
       {
         string playerId = _session.GetPlayerId(clientId);
         if (playerId != null)
         {
-          var sessionData = _session.GetPlayerData(playerId);
+          SessionPlayerData? sessionData = _session.GetPlayerData(playerId);
           if (sessionData.HasValue)
             Debug.Log($"Player {sessionData.Value.PlayerName} disconnected");
           _session.DisconnectClient(clientId);
         }
       }
     }
+
+    public void OnTransportFailure() =>
+      _connectionStateMachine.Enter<OfflineState>();
 
     public void OnUserRequestedShutdown()
     {
@@ -112,6 +103,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _connectionStateMachine.Enter<OfflineState>();
     }
 
+    public override void Enter(bool loadScene)
+    {
+      if (loadScene)
+      {
+        _sceneLoader.LoadScene("RoleSelection", true, LoadSceneMode.Single);
+        if (_lobbyService.CurrentLobby != null)
+          _lobbyService.StartTracking();
+      }
+    }
+
     public override void Exit()
     {
     }
@@ -119,9 +120,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     private ConnectStatus GetConnectStatus(ConnectionPayload connectionPayload)
     {
       if (_networkManager.ConnectedClientsIds.Count >= 8)
-      {
         return ConnectStatus.ServerFull;
-      }
 
       return _session.IsDuplicateConnection(connectionPayload.PlayerId)
         ? ConnectStatus.LoggedInAgain

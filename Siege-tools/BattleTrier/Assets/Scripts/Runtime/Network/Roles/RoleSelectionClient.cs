@@ -10,13 +10,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
   {
     [SerializeField] private NetCodeHook _hook;
 
-    private NetworkManager _networkManager;
-    private RoleSelectionService _roleSelectionService;
+    private readonly int _lastRoleSelected = -1;
+    private bool _hasLocalPlayerLockedIn = false;
     private RoleMediator _mediator;
 
-    private int _lastRoleSelected = -1;
-
-    private bool _hasLocalPlayerLockedIn = false;
+    private NetworkManager _networkManager;
+    private RoleSelectionService _roleSelectionService;
 
     [Inject]
     private void Construct(
@@ -73,10 +72,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       UpdatePlayerCount();
 
       for (var i = 0; i < _roleSelectionService.PlayerRoles.Count; i++)
-      {
         Debug.Log(_roleSelectionService.PlayerRoles[i].ClientId + " " +
                   _roleSelectionService.PlayerRoles[i].State);
-      }
     }
 
     private void OnLobbyClosedChanged(bool wasLobbyClosed, bool isLobbyClosed)

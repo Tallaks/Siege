@@ -11,10 +11,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class PlacingCharactersState : ParameterlessState
   {
-    private readonly ICoroutineRunner _coroutineRunner;
-    private readonly ICharacterSelection _characterSelection;
     private readonly ICharacterFactory _characterFactory;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
+    private readonly ICharacterSelection _characterSelection;
+    private readonly ICoroutineRunner _coroutineRunner;
     private readonly RoleBase _roleBase;
 
     public PlacingCharactersState(

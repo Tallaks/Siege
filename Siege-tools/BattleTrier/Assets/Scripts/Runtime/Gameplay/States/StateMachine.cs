@@ -12,16 +12,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class StateMachine
   {
-    private readonly ICoroutineRunner _coroutineRunner;
-    private readonly RoleBase _role;
-    private readonly ICharacterSelection _characterSelection;
     private readonly ICharacterFactory _characterFactory;
-    private readonly GameplayMediator _mediator;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
+    private readonly ICharacterSelection _characterSelection;
+    private readonly ICoroutineRunner _coroutineRunner;
+    private readonly GameplayMediator _mediator;
+    private readonly RoleBase _role;
 
     private Dictionary<Type, IExitState> _states;
-
-    public IExitState CurrentState { get; private set; }
 
     public StateMachine(
       ICoroutineRunner coroutineRunner,
@@ -39,13 +37,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       _characterRegistryNetwork = characterRegistryNetwork;
     }
 
+    public IExitState CurrentState { get; private set; }
+
     public void Initialize()
     {
       _states = new Dictionary<Type, IExitState>
       {
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
         [typeof(CharacterSelectionState)] = new CharacterSelectionState(_role, _mediator),
-        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_coroutineRunner, _characterSelection, _characterFactory, _characterRegistryNetwork, _role)
+        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_coroutineRunner, _characterSelection,
+          _characterFactory, _characterRegistryNetwork, _role)
       };
     }
 

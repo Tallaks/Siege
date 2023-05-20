@@ -9,11 +9,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
 {
   public class CharacterRegistryNetwork : NetworkBehaviour
   {
-    public NetworkList<CharacterNetworkData> FirstPlayerCharacters;
-    public NetworkList<CharacterNetworkData> SecondPlayerCharacters;
-
     private IStaticDataProvider _dataProvider;
     private RoleBase _playerRole;
+    public NetworkList<CharacterNetworkData> FirstPlayerCharacters;
+    public NetworkList<CharacterNetworkData> SecondPlayerCharacters;
 
     [Inject]
     private void Construct(IStaticDataProvider dataProvider) =>
@@ -21,8 +20,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
 
     private void Awake()
     {
-      FirstPlayerCharacters = new();
-      SecondPlayerCharacters = new();
+      FirstPlayerCharacters = new NetworkList<CharacterNetworkData>();
+      SecondPlayerCharacters = new NetworkList<CharacterNetworkData>();
     }
 
     public override void OnDestroy()

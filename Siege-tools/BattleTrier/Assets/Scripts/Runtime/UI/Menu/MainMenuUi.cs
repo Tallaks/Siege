@@ -10,16 +10,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.Menu
 {
   public class MainMenuUi : MonoBehaviour
   {
-    [SerializeField] private Transform _parent;
     [SerializeField] private Button _createButton;
-    [SerializeField] private Button _quitButton;
+    [SerializeField] private TMP_Text _errorSignText;
+    [SerializeField] private Transform _parent;
 
     [SerializeField] private TMP_InputField _playerProfileName;
-    [SerializeField] private TMP_Text _errorSignText;
-
+    [SerializeField] private Button _quitButton;
     private IApplicationService _applicationService;
-    private MainMenuMediator _menuMediator;
     private UserProfile _localUser;
+    private MainMenuMediator _menuMediator;
 
     [Inject]
     private void Construct(IApplicationService applicationService, MainMenuMediator menuMediator, UserProfile localUser)

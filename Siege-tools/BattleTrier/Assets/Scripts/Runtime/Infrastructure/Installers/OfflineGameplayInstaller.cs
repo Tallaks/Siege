@@ -20,33 +20,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 
     public override void InstallBindings()
     {
-      Container.
-        Bind<IInitializable>().
-        To<OfflineGameplayInstaller>().
-        FromInstance(this).
-        AsSingle();
+      Container.Bind<IInitializable>().To<OfflineGameplayInstaller>().FromInstance(this).AsSingle();
 
-      Container.
-        Bind<ICharacterSelection>().
-        To<LocalCharacterSelection>().
-        FromNew().
-        AsSingle();
+      Container.Bind<ICharacterSelection>().To<LocalCharacterSelection>().FromNew().AsSingle();
 
-      Container.
-        Bind<GameplayMediator>().
-        FromInstance(_mediator).
-        AsSingle();
+      Container.Bind<GameplayMediator>().FromInstance(_mediator).AsSingle();
 
-      Container.
-        Bind<StateMachine>().
-        FromNew().
-        AsSingle();
+      Container.Bind<StateMachine>().FromNew().AsSingle();
 
-      Container.
-        Bind<ICharacterFactory>().
-        To<CharacterFactory>().
-        FromNew().
-        AsSingle();
+      Container.Bind<ICharacterFactory>().To<CharacterFactory>().FromNew().AsSingle();
     }
   }
 }

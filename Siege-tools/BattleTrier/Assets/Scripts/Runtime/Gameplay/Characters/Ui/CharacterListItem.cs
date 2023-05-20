@@ -11,14 +11,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
   public class CharacterListItem : MonoBehaviour
   {
     [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _amountText;
-    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _nameText;
-    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _hpText;
     [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _apText;
+    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _hpText;
     [SerializeField, Required, ChildGameObjectsOnly] private Image _iconImage;
-
-    public CharacterConfig Config { get; private set; }
+    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _nameText;
 
     private IStaticDataProvider _dataProvider;
+
+    public CharacterConfig Config { get; private set; }
 
     [Inject]
     private void Construct(IStaticDataProvider dataProvider) =>

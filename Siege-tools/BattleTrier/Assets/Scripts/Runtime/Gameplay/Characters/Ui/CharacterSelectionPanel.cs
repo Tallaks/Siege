@@ -10,16 +10,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterSelectionPanel : MonoBehaviour
   {
-    [SerializeField, Required, AssetSelector] private CharacterSelectionVariant _characterSelectionVariantPrefab;
-    [SerializeField, Required, ChildGameObjectsOnly] private SelectedConfigInfo _selectedConfigInfo;
-    [SerializeField, Required, ChildGameObjectsOnly] private GridLayoutGroup _gridLayout;
     [SerializeField, Required, ChildGameObjectsOnly] private CharacterList _characterList;
+    [SerializeField, Required, AssetSelector] private CharacterSelectionVariant _characterSelectionVariantPrefab;
+    [SerializeField, Required, ChildGameObjectsOnly] private GridLayoutGroup _gridLayout;
+    [SerializeField, Required, ChildGameObjectsOnly] private SelectedConfigInfo _selectedConfigInfo;
     [SerializeField, Required, ChildGameObjectsOnly] private Button _submitButton;
+    private CharacterSelectionNetwork _characterSelectionNetwork;
 
     private DiContainer _container;
-    private IStaticDataProvider _staticDataProvider;
     private RoleBase _role;
-    private CharacterSelectionNetwork _characterSelectionNetwork;
+    private IStaticDataProvider _staticDataProvider;
 
     [Inject]
     private void Construct(
