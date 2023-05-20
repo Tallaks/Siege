@@ -1,23 +1,36 @@
-using Unity.Netcode;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
 {
+  [RequireComponent(typeof(SpriteRenderer))]
   public class Tile : MonoBehaviour
   {
+    [SerializeField] private Color _selectedColor;
+    [SerializeField] private Color _neighbourColor;
+    private readonly List<Tile> _neighbours = new();
     private MapNetwork _mapNetwork;
-    private Vector2Int _coords;
+    public Vector2Int Coords { get; private set; }
 
     private void OnMouseDown()
     {
-      _mapNetwork.OnTileClickedServerRpc(NetworkManager.Singleton.LocalClient.ClientId, _coords.x, _coords.y);
-      Debug.Log($"Tile with coords {_coords.x}; {_coords.y} was clicked");
+      _mapNetwork.Refresh();
+      ChangeColor(_selectedColor);
+      foreach (Tile neighbour in _neighbours)
+        neighbour.ChangeColor(_neighbourColor);
+      Debug.Log($"Tile with coords {Coords.x}; {Coords.y} was clicked");
     }
 
     public void Initialize(int col, int row, MapNetwork mapNetwork)
     {
       _mapNetwork = mapNetwork;
-      _coords = new Vector2Int(col, row);
+      Coords = new Vector2Int(col, row);
     }
+
+    public void AddNeighbour(Tile otherTile) =>
+      _neighbours.Add(otherTile);
+
+    public void ChangeColor(Color color) =>
+      GetComponent<SpriteRenderer>().color = color;
   }
 }

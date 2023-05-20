@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70431c4d06e4e589815b9d20494e2d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selectedColor: {r: 0.2816975, g: 1, b: 0, a: 1}
+  _neighbourColor: {r: 1, g: 0.9349535, b: 0, a: 1}
 --- !u!212 &686411533685628020
 SpriteRenderer:
   m_ObjectHideFlags: 0
