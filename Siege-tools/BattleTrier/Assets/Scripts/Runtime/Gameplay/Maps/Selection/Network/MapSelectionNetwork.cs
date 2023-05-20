@@ -34,6 +34,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
       Map map = Instantiate(_mapPrefab);
       map.NetworkObject.Spawn();
       map.SpawnTilesClientRpc(_config.name);
+      map.InitMapBoardServerRpc();
     }
 
     public void Select(string configName)
