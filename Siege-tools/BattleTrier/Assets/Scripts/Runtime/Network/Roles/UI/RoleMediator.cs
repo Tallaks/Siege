@@ -15,13 +15,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
     public void ConfigureUIForLobbyMode(RoleUiMode mode) =>
       _roleUi.ConfigureUiForLobbyMode(mode);
 
-    public void UpdatePlayerCount(int count) =>
-      _roleUi.UpdatePlayerCount(count);
-
     public void DestroyButtons() =>
       _roleUi.DestroyButtons();
 
     public void OnRequestedShutdown() =>
       (_connectionStateMachine.CurrentState as IRequestShutdown)?.OnUserRequestedShutdown();
+
+    public void UpdatePlayerCount(int count) =>
+      _roleUi.UpdatePlayerCount(count);
   }
 }

@@ -32,6 +32,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
         };
     }
 
+    public void Refresh()
+    {
+      foreach (Tile tile in _tiles)
+        tile.ChangeColor(Color.white);
+    }
+
     [ClientRpc]
     public void SpawnTilesClientRpc(string configName)
     {
@@ -40,12 +46,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       Debug.Log("Spawn Tiles");
       InstantiateTiles(mapTiles);
       AssignTilesWithNeighbours();
-    }
-
-    public void Refresh()
-    {
-      foreach (Tile tile in _tiles)
-        tile.ChangeColor(Color.white);
     }
 
     private void AssignTilesWithNeighbours()

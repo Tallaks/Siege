@@ -10,15 +10,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly NetworkManager _networkManager;
 
+    private bool IsNetworkSceneManagementEnabled => _networkManager != null &&
+                                                    _networkManager.SceneManager != null &&
+                                                    _networkManager.NetworkConfig.EnableSceneManagement;
+
     public SceneLoader(ICoroutineRunner coroutineRunner, NetworkManager networkManager)
     {
       _coroutineRunner = coroutineRunner;
       _networkManager = networkManager;
     }
-
-    private bool IsNetworkSceneManagementEnabled => _networkManager != null &&
-                                                    _networkManager.SceneManager != null &&
-                                                    _networkManager.NetworkConfig.EnableSceneManagement;
 
     public void LoadScene(string name, bool useNetwork, LoadSceneMode mode = LoadSceneMode.Single)
     {

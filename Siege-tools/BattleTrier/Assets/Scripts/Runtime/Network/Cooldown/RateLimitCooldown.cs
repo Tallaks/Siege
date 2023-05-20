@@ -6,15 +6,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Cooldown
   {
     private float _cooldownFinishedTime;
 
+    public float CooldownTimeLength { get; }
+
+    public bool CanCall => Time.unscaledTime > _cooldownFinishedTime;
+
     public RateLimitCooldown(float cooldownTimeLength)
     {
       CooldownTimeLength = cooldownTimeLength;
       _cooldownFinishedTime = -1f;
     }
-
-    public float CooldownTimeLength { get; }
-
-    public bool CanCall => Time.unscaledTime > _cooldownFinishedTime;
 
     public void PutOnCooldown() =>
       _cooldownFinishedTime = Time.unscaledTime + CooldownTimeLength;

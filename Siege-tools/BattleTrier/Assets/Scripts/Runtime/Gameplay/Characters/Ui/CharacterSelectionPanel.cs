@@ -48,17 +48,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       }
     }
 
-    public void ShowConfigInfo(int configId) =>
-      _selectedConfigInfo.ShowConfig(configId);
-
     public void ChangeCharacterList() =>
       _characterList.ChangeCharacterList();
+
+    public void DisableCharacterSelectSubmitButton() =>
+      _submitButton.interactable = false;
 
     public void EnableCharacterSelectSubmitButton() =>
       _submitButton.interactable = true;
 
-    public void DisableCharacterSelectSubmitButton() =>
-      _submitButton.interactable = false;
+    public void ShowConfigInfo(int configId) =>
+      _selectedConfigInfo.ShowConfig(configId);
 
     private void OnSubmitButton()
     {

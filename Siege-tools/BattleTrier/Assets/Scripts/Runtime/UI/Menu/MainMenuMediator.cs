@@ -8,7 +8,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.Menu
     [SerializeField] private MainMenuUi _mainMenuUi;
 
     public void Initialize() => _mainMenuUi.Initialize();
-    public void HideUntilAuth() => _mainMenuUi.HideMainMenuButtons();
     public void GoToLobby() => SceneManager.LoadSceneAsync("Lobby");
+    public void HideUntilAuth() => _mainMenuUi.HideMainMenuButtons();
   }
 }

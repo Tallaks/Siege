@@ -66,19 +66,19 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
     }
 
     [Button]
-    public void SetMap(int cols, int rows)
-    {
-      Cols = cols;
-      Rows = rows;
-      OnValidate();
-    }
-
-    [Button]
     public void SetAllTilesDefault()
     {
       for (var i = 0; i < MapTiles.GetLength(0); i++)
       for (var j = 0; j < MapTiles.GetLength(1); j++)
         MapTiles[i, j] = TileType.Default;
+    }
+
+    [Button]
+    public void SetMap(int cols, int rows)
+    {
+      Cols = cols;
+      Rows = rows;
+      OnValidate();
     }
 
 #if UNITY_EDITOR

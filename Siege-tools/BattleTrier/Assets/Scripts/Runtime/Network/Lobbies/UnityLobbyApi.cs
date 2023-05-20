@@ -23,22 +23,32 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       return await LobbyService.Instance.CreateLobbyAsync(lobbyName, MaxPlayers, options);
     }
 
-    public async Task<Lobby> UpdateLobby(string currentLobbyId, Dictionary<string, DataObject> data, bool shouldLock)
+    public async Task DeleteLobby(string lobbyId) =>
+      await LobbyService.Instance.DeleteLobbyAsync(lobbyId);
+
+    public async Task<Lobby> GetLobby(string lobbyId) =>
+      await LobbyService.Instance.GetLobbyAsync(lobbyId);
+
+    public async Task<Lobby> JoinLobbyByCode(string requesterUasId, string lobbyCode,
+      Dictionary<string, PlayerDataObject> localUserData)
     {
-      var updateOptions = new UpdateLobbyOptions { Data = data, IsLocked = shouldLock };
-      return await LobbyService.Instance.UpdateLobbyAsync(currentLobbyId, updateOptions);
+      var joinOptions = new JoinLobbyByCodeOptions { Player = new Player(requesterUasId, data: localUserData) };
+      return await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, joinOptions);
     }
 
-    public async Task<Lobby> UpdatePlayer(string currentLobbyId, string playerId,
-      Dictionary<string, PlayerDataObject> data, string allocationId, string connectionInfo)
+    public async Task<Lobby> JoinLobbyById(string requesterUasId, string lobbyId,
+      Dictionary<string, PlayerDataObject> localUserData)
     {
-      var updateOptions = new UpdatePlayerOptions
-      {
-        Data = data,
-        AllocationId = allocationId,
-        ConnectionInfo = connectionInfo
-      };
-      return await LobbyService.Instance.UpdatePlayerAsync(currentLobbyId, playerId, updateOptions);
+      var joinOptions = new JoinLobbyByIdOptions { Player = new Player(requesterUasId, data: localUserData) };
+      return await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinOptions);
+    }
+
+    public async Task<QueryResponse> QueryAllLobbies()
+    {
+      var queryOptions = new QueryLobbiesOptions();
+      queryOptions.Count = 5;
+
+      return await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
     }
 
     public async Task<Lobby> ReconnectToLobby(string lobbyId) =>
@@ -57,35 +67,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
     }
 
-    public async Task<Lobby> GetLobby(string lobbyId) =>
-      await LobbyService.Instance.GetLobbyAsync(lobbyId);
-
-    public async Task DeleteLobby(string lobbyId) =>
-      await LobbyService.Instance.DeleteLobbyAsync(lobbyId);
-
     public async void SendHeartbeatPing(string lobbyId) =>
       await LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
 
-    public async Task<QueryResponse> QueryAllLobbies()
+    public async Task<Lobby> UpdateLobby(string currentLobbyId, Dictionary<string, DataObject> data, bool shouldLock)
     {
-      var queryOptions = new QueryLobbiesOptions();
-      queryOptions.Count = 5;
-
-      return await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
+      var updateOptions = new UpdateLobbyOptions { Data = data, IsLocked = shouldLock };
+      return await LobbyService.Instance.UpdateLobbyAsync(currentLobbyId, updateOptions);
     }
 
-    public async Task<Lobby> JoinLobbyById(string requesterUasId, string lobbyId,
-      Dictionary<string, PlayerDataObject> localUserData)
+    public async Task<Lobby> UpdatePlayer(string currentLobbyId, string playerId,
+      Dictionary<string, PlayerDataObject> data, string allocationId, string connectionInfo)
     {
-      var joinOptions = new JoinLobbyByIdOptions { Player = new Player(requesterUasId, data: localUserData) };
-      return await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, joinOptions);
-    }
-
-    public async Task<Lobby> JoinLobbyByCode(string requesterUasId, string lobbyCode,
-      Dictionary<string, PlayerDataObject> localUserData)
-    {
-      var joinOptions = new JoinLobbyByCodeOptions { Player = new Player(requesterUasId, data: localUserData) };
-      return await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, joinOptions);
+      var updateOptions = new UpdatePlayerOptions
+      {
+        Data = data,
+        AllocationId = allocationId,
+        ConnectionInfo = connectionInfo
+      };
+      return await LobbyService.Instance.UpdatePlayerAsync(currentLobbyId, playerId, updateOptions);
     }
   }
 }

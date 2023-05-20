@@ -38,17 +38,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       _lobbyList.Initialize();
     }
 
-    public async void TryCreateLobby(string lobbyName)
+    public async void JoinLobbyRequest(LobbyInfo lobby)
     {
-      (bool Success, Lobby Lobby) lobbyCreationAttempt = await _lobbyService.TryCreateLobby(lobbyName);
-      if (lobbyCreationAttempt.Success)
-      {
-        _localUser.IsHost = true;
-        _lobbyService.SetRemoteLobby(lobbyCreationAttempt.Lobby);
+      BlockUIWhileLoadingIsInProgress();
 
-        Debug.Log($"Created lobby with ID: {_lobbyInfo.Id} and code {_lobbyInfo.Code}");
-        _connectionStateMachine.Enter<StartingHostState, string>(_localUser.Name);
-      }
+      (bool Success, Lobby Lobby) result = await _lobbyService.TryJoinLobbyAsync(lobby.Id, lobby.Code);
+
+      if (result.Success)
+        OnJoinedLobby(result.Lobby);
+      else
+        UnblockUIAfterLoadingIsComplete();
     }
 
     public async void QueryLobbiesRequest(bool blockUI)
@@ -66,16 +65,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
         UnblockUIAfterLoadingIsComplete();
     }
 
-    public async void JoinLobbyRequest(LobbyInfo lobby)
+    public async void TryCreateLobby(string lobbyName)
     {
-      BlockUIWhileLoadingIsInProgress();
+      (bool Success, Lobby Lobby) lobbyCreationAttempt = await _lobbyService.TryCreateLobby(lobbyName);
+      if (lobbyCreationAttempt.Success)
+      {
+        _localUser.IsHost = true;
+        _lobbyService.SetRemoteLobby(lobbyCreationAttempt.Lobby);
 
-      (bool Success, Lobby Lobby) result = await _lobbyService.TryJoinLobbyAsync(lobby.Id, lobby.Code);
-
-      if (result.Success)
-        OnJoinedLobby(result.Lobby);
-      else
-        UnblockUIAfterLoadingIsComplete();
+        Debug.Log($"Created lobby with ID: {_lobbyInfo.Id} and code {_lobbyInfo.Code}");
+        _connectionStateMachine.Enter<StartingHostState, string>(_localUser.Name);
+      }
     }
 
 

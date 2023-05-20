@@ -21,6 +21,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
     private Dictionary<Type, IExitState> _states;
 
+    public IExitState CurrentState { get; private set; }
+
     public StateMachine(
       ICoroutineRunner coroutineRunner,
       RoleBase role,
@@ -36,8 +38,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       _mediator = mediator;
       _characterRegistryNetwork = characterRegistryNetwork;
     }
-
-    public IExitState CurrentState { get; private set; }
 
     public void Initialize()
     {

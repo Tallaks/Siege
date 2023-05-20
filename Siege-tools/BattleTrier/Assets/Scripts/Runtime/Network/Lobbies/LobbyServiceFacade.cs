@@ -26,6 +26,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
     private bool _isTracking;
     [Inject] private LobbyHeartbeat _lobbyHeartbeat;
 
+    public Lobby CurrentLobby { get; set; }
+
     public LobbyServiceFacade(
       IUpdateRunner updateRunner,
       AuthenticationServiceFacade authentication,
@@ -43,39 +45,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       _joinLobbyLimit = new RateLimitCooldown(3f);
     }
 
-    public Lobby CurrentLobby { get; set; }
-
-    public async Task<(bool Success, Lobby Lobby)> TryCreateLobby(string lobbyName)
-    {
-      try
-      {
-        Lobby lobby = await _lobbyApi.CreateLobby(lobbyName);
-        return (true, lobby);
-      }
-      catch (LobbyServiceException exception)
-      {
-        Debug.LogError(exception.Reason);
-      }
-
-      return (false, null);
-    }
-
-    public void SetRemoteLobby(Lobby lobby)
-    {
-      CurrentLobby = lobby;
-      _lobbyInfo.ApplyRemoteData(lobby);
-    }
-
-    public void StartTracking()
-    {
-      if (!_isTracking)
-      {
-        _isTracking = true;
-        _updateRunner.Subscribe(UpdateLobby, 2f);
-        _lobbyHeartbeat.BeginTracking();
-      }
-    }
-
     public void DoLobbyHeartbeat(float deltaTime)
     {
       _heartbeatTime += deltaTime;
@@ -91,127 +60,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
           if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
             Debug.LogError(e.Reason);
         }
-      }
-    }
-
-    public async Task UpdateLobbyDataAsync(Dictionary<string, DataObject> dataObjects)
-    {
-      Dictionary<string, DataObject> dataCurr = CurrentLobby.Data ?? new Dictionary<string, DataObject>();
-
-      foreach (KeyValuePair<string, DataObject> dataNew in dataObjects)
-        if (dataCurr.ContainsKey(dataNew.Key))
-          dataCurr[dataNew.Key] = dataNew.Value;
-        else
-          dataCurr.Add(dataNew.Key, dataNew.Value);
-
-      //we would want to lock lobbies from appearing in queries if we're in relay mode and the relay isn't fully set up yet
-      bool shouldLock = string.IsNullOrEmpty(_lobbyInfo.RelayJoinCode);
-
-      try
-      {
-        Lobby result = await _lobbyApi.UpdateLobby(CurrentLobby.Id, dataCurr, shouldLock);
-
-        if (result != null)
-          CurrentLobby = result;
-      }
-      catch (LobbyServiceException e)
-      {
-        Debug.LogError(e.Reason);
-      }
-    }
-
-    public async Task UpdatePlayerRelayInfoAsync(string allocationId, string connectionInfo)
-    {
-      try
-      {
-        await _lobbyApi.UpdatePlayer(CurrentLobby.Id, AuthenticationService.Instance.PlayerId,
-          new Dictionary<string, PlayerDataObject>(), allocationId, connectionInfo);
-      }
-      catch (LobbyServiceException e)
-      {
-        Debug.LogError(e.Reason);
-      }
-    }
-
-    public async Task<Lobby> ReconnectToLobbyAsync(string lobbyId)
-    {
-      try
-      {
-        return await _lobbyApi.ReconnectToLobby(lobbyId);
-      }
-      catch (LobbyServiceException e)
-      {
-        // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
-        if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
-          Debug.LogError(e.Reason);
-      }
-
-      return null;
-    }
-
-    public async void RemovePlayerFromLobbyAsync(string playerId, string currentLobbyId)
-    {
-      if (_localUser.IsHost)
-        try
-        {
-          await _lobbyApi.RemovePlayerFromLobby(playerId, currentLobbyId);
-        }
-        catch (LobbyServiceException e)
-        {
-          Debug.LogError(e.Reason);
-        }
-      else
-        Debug.LogError("Only the host can remove other players from the lobby.");
-    }
-
-    public async Task UpdatePlayerDataAsync(Dictionary<string, PlayerDataObject> data)
-    {
-      if (!_queryForLobbiesLimit.CanCall)
-        return;
-
-      try
-      {
-        Lobby result = await _lobbyApi.UpdatePlayer(CurrentLobby.Id,
-          _authentication.PlayerId, data, null, null);
-
-        if (result != null)
-          CurrentLobby =
-            result; // Store the most up-to-date lobby now since we have it, instead of waiting for the next heartbeat.
-      }
-      catch (LobbyServiceException e)
-      {
-        if (e.Reason == LobbyExceptionReason.RateLimited)
-          _queryForLobbiesLimit.PutOnCooldown();
-        else if (e.Reason != LobbyExceptionReason.LobbyNotFound &&
-                 !_localUser.IsHost) // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
-          Debug.LogError(e.Reason);
-      }
-    }
-
-    private async void UpdateLobby()
-    {
-      if (!_queryForLobbiesLimit.CanCall)
-        return;
-
-      try
-      {
-        Lobby lobby = await _lobbyApi.GetLobby(_lobbyInfo.Id);
-        CurrentLobby = lobby;
-        _lobbyInfo.ApplyRemoteData(lobby);
-
-        if (!_localUser.IsHost)
-        {
-          foreach (KeyValuePair<string, UserProfile> lobbyUser in _lobbyInfo.LobbyUsers)
-            if (lobbyUser.Value.IsHost)
-              return;
-
-          Debug.LogWarning("Host left the lobby, disconnecting...");
-          await EndTracking();
-        }
-      }
-      catch (LobbyServiceException e)
-      {
-        Debug.LogError(e.Reason);
       }
     }
 
@@ -246,12 +94,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       return task;
     }
 
-    private async Task LeaveLobbyAsync(string lobbyId)
+    public async Task<Lobby> ReconnectToLobbyAsync(string lobbyId)
     {
-      string uasId = _authentication.PlayerId;
       try
       {
-        await _lobbyApi.RemovePlayerFromLobby(uasId, lobbyId);
+        return await _lobbyApi.ReconnectToLobby(lobbyId);
       }
       catch (LobbyServiceException e)
       {
@@ -259,19 +106,23 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
           Debug.LogError(e.Reason);
       }
+
+      return null;
     }
 
-    private async Task DeleteLobbyAsync(string lobbyId)
+    public async void RemovePlayerFromLobbyAsync(string playerId, string currentLobbyId)
     {
       if (_localUser.IsHost)
         try
         {
-          await _lobbyApi.DeleteLobby(lobbyId);
+          await _lobbyApi.RemovePlayerFromLobby(playerId, currentLobbyId);
         }
         catch (LobbyServiceException e)
         {
           Debug.LogError(e.Reason);
         }
+      else
+        Debug.LogError("Only the host can remove other players from the lobby.");
     }
 
     public async Task<List<Lobby>> RetrieveAndPublishLobbyListAsync()
@@ -296,6 +147,37 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
 
       return null;
+    }
+
+    public void SetRemoteLobby(Lobby lobby)
+    {
+      CurrentLobby = lobby;
+      _lobbyInfo.ApplyRemoteData(lobby);
+    }
+
+    public void StartTracking()
+    {
+      if (!_isTracking)
+      {
+        _isTracking = true;
+        _updateRunner.Subscribe(UpdateLobby, 2f);
+        _lobbyHeartbeat.BeginTracking();
+      }
+    }
+
+    public async Task<(bool Success, Lobby Lobby)> TryCreateLobby(string lobbyName)
+    {
+      try
+      {
+        Lobby lobby = await _lobbyApi.CreateLobby(lobbyName);
+        return (true, lobby);
+      }
+      catch (LobbyServiceException exception)
+      {
+        Debug.LogError(exception.Reason);
+      }
+
+      return (false, null);
     }
 
     public async Task<(bool Success, Lobby Lobby)> TryJoinLobbyAsync(string lobbyId, string lobbyCode)
@@ -331,6 +213,124 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
 
       return (false, null);
+    }
+
+    public async Task UpdateLobbyDataAsync(Dictionary<string, DataObject> dataObjects)
+    {
+      Dictionary<string, DataObject> dataCurr = CurrentLobby.Data ?? new Dictionary<string, DataObject>();
+
+      foreach (KeyValuePair<string, DataObject> dataNew in dataObjects)
+        if (dataCurr.ContainsKey(dataNew.Key))
+          dataCurr[dataNew.Key] = dataNew.Value;
+        else
+          dataCurr.Add(dataNew.Key, dataNew.Value);
+
+      //we would want to lock lobbies from appearing in queries if we're in relay mode and the relay isn't fully set up yet
+      bool shouldLock = string.IsNullOrEmpty(_lobbyInfo.RelayJoinCode);
+
+      try
+      {
+        Lobby result = await _lobbyApi.UpdateLobby(CurrentLobby.Id, dataCurr, shouldLock);
+
+        if (result != null)
+          CurrentLobby = result;
+      }
+      catch (LobbyServiceException e)
+      {
+        Debug.LogError(e.Reason);
+      }
+    }
+
+    public async Task UpdatePlayerDataAsync(Dictionary<string, PlayerDataObject> data)
+    {
+      if (!_queryForLobbiesLimit.CanCall)
+        return;
+
+      try
+      {
+        Lobby result = await _lobbyApi.UpdatePlayer(CurrentLobby.Id,
+          _authentication.PlayerId, data, null, null);
+
+        if (result != null)
+          CurrentLobby =
+            result; // Store the most up-to-date lobby now since we have it, instead of waiting for the next heartbeat.
+      }
+      catch (LobbyServiceException e)
+      {
+        if (e.Reason == LobbyExceptionReason.RateLimited)
+          _queryForLobbiesLimit.PutOnCooldown();
+        else if (e.Reason != LobbyExceptionReason.LobbyNotFound &&
+                 !_localUser.IsHost) // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
+          Debug.LogError(e.Reason);
+      }
+    }
+
+    public async Task UpdatePlayerRelayInfoAsync(string allocationId, string connectionInfo)
+    {
+      try
+      {
+        await _lobbyApi.UpdatePlayer(CurrentLobby.Id, AuthenticationService.Instance.PlayerId,
+          new Dictionary<string, PlayerDataObject>(), allocationId, connectionInfo);
+      }
+      catch (LobbyServiceException e)
+      {
+        Debug.LogError(e.Reason);
+      }
+    }
+
+    private async void UpdateLobby()
+    {
+      if (!_queryForLobbiesLimit.CanCall)
+        return;
+
+      try
+      {
+        Lobby lobby = await _lobbyApi.GetLobby(_lobbyInfo.Id);
+        CurrentLobby = lobby;
+        _lobbyInfo.ApplyRemoteData(lobby);
+
+        if (!_localUser.IsHost)
+        {
+          foreach (KeyValuePair<string, UserProfile> lobbyUser in _lobbyInfo.LobbyUsers)
+            if (lobbyUser.Value.IsHost)
+              return;
+
+          Debug.LogWarning("Host left the lobby, disconnecting...");
+          await EndTracking();
+        }
+      }
+      catch (LobbyServiceException e)
+      {
+        Debug.LogError(e.Reason);
+      }
+    }
+
+    private async Task LeaveLobbyAsync(string lobbyId)
+    {
+      string uasId = _authentication.PlayerId;
+      try
+      {
+        await _lobbyApi.RemovePlayerFromLobby(uasId, lobbyId);
+      }
+      catch (LobbyServiceException e)
+      {
+        // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
+        if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
+          Debug.LogError(e.Reason);
+      }
+    }
+
+    private async Task DeleteLobbyAsync(string lobbyId)
+    {
+      if (_localUser.IsHost)
+        try
+        {
+          await _lobbyApi.DeleteLobby(lobbyId);
+        }
+        catch (LobbyServiceException e)
+        {
+          Debug.LogError(e.Reason);
+        }
     }
   }
 }

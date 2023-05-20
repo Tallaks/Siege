@@ -10,29 +10,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     [SerializeField] private CharacterSelectionUi _characterSelectionUi;
     [SerializeField] private MapSelectionUi _mapSelectionUi;
 
-    public void InitializeMapSelectionUi(RoleState stateValue) =>
-      _mapSelectionUi.Initialize(stateValue);
-
-    public void InitializeCharacterSelectionUi(RoleState stateValue) =>
-      _characterSelectionUi.Initialize(stateValue);
-
-    public void HideMapSelectionUi() =>
-      _mapSelectionUi.HideMapSelectionUi();
-
-    public void EnableMapSubmitButton() =>
-      _mapSelectionUi.EnableSubmitButton();
-
-    public void SetSelectedMap(MapSelectionButton selected) =>
-      _mapSelectionUi.SetMap(selected);
-
-    public void ShowConfigInfo(int configId) =>
-      _characterSelectionUi.ShowConfigInfo(configId);
-
     public void ChangeCharacterList() =>
       _characterSelectionUi.ChangeCharacterList();
 
-    public void HideCharacterSelectionUi() =>
-      _characterSelectionUi.HideCharacterSelectionUi();
+    public void ChangeCharacterSelectionUiOnFirstPlayerReady() =>
+      _characterSelectionUi.ChangeCharacterSelectionUiOnFirstPlayerReady();
+
+    public void ChangeCharacterSelectionUiOnSecondPlayerReady() =>
+      _characterSelectionUi.ChangeCharacterSelectionUiOnSecondPlayerReady();
 
     public void DisableCharacterSelectSubmitButton() =>
       _characterSelectionUi.DisableCharacterSelectSubmitButton();
@@ -40,10 +25,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     public void EnableCharacterSelectSubmitButton() =>
       _characterSelectionUi.EnableCharacterSelectSubmitButton();
 
-    public void ChangeCharacterSelectionUiOnFirstPlayerReady() =>
-      _characterSelectionUi.ChangeCharacterSelectionUiOnFirstPlayerReady();
+    public void EnableMapSubmitButton() =>
+      _mapSelectionUi.EnableSubmitButton();
 
-    public void ChangeCharacterSelectionUiOnSecondPlayerReady() =>
-      _characterSelectionUi.ChangeCharacterSelectionUiOnSecondPlayerReady();
+    public void HideCharacterSelectionUi() =>
+      _characterSelectionUi.HideCharacterSelectionUi();
+
+    public void HideMapSelectionUi() =>
+      _mapSelectionUi.HideMapSelectionUi();
+
+    public void InitializeCharacterSelectionUi(RoleState stateValue) =>
+      _characterSelectionUi.Initialize(stateValue);
+
+    public void InitializeMapSelectionUi(RoleState stateValue) =>
+      _mapSelectionUi.Initialize(stateValue);
+
+    public void SetSelectedMap(MapSelectionButton selected) =>
+      _mapSelectionUi.SetMap(selected);
+
+    public void ShowConfigInfo(int configId) =>
+      _characterSelectionUi.ShowConfigInfo(configId);
   }
 }

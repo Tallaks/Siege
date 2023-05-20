@@ -6,9 +6,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Utilities
 {
   public class NetCodeHook : NetworkBehaviour
   {
-    public event Action OnNetworkSpawnHook;
-
-    public event Action OnNetworkDeSpawnHook;
+    public override void OnNetworkDespawn()
+    {
+      base.OnNetworkDespawn();
+      OnNetworkDeSpawnHook?.Invoke();
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -17,10 +19,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Utilities
       Debug.Log("Hook spawned");
     }
 
-    public override void OnNetworkDespawn()
-    {
-      base.OnNetworkDespawn();
-      OnNetworkDeSpawnHook?.Invoke();
-    }
+    public event Action OnNetworkSpawnHook;
+
+    public event Action OnNetworkDeSpawnHook;
   }
 }

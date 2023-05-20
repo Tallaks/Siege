@@ -23,7 +23,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
     public LobbyInfo(Lobby lobby) =>
       ApplyRemoteData(lobby);
 
-    public event Action<LobbyInfo> OnLobbyChanged;
+    public void AddUser(UserProfile localUser)
+    {
+      if (!_lobbyUsers.ContainsKey(localUser.Id))
+      {
+        DoAddUser(localUser);
+        OnLobbyChanged?.Invoke(this);
+      }
+    }
 
     public void ApplyRemoteData(Lobby lobby)
     {
@@ -58,14 +65,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       CopyDataFrom(lobbyUsers);
     }
 
-    public void AddUser(UserProfile localUser)
-    {
-      if (!_lobbyUsers.ContainsKey(localUser.Id))
+    public Dictionary<string, DataObject> GetDataForUnityServices() =>
+      new()
       {
-        DoAddUser(localUser);
-        OnLobbyChanged?.Invoke(this);
-      }
-    }
+        { "RelayJoinCode", new DataObject(DataObject.VisibilityOptions.Public, RelayJoinCode) }
+      };
 
     public void Reset(UserProfile localUser)
     {
@@ -73,11 +77,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       AddUser(localUser);
     }
 
-    public Dictionary<string, DataObject> GetDataForUnityServices() =>
-      new()
-      {
-        { "RelayJoinCode", new DataObject(DataObject.VisibilityOptions.Public, RelayJoinCode) }
-      };
+    public event Action<LobbyInfo> OnLobbyChanged;
 
     private void CopyDataFrom(Dictionary<string, UserProfile> lobbyUsers)
     {

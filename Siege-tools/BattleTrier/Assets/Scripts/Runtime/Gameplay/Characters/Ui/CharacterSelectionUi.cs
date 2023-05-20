@@ -21,24 +21,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
         _waitingAsSpectatorPanel.SetActive(true);
     }
 
-    public void ShowConfigInfo(int configId) =>
-      _characterSelectionPanel.ShowConfigInfo(configId);
-
     public void ChangeCharacterList() =>
       _characterSelectionPanel.ChangeCharacterList();
-
-    public void HideCharacterSelectionUi()
-    {
-      _characterSelectionPanel.gameObject.SetActive(false);
-      _waitingAsPlayerPanel.SetActive(false);
-      _waitingAsSpectatorPanel.SetActive(false);
-    }
-
-    public void EnableCharacterSelectSubmitButton() =>
-      _characterSelectionPanel.EnableCharacterSelectSubmitButton();
-
-    public void DisableCharacterSelectSubmitButton() =>
-      _characterSelectionPanel.DisableCharacterSelectSubmitButton();
 
     public void ChangeCharacterSelectionUiOnFirstPlayerReady()
     {
@@ -57,6 +41,22 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
         _waitingAsPlayerPanel.SetActive(true);
       }
     }
+
+    public void DisableCharacterSelectSubmitButton() =>
+      _characterSelectionPanel.DisableCharacterSelectSubmitButton();
+
+    public void EnableCharacterSelectSubmitButton() =>
+      _characterSelectionPanel.EnableCharacterSelectSubmitButton();
+
+    public void HideCharacterSelectionUi()
+    {
+      _characterSelectionPanel.gameObject.SetActive(false);
+      _waitingAsPlayerPanel.SetActive(false);
+      _waitingAsSpectatorPanel.SetActive(false);
+    }
+
+    public void ShowConfigInfo(int configId) =>
+      _characterSelectionPanel.ShowConfigInfo(configId);
 
     private void ShowCharacterSelectionPanel()
     {

@@ -28,6 +28,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
     private void Awake() =>
       MapSelected.OnValueChanged += OnMapSelected;
 
+    public void Select(string configName)
+    {
+      SaveConfigServerRpc(configName);
+      _mediator.EnableMapSubmitButton();
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void SetSelectedServerRpc()
     {
@@ -36,12 +42,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
       mapNetwork.NetworkObject.Spawn();
       mapNetwork.SpawnTilesClientRpc(_config.name);
       mapNetwork.InitMapBoardServerRpc();
-    }
-
-    public void Select(string configName)
-    {
-      SaveConfigServerRpc(configName);
-      _mediator.EnableMapSubmitButton();
     }
 
     [ServerRpc(RequireOwnership = false)]

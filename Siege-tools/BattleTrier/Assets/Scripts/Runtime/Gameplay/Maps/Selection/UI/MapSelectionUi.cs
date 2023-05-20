@@ -49,14 +49,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
       }
     }
 
+    public void EnableSubmitButton() =>
+      _selectMapButton.interactable = true;
+
     public void HideMapSelectionUi()
     {
       _firstRoleUi.SetActive(false);
       _otherRoleUi.SetActive(false);
     }
-
-    public void EnableSubmitButton() =>
-      _selectMapButton.interactable = true;
 
     public void SetMap(MapSelectionButton selected)
     {

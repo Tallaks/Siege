@@ -51,14 +51,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.Menu
       });
     }
 
+    public void HideMainMenuButtons() =>
+      _parent.gameObject.SetActive(false);
+
     private IEnumerator ShowErrorSign()
     {
       _errorSignText.gameObject.SetActive(true);
       yield return new WaitForSeconds(3);
       _errorSignText.gameObject.SetActive(false);
     }
-
-    public void HideMainMenuButtons() =>
-      _parent.gameObject.SetActive(false);
   }
 }

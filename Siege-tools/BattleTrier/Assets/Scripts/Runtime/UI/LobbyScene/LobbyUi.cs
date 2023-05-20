@@ -45,14 +45,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       });
     }
 
-    private void OnQuitButtonClicked() =>
-      _applicationService.QuitApplication();
-
     public void Block() =>
       _blockScreen.SetActive(true);
 
     public void Unblock() =>
       _blockScreen.SetActive(false);
+
+    private void OnQuitButtonClicked() =>
+      _applicationService.QuitApplication();
 
     private IEnumerator ShowErrorSign()
     {

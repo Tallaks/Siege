@@ -18,14 +18,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
     private void Construct(LobbyMediator mediator) =>
       _mediator = mediator;
 
-    private void OnDestroy() =>
-      _joinButton.onClick.RemoveAllListeners();
-
     public void Initialize(LobbyInfo lobby)
     {
       _lobby = lobby;
       _name.text = lobby.Name;
       _joinButton.onClick.AddListener(() => _mediator.JoinLobbyRequest(_lobby));
     }
+
+    private void OnDestroy() =>
+      _joinButton.onClick.RemoveAllListeners();
   }
 }

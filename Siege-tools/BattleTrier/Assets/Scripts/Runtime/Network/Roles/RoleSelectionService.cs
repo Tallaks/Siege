@@ -12,13 +12,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private void Awake() =>
       PlayerRoles = new NetworkList<PlayerRoleState>();
 
-    public event Action<ulong, int> OnClientChoseRole;
-
     [ServerRpc(RequireOwnership = false)]
     public void ChangeSeatServerRpc(ulong clientId, int seatIdx)
     {
       Debug.Log("ChangeSeatServerRpc");
       OnClientChoseRole?.Invoke(clientId, seatIdx);
     }
+
+    public event Action<ulong, int> OnClientChoseRole;
   }
 }

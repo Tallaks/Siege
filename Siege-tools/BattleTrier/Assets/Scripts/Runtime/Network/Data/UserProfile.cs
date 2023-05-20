@@ -49,8 +49,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       }
     }
 
-    public event Action<UserProfile> OnChanged;
-
     public void CopyDataFrom(UserProfile lobbyUser)
     {
       int lastChanged = // Set flags just for the members that will be changed.
@@ -68,13 +66,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       OnChanged?.Invoke(this);
     }
 
-    public void ResetState() =>
-      IsHost = false;
-
     public Dictionary<string, PlayerDataObject> GetDataForUnityServices() =>
       new()
       {
         { "DisplayName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, Name) }
       };
+
+    public void ResetState() =>
+      IsHost = false;
+
+    public event Action<UserProfile> OnChanged;
   }
 }

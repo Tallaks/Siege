@@ -52,13 +52,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
         element.SetActive(true);
     }
 
-    public void UpdatePlayerCount(int count) =>
-      _playerCounter.text = count.ToString();
-
     public void DestroyButtons()
     {
       foreach (RoleSelectionButton button in _roleButtons)
         Destroy(button.gameObject);
     }
+
+    public void UpdatePlayerCount(int count) =>
+      _playerCounter.text = count.ToString();
   }
 }
