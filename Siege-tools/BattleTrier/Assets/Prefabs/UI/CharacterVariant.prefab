@@ -548,11 +548,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94ac9b6ab6f14845a75c73f425247b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _icon: {fileID: 6975877099193885532}
-  _deselectAllButton: {fileID: 6975877099121907311}
   _addButton: {fileID: 6975877100192157659}
-  _subButton: {fileID: 6975877100730281863}
   _amountText: {fileID: 6975877100044489726}
+  _deselectAllButton: {fileID: 6975877099121907311}
+  _icon: {fileID: 6975877099193885532}
+  _subButton: {fileID: 6975877100730281863}
 --- !u!1 &6975877100601285668
 GameObject:
   m_ObjectHideFlags: 0

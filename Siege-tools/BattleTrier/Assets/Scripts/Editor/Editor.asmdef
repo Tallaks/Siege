@@ -1,16 +1,20 @@
 {
     "name": "Editor",
     "rootNamespace": "Kulinaria.Tools.BattleTrier",
-    "references": [
-        "GUID:39db31f0562d9184c92881e43adea352"
-    ],
+    "references": [],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Sirenix.Serialization.dll",
+        "Sirenix.OdinInspector.Attributes.dll",
+        "Sirenix.Utilities.dll",
+        "Sirenix.OdinValidator.Editor.dll",
+        "Sirenix.OdinInspector.Editor.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

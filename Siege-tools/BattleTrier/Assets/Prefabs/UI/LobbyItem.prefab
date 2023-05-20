@@ -523,8 +523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2bb0eaf60f4daab7ceeb0fdaf23f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: {fileID: 8718872545841188573}
   _joinButton: {fileID: 409510110}
+  _name: {fileID: 8718872545841188573}
 --- !u!114 &8718872546289333756
 MonoBehaviour:
   m_ObjectHideFlags: 0

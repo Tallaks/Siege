@@ -1,14 +1,16 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 {
   public class GameplayMediator : MonoBehaviour
   {
-    [SerializeField] private CharacterSelectionUi _characterSelectionUi;
-    [SerializeField] private MapSelectionUi _mapSelectionUi;
+    [SerializeField, Required] private CharacterSelectionUi _characterSelectionUi;
+    [SerializeField, Required] private MapSelectionUi _mapSelectionUi;
+    [SerializeField, Required] private CharacterPlacementUi _characterPlacementUi;
 
     public void ChangeCharacterList() =>
       _characterSelectionUi.ChangeCharacterList();
