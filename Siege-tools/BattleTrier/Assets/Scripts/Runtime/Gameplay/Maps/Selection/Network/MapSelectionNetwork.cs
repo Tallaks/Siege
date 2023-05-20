@@ -3,13 +3,14 @@ using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
 {
   public class MapSelectionNetwork : NetworkBehaviour
   {
-    [SerializeField] private Map _mapPrefab;
+    [FormerlySerializedAs("_mapPrefab"), SerializeField] private MapNetwork _mapNetworkPrefab;
 
     public NetworkVariable<bool> MapSelected = new();
     private BoardConfig _config;
@@ -31,10 +32,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
     public void SetSelectedServerRpc()
     {
       MapSelected.Value = true;
-      Map map = Instantiate(_mapPrefab);
-      map.NetworkObject.Spawn();
-      map.SpawnTilesClientRpc(_config.name);
-      map.InitMapBoardServerRpc();
+      MapNetwork mapNetwork = Instantiate(_mapNetworkPrefab);
+      mapNetwork.NetworkObject.Spawn();
+      mapNetwork.SpawnTilesClientRpc(_config.name);
+      mapNetwork.InitMapBoardServerRpc();
     }
 
     public void Select(string configName)

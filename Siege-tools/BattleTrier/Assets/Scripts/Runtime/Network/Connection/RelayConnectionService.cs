@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
@@ -11,7 +12,6 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 using Zenject;
-using Task = System.Threading.Tasks.Task;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection
 {

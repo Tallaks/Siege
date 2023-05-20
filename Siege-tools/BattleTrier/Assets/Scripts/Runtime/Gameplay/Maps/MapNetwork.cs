@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
 {
-  public class Map : NetworkBehaviour
+  public class MapNetwork : NetworkBehaviour
   {
     [SerializeField] private Tile _tilePrefab;
     private BoardConfig _config;
@@ -22,6 +22,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
         if (mapTiles[col, row] == TileType.Default)
           _mapBoard[col, row] = 0;
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void OnTileClickedServerRpc(ulong clientId, int coordsX, int coordsY) =>
+      Debug.Log($"Client with {clientId} clicked on coords {coordsX}; {coordsY}");
 
     [ClientRpc]
     public void SpawnTilesClientRpc(string configName)
