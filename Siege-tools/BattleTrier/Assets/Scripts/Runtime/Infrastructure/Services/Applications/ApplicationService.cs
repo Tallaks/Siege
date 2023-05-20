@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
 using UnityEngine;
@@ -12,12 +13,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applicatio
     private readonly LobbyInfo _lobbyInfo;
     private readonly LobbyServiceFacade _lobbyServiceFacade;
     private readonly ICoroutineRunner _runner;
+    private readonly IConnectionStateMachine _connectionStateMachine;
 
-    public ApplicationService(ICoroutineRunner runner, LobbyInfo lobbyInfo, LobbyServiceFacade lobbyServiceFacade)
+    public ApplicationService(
+      ICoroutineRunner runner,
+      LobbyInfo lobbyInfo,
+      LobbyServiceFacade lobbyServiceFacade,
+      IConnectionStateMachine connectionStateMachine)
     {
       _runner = runner;
       _lobbyInfo = lobbyInfo;
       _lobbyServiceFacade = lobbyServiceFacade;
+      _connectionStateMachine = connectionStateMachine;
     }
 
     public void Initialize() =>
@@ -34,7 +41,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applicatio
 
     private bool OnWantToQuit()
     {
-      bool canQuit = string.IsNullOrEmpty(_lobbyInfo?.Id);
+      bool canQuit = _connectionStateMachine.CurrentState is IOnlineState;
       if (!canQuit)
         _runner.StartCoroutine(LeaveBeforeQuit());
       return canQuit;
@@ -44,7 +51,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applicatio
     {
       try
       {
-        _lobbyServiceFacade.EndTracking();
+        (_connectionStateMachine.CurrentState as IRequestShutdown)?.OnUserRequestedShutdown();
       }
       catch (Exception e)
       {
