@@ -129,7 +129,7 @@
 
     &lt;Entry DisplayName="Constructors" Priority="25"&gt;
       &lt;Entry.Match&gt;
-        &lt;Kind Is="Constructor" /&gt;
+            &lt;Kind Is="Constructor" /&gt;
       &lt;/Entry.Match&gt;
 
       &lt;Entry.SortBy&gt;
@@ -138,23 +138,42 @@
     &lt;/Entry&gt;
 
     &lt;Entry DisplayName="Inject Methods" Priority="0"&gt;
+
           &lt;Entry.Match&gt;
-            &lt;Or&gt;
-              &lt;And&gt;
-                &lt;Kind Is="Method" /&gt;
-                &lt;HasAttribute Name="Inject" /&gt;  
-              &lt;/And&gt;
-              &lt;And&gt;
-                &lt;Kind Is="Method" /&gt;
-                &lt;HasAttribute Name="InjectOptional" /&gt;
-              &lt;/And&gt;
-            &lt;/Or&gt;
+              &lt;Or&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Method" /&gt;
+                      &lt;HasAttribute Name="Inject" /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Method" /&gt;
+                      &lt;HasAttribute Name="InjectOptional" /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
           &lt;/Entry.Match&gt;
 
           &lt;Entry.SortBy&gt;
-            &lt;Name /&gt;
+              &lt;Name /&gt;
           &lt;/Entry.SortBy&gt;
       &lt;/Entry&gt;
+    
+    &lt;Entry DisplayName="Initializers" Priority="25"&gt;
+      &lt;Entry.Match&gt;
+        &lt;Or&gt;
+          &lt;And&gt;
+            &lt;Kind Is="Method" /&gt;
+            &lt;Name Is="Initialize" /&gt;
+          &lt;/And&gt;
+          &lt;And&gt;
+            &lt;Kind Is="Method" /&gt;
+            &lt;Name Is="Init" /&gt;
+          &lt;/And&gt;  
+        &lt;/Or&gt;
+      &lt;/Entry.Match&gt;
+      &lt;Entry.SortBy&gt;
+              &lt;Static/&gt;
+          &lt;/Entry.SortBy&gt;
+    &lt;/Entry&gt;
       
     &lt;Entry DisplayName="Event Functions" Priority="0"&gt;
       &lt;Entry.Match&gt;
@@ -167,7 +186,26 @@
         &lt;unity:EventFunctionName /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
+      
+    &lt;Entry DisplayName="RPC methods" Priority="0"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Method" /&gt;
+                      &lt;HasAttribute Name="ServerRpc" /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Method" /&gt;
+                      &lt;HasAttribute Name="ClientRpc" /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
 
+          &lt;Entry.SortBy&gt;
+              &lt;Name /&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+    
     &lt;Entry DisplayName="Interface Method Implementations" Priority="0"&gt;
       &lt;Entry.Match&gt;
         &lt;And&gt;
@@ -574,6 +612,25 @@
           &lt;/Entry.SortBy&gt;
       &lt;/Entry&gt;
 
+      &lt;Entry DisplayName="Initializers" Priority="25"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Method" /&gt;
+                      &lt;Name Is="Initialize" /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Method" /&gt;
+                      &lt;Name Is="Init" /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;Static/&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+      
       &lt;Entry DisplayName="Inject Methods" Priority="0"&gt;
           &lt;Entry.Match&gt;
               &lt;Or&gt;

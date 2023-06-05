@@ -12,6 +12,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
     public Vector2Int Coords { get; private set; }
     private MapNetwork _mapNetwork;
 
+    public void Initialize(int col, int row, MapNetwork mapNetwork)
+    {
+      _mapNetwork = mapNetwork;
+      Coords = new Vector2Int(col, row);
+    }
+
     private void OnMouseDown()
     {
       _mapNetwork.Refresh();
@@ -19,12 +25,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       foreach (Tile neighbour in _neighbours)
         neighbour.ChangeColor(_neighbourColor);
       Debug.Log($"Tile with coords {Coords.x}; {Coords.y} was clicked");
-    }
-
-    public void Initialize(int col, int row, MapNetwork mapNetwork)
-    {
-      _mapNetwork = mapNetwork;
-      Coords = new Vector2Int(col, row);
     }
 
     public void AddNeighbour(Tile otherTile) =>
