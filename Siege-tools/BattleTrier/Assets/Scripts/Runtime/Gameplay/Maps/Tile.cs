@@ -18,19 +18,23 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       Coords = new Vector2Int(col, row);
     }
 
-    private void OnMouseDown()
-    {
-      _mapNetwork.Refresh();
-      ChangeColor(_selectedColor);
-      foreach (Tile neighbour in _neighbours)
-        neighbour.ChangeColor(_neighbourColor);
-      Debug.Log($"Tile with coords {Coords.x}; {Coords.y} was clicked");
-    }
+    private void OnMouseDown() =>
+      _mapNetwork.OnTileSelected(this);
 
     public void AddNeighbour(Tile otherTile) =>
       _neighbours.Add(otherTile);
 
-    public void ChangeColor(Color color) =>
+    public void ChangeToSelectedColor()
+    {
+      ChangeColor(_selectedColor);
+      foreach (Tile neighbour in _neighbours)
+        neighbour.ChangeColor(_neighbourColor);
+    }
+
+    public void ChangeToUnselectedColor() =>
+      ChangeColor(Color.white);
+
+    private void ChangeColor(Color color) =>
       GetComponent<SpriteRenderer>().color = color;
   }
 }

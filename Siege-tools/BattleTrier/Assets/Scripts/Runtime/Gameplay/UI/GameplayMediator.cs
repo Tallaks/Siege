@@ -12,6 +12,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     [SerializeField, Required] private MapSelectionUi _mapSelectionUi;
     [SerializeField, Required] private CharacterPlacementUi _characterPlacementUi;
 
+    public bool CharacterPlacementUiIsActive => _characterPlacementUi.IsActivePanel;
+
     public void ChangeCharacterList() =>
       _characterSelectionUi.ChangeCharacterList();
 

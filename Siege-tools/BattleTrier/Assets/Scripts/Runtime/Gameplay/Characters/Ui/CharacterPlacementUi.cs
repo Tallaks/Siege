@@ -11,6 +11,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     [SerializeField, Required, ChildGameObjectsOnly] private GameObject _waitingPlayerPanel;
     [SerializeField, Required, ChildGameObjectsOnly] private GameObject _spectatorPanel;
 
+    public bool IsActivePanel => _activePlayerPanel.activeInHierarchy;
+
     public void ShowPlacementActivePlayerUi() =>
       _activePlayerPanel.SetActive(true);
 

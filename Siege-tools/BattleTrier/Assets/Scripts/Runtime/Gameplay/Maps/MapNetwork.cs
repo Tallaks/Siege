@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,9 +10,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
   {
     private readonly List<Tile> _tiles = new();
     [SerializeField] private Tile _tilePrefab;
-    private BoardConfig _config;
 
+    private GameplayMediator Mediator =>
+      _mediator == null ? _mediator = FindObjectOfType<GameplayMediator>() : _mediator;
+
+    private BoardConfig _config;
     private int[,] _mapBoard;
+    private GameplayMediator _mediator;
 
     [ServerRpc(RequireOwnership = false)]
     public void InitMapBoardServerRpc()
@@ -42,10 +47,20 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       AssignTilesWithNeighbours();
     }
 
-    public void Refresh()
+    public void OnTileSelected(Tile selectedTile)
+    {
+      if (Mediator.CharacterPlacementUiIsActive)
+      {
+        Refresh();
+        selectedTile.ChangeToSelectedColor();
+        Debug.Log($"Tile with coords {selectedTile.Coords.x}; {selectedTile.Coords.y} was clicked");
+      }
+    }
+
+    private void Refresh()
     {
       foreach (Tile tile in _tiles)
-        tile.ChangeColor(Color.white);
+        tile.ChangeToUnselectedColor();
     }
 
     private void AssignTilesWithNeighbours()
