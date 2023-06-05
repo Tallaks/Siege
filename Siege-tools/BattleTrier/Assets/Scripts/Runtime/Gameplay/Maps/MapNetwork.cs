@@ -7,8 +7,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
 {
   public class MapNetwork : NetworkBehaviour
   {
-    [SerializeField] private Tile _tilePrefab;
     private readonly List<Tile> _tiles = new();
+    [SerializeField] private Tile _tilePrefab;
     private BoardConfig _config;
 
     private int[,] _mapBoard;

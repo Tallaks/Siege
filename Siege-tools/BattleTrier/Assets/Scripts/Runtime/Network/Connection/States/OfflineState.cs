@@ -22,8 +22,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     {
       _lobbyServiceFacade.EndTracking();
       _networkManager.Shutdown();
-      if (SceneManager.GetActiveScene().name != "Lobby" || 
-          SceneManager.GetActiveScene().name != "BootScene" || 
+      if (SceneManager.GetActiveScene().name != "Lobby" ||
+          SceneManager.GetActiveScene().name != "BootScene" ||
           SceneManager.GetActiveScene().name != "MainMenu")
         _sceneLoader.LoadScene("Lobby", false, LoadSceneMode.Single);
     }

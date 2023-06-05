@@ -22,11 +22,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
 
     private readonly RateLimitCooldown _queryForLobbiesLimit;
     private readonly IUpdateRunner _updateRunner;
+
+    public Lobby CurrentLobby { get; set; }
     private float _heartbeatTime;
     private bool _isTracking;
     [Inject] private LobbyHeartbeat _lobbyHeartbeat;
-
-    public Lobby CurrentLobby { get; set; }
 
     public LobbyServiceFacade(
       IUpdateRunner updateRunner,

@@ -10,9 +10,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterList : MonoBehaviour
   {
+    private readonly List<CharacterListItem> _characterList = new();
     [SerializeField, Required, AssetSelector] private CharacterListItem _characterListItemPrefab;
     [SerializeField, Required, SceneObjectsOnly] private Transform _listContainer;
-    private readonly List<CharacterListItem> _characterList = new();
 
     private ICharacterSelection _characterSelection;
     private DiContainer _container;

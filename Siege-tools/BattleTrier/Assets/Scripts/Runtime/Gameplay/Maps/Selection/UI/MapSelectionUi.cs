@@ -11,12 +11,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI
 {
   public class MapSelectionUi : MonoBehaviour
   {
+    private readonly List<MapSelectionButton> _mapSelectionButtons = new();
     [SerializeField] private GameObject _firstRoleUi;
     [SerializeField] private Transform _mapSelectionContainer;
     [SerializeField] private MapSelectionButton _mapSelectionPrefab;
     [SerializeField] private GameObject _otherRoleUi;
     [SerializeField] private Button _selectMapButton;
-    private readonly List<MapSelectionButton> _mapSelectionButtons = new();
 
     private DiContainer _container;
     private MapSelectionNetwork _mapSelectionNetwork;

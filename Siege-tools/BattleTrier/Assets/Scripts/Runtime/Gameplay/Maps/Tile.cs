@@ -6,17 +6,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
   [RequireComponent(typeof(SpriteRenderer))]
   public class Tile : MonoBehaviour
   {
+    private readonly List<Tile> _neighbours = new();
     [SerializeField] private Color _selectedColor;
     [SerializeField] private Color _neighbourColor;
-    private readonly List<Tile> _neighbours = new();
-    private MapNetwork _mapNetwork;
     public Vector2Int Coords { get; private set; }
-
-    public void Initialize(int col, int row, MapNetwork mapNetwork)
-    {
-      _mapNetwork = mapNetwork;
-      Coords = new Vector2Int(col, row);
-    }
+    private MapNetwork _mapNetwork;
 
     private void OnMouseDown()
     {
@@ -25,6 +19,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       foreach (Tile neighbour in _neighbours)
         neighbour.ChangeColor(_neighbourColor);
       Debug.Log($"Tile with coords {Coords.x}; {Coords.y} was clicked");
+    }
+
+    public void Initialize(int col, int row, MapNetwork mapNetwork)
+    {
+      _mapNetwork = mapNetwork;
+      Coords = new Vector2Int(col, row);
     }
 
     public void AddNeighbour(Tile otherTile) =>

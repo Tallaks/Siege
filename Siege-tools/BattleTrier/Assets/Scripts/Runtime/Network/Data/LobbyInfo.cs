@@ -8,13 +8,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
   [Serializable]
   public sealed class LobbyInfo
   {
-    private Dictionary<string, UserProfile> _lobbyUsers = new();
-
     public string Id { get; set; }
     public string Code { get; set; }
     public string RelayJoinCode { get; set; }
     public string Name { get; set; }
     public IDictionary<string, UserProfile> LobbyUsers => _lobbyUsers;
+    private Dictionary<string, UserProfile> _lobbyUsers = new();
 
     public LobbyInfo()
     {
@@ -77,8 +76,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       AddUser(localUser);
     }
 
-    public event Action<LobbyInfo> OnLobbyChanged;
-
     private void CopyDataFrom(Dictionary<string, UserProfile> lobbyUsers)
     {
       if (lobbyUsers == null)
@@ -125,5 +122,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
 
     private void OnChangedUser(UserProfile user) =>
       OnLobbyChanged?.Invoke(this);
+
+    public event Action<LobbyInfo> OnLobbyChanged;
   }
 }

@@ -12,6 +12,37 @@
       &lt;unity:SerializableClass /&gt;
     &lt;/TypePattern.Match&gt;
 
+    &lt;Entry DisplayName="Nested Types" Priority="150"&gt;
+      &lt;Entry.Match&gt;
+        &lt;Kind Is="Type" /&gt;
+      &lt;/Entry.Match&gt;
+    &lt;/Entry&gt;
+
+    &lt;Entry DisplayName="Static and Readonly Fields and Constants" Priority="100"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;Kind Is="Constant" /&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Field" /&gt;
+                      &lt;Static /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Field" /&gt;
+                      &lt;Readonly /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;Kind&gt;
+                  &lt;Kind.Order&gt;
+                      &lt;DeclarationKind&gt;Constant&lt;/DeclarationKind&gt;
+                      &lt;DeclarationKind&gt;Field&lt;/DeclarationKind&gt;
+                  &lt;/Kind.Order&gt;
+              &lt;/Kind&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+      
     &lt;Entry DisplayName="Public Delegates" Priority="100"&gt;
       &lt;Entry.Match&gt;
         &lt;And&gt;
@@ -38,27 +69,6 @@
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
 
-    &lt;Entry DisplayName="Static Fields and Constants"&gt;
-      &lt;Entry.Match&gt;
-        &lt;Or&gt;
-          &lt;Kind Is="Constant" /&gt;
-          &lt;And&gt;
-            &lt;Kind Is="Field" /&gt;
-            &lt;Static /&gt;
-          &lt;/And&gt;
-        &lt;/Or&gt;
-      &lt;/Entry.Match&gt;
-
-      &lt;Entry.SortBy&gt;
-        &lt;Kind&gt;
-          &lt;Kind.Order&gt;
-            &lt;DeclarationKind&gt;Constant&lt;/DeclarationKind&gt;
-            &lt;DeclarationKind&gt;Field&lt;/DeclarationKind&gt;
-          &lt;/Kind.Order&gt;
-        &lt;/Kind&gt;
-      &lt;/Entry.SortBy&gt;
-    &lt;/Entry&gt;
-
     &lt;Entry DisplayName="Serialized Fields"&gt;
       &lt;Entry.Match&gt;
         &lt;!-- Keep serialised fields and auto-properties with serialised backing
@@ -73,6 +83,34 @@
       &lt;!-- No sorting --&gt;
     &lt;/Entry&gt;
 
+    &lt;Entry DisplayName="Interface Property Implementations"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Property" /&gt;
+                      &lt;ImplementsInterface /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Autoproperty" /&gt;
+                      &lt;ImplementsInterface /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;ImplementsInterface Immediate="true"/&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+    &lt;Entry DisplayName="Properties, Indexers"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;Kind Is="Property" /&gt;
+                  &lt;Kind Is="Indexer" /&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+      &lt;/Entry&gt;
+      
     &lt;Entry DisplayName="Non-serialised Fields"&gt;
       &lt;Entry.Match&gt;
         &lt;And&gt;
@@ -89,42 +127,7 @@
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
 
-    &lt;Entry DisplayName="Properties, Indexers"&gt;
-          &lt;Entry.Match&gt;
-              &lt;Or&gt;
-                  &lt;Kind Is="Property" /&gt;
-                  &lt;Kind Is="Indexer" /&gt;
-              &lt;/Or&gt;
-          &lt;/Entry.Match&gt;
-      &lt;/Entry&gt;
-      
-    &lt;Entry DisplayName="Inject Methods"&gt;
-          &lt;Entry.Match&gt;
-              &lt;And&gt;
-                &lt;Kind Is="Method" /&gt;
-                &lt;HasAttribute Name="Inject" /&gt;
-              &lt;/And&gt;
-          &lt;/Entry.Match&gt;
-
-          &lt;Entry.SortBy&gt;
-              &lt;Name/&gt;
-          &lt;/Entry.SortBy&gt;
-      &lt;/Entry&gt;
-
-    &lt;Entry DisplayName="Initialize methods"&gt;
-          &lt;Entry.Match&gt;
-              &lt;And&gt;
-                  &lt;Kind Is="Method" /&gt;
-                  &lt;ImplementsInterface Name="IInitializable" /&gt;
-              &lt;/And&gt;
-          &lt;/Entry.Match&gt;
-
-          &lt;Entry.SortBy&gt;
-              &lt;Name/&gt;
-          &lt;/Entry.SortBy&gt;
-      &lt;/Entry&gt;
-      
-    &lt;Entry DisplayName="Constructors"&gt;
+    &lt;Entry DisplayName="Constructors" Priority="25"&gt;
       &lt;Entry.Match&gt;
         &lt;Kind Is="Constructor" /&gt;
       &lt;/Entry.Match&gt;
@@ -134,47 +137,51 @@
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
 
-    &lt;Entry DisplayName="Init Methods"&gt;
-
-
+    &lt;Entry DisplayName="Inject Methods" Priority="0"&gt;
           &lt;Entry.Match&gt;
+            &lt;Or&gt;
               &lt;And&gt;
-                  &lt;Kind Is="Method" /&gt;
-                  &lt;Name Is="Initialize" /&gt;
+                &lt;Kind Is="Method" /&gt;
+                &lt;HasAttribute Name="Inject" /&gt;  
               &lt;/And&gt;
+              &lt;And&gt;
+                &lt;Kind Is="Method" /&gt;
+                &lt;HasAttribute Name="InjectOptional" /&gt;
+              &lt;/And&gt;
+            &lt;/Or&gt;
           &lt;/Entry.Match&gt;
 
           &lt;Entry.SortBy&gt;
-              &lt;Name/&gt;
-          &lt;/Entry.SortBy&gt;
-      &lt;/Entry&gt;
-
-    &lt;Entry DisplayName="Event Functions"&gt;
-          &lt;Entry.Match&gt;
-              &lt;unity:EventFunction /&gt;
-          &lt;/Entry.Match&gt;
-
-          &lt;Entry.SortBy&gt;
-              &lt;!-- Prioritises common event functions. For alphabetical, replace with
-                   &lt;Name /&gt; --&gt;
-              &lt;unity:EventFunctionName /&gt;
+            &lt;Name /&gt;
           &lt;/Entry.SortBy&gt;
       &lt;/Entry&gt;
       
-    &lt;Entry DisplayName="Interface Implementations" Priority="100"&gt;
-          &lt;Entry.Match&gt;
-              &lt;And&gt;
-                  &lt;Kind Is="Member" /&gt;
-                  &lt;ImplementsInterface /&gt;
-              &lt;/And&gt;
-          &lt;/Entry.Match&gt;
+    &lt;Entry DisplayName="Event Functions" Priority="0"&gt;
+      &lt;Entry.Match&gt;
+        &lt;unity:EventFunction /&gt;
+      &lt;/Entry.Match&gt;
 
-          &lt;Entry.SortBy&gt;
-              &lt;ImplementsInterface Immediate="true" /&gt;
-          &lt;/Entry.SortBy&gt;
-      &lt;/Entry&gt;
+      &lt;Entry.SortBy&gt;
+        &lt;!-- Prioritises common event functions. For alphabetical, replace with
+             &lt;Name /&gt; --&gt;
+        &lt;unity:EventFunctionName /&gt;
+      &lt;/Entry.SortBy&gt;
+    &lt;/Entry&gt;
 
-    &lt;Entry DisplayName="Public Methods"&gt;
+    &lt;Entry DisplayName="Interface Method Implementations" Priority="0"&gt;
+      &lt;Entry.Match&gt;
+        &lt;And&gt;
+          &lt;Kind Is="Method" /&gt;
+          &lt;ImplementsInterface /&gt;
+        &lt;/And&gt;
+      &lt;/Entry.Match&gt;
+
+      &lt;Entry.SortBy&gt;
+        &lt;ImplementsInterface Immediate="true" /&gt;
+      &lt;/Entry.SortBy&gt;
+    &lt;/Entry&gt;
+
+    &lt;Entry DisplayName="Public Methods" Priority="0"&gt;
           &lt;Entry.Match&gt;
               &lt;And&gt;
                   &lt;Kind Is="Method" /&gt;
@@ -183,20 +190,113 @@
           &lt;/Entry.Match&gt;
 
           &lt;Entry.SortBy&gt;
-              &lt;Name/&gt;
+              &lt;ImplementsInterface Immediate="true" /&gt;
           &lt;/Entry.SortBy&gt;
       &lt;/Entry&gt;
 
-    &lt;Entry DisplayName="All other members" /&gt;
+    &lt;Entry DisplayName="Protected Methods" Priority="0"&gt;
+          &lt;Entry.Match&gt;
+              &lt;And&gt;
+                  &lt;Kind Is="Method" /&gt;
+                  &lt;Access Is="Protected" /&gt;
+              &lt;/And&gt;
+          &lt;/Entry.Match&gt;
 
-    &lt;Entry DisplayName="Nested Types"&gt;
-      &lt;Entry.Match&gt;
-        &lt;Kind Is="Type" /&gt;
-      &lt;/Entry.Match&gt;
+          &lt;Entry.SortBy&gt;
+              &lt;ImplementsInterface Immediate="true" /&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+    &lt;Entry DisplayName="Private Methods" Priority="0"&gt;
+          &lt;Entry.Match&gt;
+              &lt;And&gt;
+                  &lt;Kind Is="Method" /&gt;
+                  &lt;Access Is="Private" /&gt;
+              &lt;/And&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;ImplementsInterface Immediate="true" /&gt;
+          &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
+      
+    &lt;Entry DisplayName="All other members" Priority="0" /&gt;
+
   &lt;/TypePattern&gt;
 &lt;/Patterns&gt;
 </s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeCleanup/Profiles/=Tallaks/@EntryIndexedValue"></s:String>
+	<s:Boolean x:Key="/Default/CodeStyle/CodeCleanup/Profiles/=Tallaks/@EntryIndexRemoved">True</s:Boolean>
+	<s:String x:Key="/Default/CodeStyle/CodeCleanup/Profiles/=Tallaks_0020Siege/@EntryIndexedValue">&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;Profile name="Tallaks Siege"&gt;&lt;CppReformatCode&gt;True&lt;/CppReformatCode&gt;&lt;ShaderLabReformatCode&gt;True&lt;/ShaderLabReformatCode&gt;&lt;XAMLCollapseEmptyTags&gt;False&lt;/XAMLCollapseEmptyTags&gt;&lt;XMLReformatCode&gt;True&lt;/XMLReformatCode&gt;&lt;HtmlReformatCode&gt;True&lt;/HtmlReformatCode&gt;&lt;VBReformatCode&gt;True&lt;/VBReformatCode&gt;&lt;CSReformatCode&gt;True&lt;/CSReformatCode&gt;&lt;CSCodeStyleAttributes ArrangeVarStyle="True" ArrangeTypeAccessModifier="True" ArrangeTypeMemberAccessModifier="True" SortModifiers="True" ArrangeArgumentsStyle="True" RemoveRedundantParentheses="True" AddMissingParentheses="True" ArrangeBraces="True" ArrangeAttributes="True" ArrangeTrailingCommas="True" ArrangeObjectCreation="True" ArrangeDefaultValue="True" ArrangeNamespaces="True" ArrangeCodeBodyStyle="True" /&gt;&lt;CSArrangeQualifiers&gt;True&lt;/CSArrangeQualifiers&gt;&lt;CSFixBuiltinTypeReferences&gt;True&lt;/CSFixBuiltinTypeReferences&gt;&lt;CSReorderTypeMembers&gt;True&lt;/CSReorderTypeMembers&gt;&lt;RemoveCodeRedundancies&gt;True&lt;/RemoveCodeRedundancies&gt;&lt;CSUseAutoProperty&gt;True&lt;/CSUseAutoProperty&gt;&lt;CSMakeFieldReadonly&gt;True&lt;/CSMakeFieldReadonly&gt;&lt;CSMakeAutoPropertyGetOnly&gt;True&lt;/CSMakeAutoPropertyGetOnly&gt;&lt;CSUpdateFileHeader&gt;True&lt;/CSUpdateFileHeader&gt;&lt;IDEA_SETTINGS&gt;&amp;lt;profile version="1.0"&amp;gt;&#xD;
+  &amp;lt;option name="myName" value="Tallaks Siege" /&amp;gt;&#xD;
+  &amp;lt;inspection_tool class="ConditionalExpressionWithIdenticalBranchesJS" enabled="true" level="WARNING" enabled_by_default="true" /&amp;gt;&#xD;
+  &amp;lt;inspection_tool class="ES6ShorthandObjectProperty" enabled="true" level="WARNING" enabled_by_default="true" /&amp;gt;&#xD;
+  &amp;lt;inspection_tool class="JSArrowFunctionBracesCanBeRemoved" enabled="true" level="WARNING" enabled_by_default="true" /&amp;gt;&#xD;
+  &amp;lt;inspection_tool class="JSRemoveUnnecessaryParentheses" enabled="true" level="WARNING" enabled_by_default="true" /&amp;gt;&#xD;
+  &amp;lt;inspection_tool class="TypeScriptExplicitMemberType" enabled="true" level="WARNING" enabled_by_default="true" /&amp;gt;&#xD;
+  &amp;lt;inspection_tool class="UnterminatedStatementJS" enabled="true" level="WARNING" enabled_by_default="true" /&amp;gt;&#xD;
+&amp;lt;/profile&amp;gt;&lt;/IDEA_SETTINGS&gt;&lt;RIDER_SETTINGS&gt;&amp;lt;profile&amp;gt;&#xD;
+  &amp;lt;Language id="CSS"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+    &amp;lt;Rearrange&amp;gt;true&amp;lt;/Rearrange&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="EditorConfig"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="HTML"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+    &amp;lt;OptimizeImports&amp;gt;true&amp;lt;/OptimizeImports&amp;gt;&#xD;
+    &amp;lt;Rearrange&amp;gt;true&amp;lt;/Rearrange&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="HTTP Request"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="Handlebars"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="Ini"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="JSON"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="Jade"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="JavaScript"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+    &amp;lt;OptimizeImports&amp;gt;true&amp;lt;/OptimizeImports&amp;gt;&#xD;
+    &amp;lt;Rearrange&amp;gt;true&amp;lt;/Rearrange&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="Markdown"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="Properties"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="RELAX-NG"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="SQL"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="VueExpr"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="XML"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+    &amp;lt;OptimizeImports&amp;gt;true&amp;lt;/OptimizeImports&amp;gt;&#xD;
+    &amp;lt;Rearrange&amp;gt;true&amp;lt;/Rearrange&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+  &amp;lt;Language id="yaml"&amp;gt;&#xD;
+    &amp;lt;Reformat&amp;gt;true&amp;lt;/Reformat&amp;gt;&#xD;
+  &amp;lt;/Language&amp;gt;&#xD;
+&amp;lt;/profile&amp;gt;&lt;/RIDER_SETTINGS&gt;&lt;CSOptimizeUsings&gt;&lt;OptimizeUsings&gt;True&lt;/OptimizeUsings&gt;&lt;/CSOptimizeUsings&gt;&lt;CppAddTypenameTemplateKeywords&gt;True&lt;/CppAddTypenameTemplateKeywords&gt;&lt;CppJoinDeclarationAndAssignmentDescriptor&gt;True&lt;/CppJoinDeclarationAndAssignmentDescriptor&gt;&lt;CppMakeLocalVarConstDescriptor&gt;True&lt;/CppMakeLocalVarConstDescriptor&gt;&lt;CppMakeMethodConst&gt;True&lt;/CppMakeMethodConst&gt;&lt;CppMakeMethodStatic&gt;True&lt;/CppMakeMethodStatic&gt;&lt;CppMakePtrOrRefParameterConst&gt;True&lt;/CppMakePtrOrRefParameterConst&gt;&lt;CppMakeParameterConst&gt;True&lt;/CppMakeParameterConst&gt;&lt;CppPassValueParameterByConstReference&gt;True&lt;/CppPassValueParameterByConstReference&gt;&lt;CppRemoveCastDescriptor&gt;True&lt;/CppRemoveCastDescriptor&gt;&lt;CppRemoveElseKeyword&gt;True&lt;/CppRemoveElseKeyword&gt;&lt;CppRemoveElaboratedTypeSpecifierDescriptor&gt;True&lt;/CppRemoveElaboratedTypeSpecifierDescriptor&gt;&lt;CppRemoveRedundantLambdaParameterListDescriptor&gt;True&lt;/CppRemoveRedundantLambdaParameterListDescriptor&gt;&lt;CppRemoveRedundantMemberInitializerDescriptor&gt;True&lt;/CppRemoveRedundantMemberInitializerDescriptor&gt;&lt;CppRemoveRedundantParentheses&gt;True&lt;/CppRemoveRedundantParentheses&gt;&lt;CppShortenQualifiedName&gt;True&lt;/CppShortenQualifiedName&gt;&lt;CppDeleteRedundantSpecifier&gt;True&lt;/CppDeleteRedundantSpecifier&gt;&lt;CppRemoveStatement&gt;True&lt;/CppRemoveStatement&gt;&lt;CppRemoveTemplateArgumentsDescriptor&gt;True&lt;/CppRemoveTemplateArgumentsDescriptor&gt;&lt;CppDeleteRedundantTypenameTemplateKeywords&gt;True&lt;/CppDeleteRedundantTypenameTemplateKeywords&gt;&lt;CppRemoveUnreachableCode&gt;True&lt;/CppRemoveUnreachableCode&gt;&lt;CppRemoveUnusedIncludes&gt;True&lt;/CppRemoveUnusedIncludes&gt;&lt;CppRemoveUnusedLambdaCaptures&gt;True&lt;/CppRemoveUnusedLambdaCaptures&gt;&lt;CppCStyleToStaticCastDescriptor&gt;True&lt;/CppCStyleToStaticCastDescriptor&gt;&lt;CppReplaceExpressionWithBooleanConst&gt;True&lt;/CppReplaceExpressionWithBooleanConst&gt;&lt;CppMakeIfConstexpr&gt;True&lt;/CppMakeIfConstexpr&gt;&lt;CppMakePostfixOperatorPrefix&gt;True&lt;/CppMakePostfixOperatorPrefix&gt;&lt;CppChangeSmartPointerToMakeFunction&gt;True&lt;/CppChangeSmartPointerToMakeFunction&gt;&lt;CppReplaceThrowWithRethrowFix&gt;True&lt;/CppReplaceThrowWithRethrowFix&gt;&lt;CppTypeTraitAliasDescriptor&gt;True&lt;/CppTypeTraitAliasDescriptor&gt;&lt;CppReplaceExpressionWithNullptr&gt;True&lt;/CppReplaceExpressionWithNullptr&gt;&lt;CppReplaceTieWithStructuredBindingDescriptor&gt;True&lt;/CppReplaceTieWithStructuredBindingDescriptor&gt;&lt;CppUseAssociativeContainsDescriptor&gt;True&lt;/CppUseAssociativeContainsDescriptor&gt;&lt;CppUseEraseAlgorithmDescriptor&gt;True&lt;/CppUseEraseAlgorithmDescriptor&gt;&lt;RemoveCodeRedundanciesVB&gt;True&lt;/RemoveCodeRedundanciesVB&gt;&lt;Xaml.RedundantFreezeAttribute&gt;True&lt;/Xaml.RedundantFreezeAttribute&gt;&lt;Xaml.RemoveRedundantModifiersAttribute&gt;True&lt;/Xaml.RemoveRedundantModifiersAttribute&gt;&lt;Xaml.RemoveRedundantNameAttribute&gt;True&lt;/Xaml.RemoveRedundantNameAttribute&gt;&lt;Xaml.RemoveRedundantResource&gt;True&lt;/Xaml.RemoveRedundantResource&gt;&lt;Xaml.RemoveRedundantCollectionProperty&gt;True&lt;/Xaml.RemoveRedundantCollectionProperty&gt;&lt;Xaml.RemoveRedundantAttachedPropertySetter&gt;True&lt;/Xaml.RemoveRedundantAttachedPropertySetter&gt;&lt;Xaml.RemoveRedundantStyledValue&gt;True&lt;/Xaml.RemoveRedundantStyledValue&gt;&lt;Xaml.RemoveForbiddenResourceName&gt;True&lt;/Xaml.RemoveForbiddenResourceName&gt;&lt;Xaml.RemoveRedundantGridDefinitionsAttribute&gt;True&lt;/Xaml.RemoveRedundantGridDefinitionsAttribute&gt;&lt;Xaml.RemoveRedundantUpdateSourceTriggerAttribute&gt;True&lt;/Xaml.RemoveRedundantUpdateSourceTriggerAttribute&gt;&lt;Xaml.RemoveRedundantBindingModeAttribute&gt;True&lt;/Xaml.RemoveRedundantBindingModeAttribute&gt;&lt;Xaml.RemoveRedundantGridSpanAttribut&gt;True&lt;/Xaml.RemoveRedundantGridSpanAttribut&gt;&lt;/Profile&gt;</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeCleanup/SilentCleanupProfile/@EntryValue">Tallaks Siege</s:String>
+	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CSharpCodeStyle/USE_HEURISTICS_FOR_BODY_STYLE/@EntryValue">False</s:Boolean>
+	<s:Int64 x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/KEEP_BLANK_LINES_IN_CODE/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/KEEP_BLANK_LINES_IN_DECLARATIONS/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/UnityCSharpFormatting/ENFORCE_CUSTOM_HEADER_FORMATTING/@EntryValue">False</s:Boolean>
 	<s:String x:Key="/Default/CodeStyle/CSharpFileLayoutPatterns/Pattern/@EntryValue">&lt;Patterns xmlns="urn:schemas-jetbrains-com:member-reordering-patterns"&gt;
   &lt;TypePattern DisplayName="Non-reorderable types"&gt;
     &lt;TypePattern.Match&gt;
@@ -208,7 +308,6 @@
             &lt;HasAttribute Name="System.Runtime.InteropServices.ComImport" /&gt;
           &lt;/Or&gt;
         &lt;/And&gt;
-        &lt;Kind Is="Struct" /&gt;
         &lt;HasAttribute Name="JetBrains.Annotations.NoReorderAttribute" /&gt;
         &lt;HasAttribute Name="JetBrains.Annotations.NoReorder" /&gt;
       &lt;/Or&gt;
@@ -228,7 +327,8 @@
         &lt;/HasMember&gt;
       &lt;/And&gt;
     &lt;/TypePattern.Match&gt;
-
+    &lt;Entry DisplayName="All other members" /&gt;
+      
     &lt;Entry DisplayName="Setup/Teardown Methods"&gt;
       &lt;Entry.Match&gt;
         &lt;Or&gt;
@@ -248,9 +348,6 @@
         &lt;/Kind&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
-
-
-    &lt;Entry DisplayName="All other members" /&gt;
 
     &lt;Entry DisplayName="Test Methods" Priority="100"&gt;
       &lt;Entry.Match&gt;
@@ -285,6 +382,49 @@
         &lt;/Or&gt;
       &lt;/And&gt;
     &lt;/TypePattern.Match&gt;
+      &lt;Entry DisplayName="Static and Readonly Fields and Constants" Priority="100"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;Kind Is="Constant" /&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Field" /&gt;
+                      &lt;Static /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Field" /&gt;
+                      &lt;Readonly /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;Kind&gt;
+                  &lt;Kind.Order&gt;
+                      &lt;DeclarationKind&gt;Constant&lt;/DeclarationKind&gt;
+                      &lt;DeclarationKind&gt;Field&lt;/DeclarationKind&gt;
+                  &lt;/Kind.Order&gt;
+              &lt;/Kind&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+      &lt;Entry DisplayName="Properties, Indexers"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;Kind Is="Property" /&gt;
+                  &lt;Kind Is="Indexer" /&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="Fields"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Kind Is="Field" /&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;Readonly /&gt;
+              &lt;Name /&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
 
     &lt;Entry DisplayName="Setup/Teardown Methods"&gt;
       &lt;Entry.Match&gt;
@@ -302,130 +442,161 @@
       &lt;/Entry.Match&gt;
     &lt;/Entry&gt;
 
-    &lt;Entry DisplayName="All other members" /&gt;
 
     &lt;Entry DisplayName="Test Methods" Priority="100"&gt;
       &lt;Entry.Match&gt;
-        &lt;And&gt;
-          &lt;Kind Is="Method" /&gt;
-          &lt;HasAttribute Name="NUnit.Framework.TestAttribute" Inherited="false" /&gt;
-          &lt;HasAttribute Name="NUnit.Framework.TestCaseAttribute" Inherited="false" /&gt;
-          &lt;HasAttribute Name="NUnit.Framework.TestCaseSourceAttribute" Inherited="false" /&gt;
-        &lt;/And&gt;
+          &lt;Or&gt;
+              &lt;And&gt;
+                  &lt;Kind Is="Method" /&gt;
+                  &lt;HasAttribute Name="NUnit.Framework.TestAttribute" Inherited="false" /&gt;
+                  &lt;HasAttribute Name="NUnit.Framework.TestCaseAttribute" Inherited="false" /&gt;
+                  &lt;HasAttribute Name="NUnit.Framework.TestCaseSourceAttribute" Inherited="false" /&gt;
+              &lt;/And&gt;
+              &lt;And&gt;
+                  &lt;Kind Is="Method" /&gt;
+                  &lt;HasAttribute Name="UnityTest" Inherited="false" /&gt;
+              &lt;/And&gt;
+          &lt;/Or&gt;
       &lt;/Entry.Match&gt;
 
       &lt;Entry.SortBy&gt;
         &lt;Name /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="All other members" /&gt;
   &lt;/TypePattern&gt;
 
   &lt;TypePattern DisplayName="Default Pattern"&gt;
-    &lt;Entry DisplayName="Nested Types"&gt;
+      &lt;Entry DisplayName="Nested Types" Priority="150"&gt;
           &lt;Entry.Match&gt;
               &lt;Kind Is="Type" /&gt;
           &lt;/Entry.Match&gt;
       &lt;/Entry&gt;
-      
-    &lt;Entry DisplayName="Public Delegates" Priority="100"&gt;
-      &lt;Entry.Match&gt;
-        &lt;And&gt;
-          &lt;Access Is="Public" /&gt;
-          &lt;Kind Is="Delegate" /&gt;
-        &lt;/And&gt;
-      &lt;/Entry.Match&gt;
 
-      &lt;Entry.SortBy&gt;
-        &lt;Name /&gt;
-      &lt;/Entry.SortBy&gt;
-    &lt;/Entry&gt;
+      &lt;Entry DisplayName="Static and Readonly Fields and Constants" Priority="100"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;Kind Is="Constant" /&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Field" /&gt;
+                      &lt;Static /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Field" /&gt;
+                      &lt;Readonly /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
 
-    &lt;Entry DisplayName="Public Enums" Priority="100"&gt;
-      &lt;Entry.Match&gt;
-        &lt;And&gt;
-          &lt;Access Is="Public" /&gt;
-          &lt;Kind Is="Enum" /&gt;
-        &lt;/And&gt;
-      &lt;/Entry.Match&gt;
+          &lt;Entry.SortBy&gt;
+              &lt;Kind&gt;
+                  &lt;Kind.Order&gt;
+                      &lt;DeclarationKind&gt;Constant&lt;/DeclarationKind&gt;
+                      &lt;DeclarationKind&gt;Field&lt;/DeclarationKind&gt;
+                  &lt;/Kind.Order&gt;
+              &lt;/Kind&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
 
-      &lt;Entry.SortBy&gt;
-        &lt;Name /&gt;
-      &lt;/Entry.SortBy&gt;
-    &lt;/Entry&gt;
-
-    &lt;Entry DisplayName="Static Fields and Constants"&gt;
-      &lt;Entry.Match&gt;
-        &lt;Or&gt;
-          &lt;Kind Is="Constant" /&gt;
-          &lt;And&gt;
-            &lt;Kind Is="Field" /&gt;
-            &lt;Static /&gt;
-          &lt;/And&gt;
-        &lt;/Or&gt;
-      &lt;/Entry.Match&gt;
-
-      &lt;Entry.SortBy&gt;
-        &lt;Kind&gt;
-          &lt;Kind.Order&gt;
-            &lt;DeclarationKind&gt;Constant&lt;/DeclarationKind&gt;
-            &lt;DeclarationKind&gt;Field&lt;/DeclarationKind&gt;
-          &lt;/Kind.Order&gt;
-        &lt;/Kind&gt;
-      &lt;/Entry.SortBy&gt;
-    &lt;/Entry&gt;
-
-    &lt;Entry DisplayName="Fields"&gt;
-      &lt;Entry.Match&gt;
-        &lt;And&gt;
-          &lt;Kind Is="Field" /&gt;
-          &lt;Not&gt;
-            &lt;Static /&gt;
-          &lt;/Not&gt;
-        &lt;/And&gt;
-      &lt;/Entry.Match&gt;
-
-      &lt;Entry.SortBy&gt;
-        &lt;Readonly /&gt;
-        &lt;Name /&gt;
-      &lt;/Entry.SortBy&gt;
-    &lt;/Entry&gt;
-      
-    &lt;Entry DisplayName="Properties, Indexers"&gt;
-      &lt;Entry.Match&gt;
-        &lt;Or&gt;
-          &lt;Kind Is="Property" /&gt;
-          &lt;Kind Is="Indexer" /&gt;
-        &lt;/Or&gt;
-      &lt;/Entry.Match&gt;
-    &lt;/Entry&gt;
-
-    &lt;Entry DisplayName="Constructors"&gt;
-      &lt;Entry.Match&gt;
-        &lt;Kind Is="Constructor" /&gt;
-      &lt;/Entry.Match&gt;
-
-      &lt;Entry.SortBy&gt;
-        &lt;Static/&gt;
-      &lt;/Entry.SortBy&gt;
-    &lt;/Entry&gt;
-
-    &lt;Entry DisplayName="Init Methods"&gt;
+      &lt;Entry DisplayName="Public Delegates" Priority="100"&gt;
           &lt;Entry.Match&gt;
               &lt;And&gt;
-                  &lt;Kind Is="Method" /&gt;
-                  &lt;Name Is="Initialize" /&gt;
+                  &lt;Access Is="Public" /&gt;
+                  &lt;Kind Is="Delegate" /&gt;
               &lt;/And&gt;
           &lt;/Entry.Match&gt;
 
           &lt;Entry.SortBy&gt;
-              &lt;Name/&gt;
+              &lt;Name /&gt;
           &lt;/Entry.SortBy&gt;
       &lt;/Entry&gt;
-      
-    &lt;Entry DisplayName="Interface Implementations" Priority="100"&gt;
+
+      &lt;Entry DisplayName="Public Enums" Priority="100"&gt;
           &lt;Entry.Match&gt;
               &lt;And&gt;
-                  &lt;Kind Is="Member" /&gt;
+                  &lt;Access Is="Public" /&gt;
+                  &lt;Kind Is="Enum" /&gt;
+              &lt;/And&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;Name /&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="Interface Property Implementations"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Property" /&gt;
+                      &lt;ImplementsInterface /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Autoproperty" /&gt;
+                      &lt;ImplementsInterface /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;ImplementsInterface Immediate="true"/&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="Properties, Indexers"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;Kind Is="Property" /&gt;
+                  &lt;Kind Is="Indexer" /&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="Fields"&gt;
+          &lt;Entry.Match&gt;
+                  &lt;Kind Is="Field" /&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;Readonly /&gt;
+              &lt;Name /&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="Constructors" Priority="25"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Kind Is="Constructor" /&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;Static/&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="Inject Methods" Priority="0"&gt;
+          &lt;Entry.Match&gt;
+              &lt;Or&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Method" /&gt;
+                      &lt;HasAttribute Name="Inject" /&gt;
+                  &lt;/And&gt;
+                  &lt;And&gt;
+                      &lt;Kind Is="Method" /&gt;
+                      &lt;HasAttribute Name="InjectOptional" /&gt;
+                  &lt;/And&gt;
+              &lt;/Or&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;Name /&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="Interface Method Implementations" Priority="0"&gt;
+          &lt;Entry.Match&gt;
+              &lt;And&gt;
+                  &lt;Kind Is="Method" /&gt;
                   &lt;ImplementsInterface /&gt;
               &lt;/And&gt;
           &lt;/Entry.Match&gt;
@@ -434,22 +605,136 @@
               &lt;ImplementsInterface Immediate="true" /&gt;
           &lt;/Entry.SortBy&gt;
       &lt;/Entry&gt;
-      
-    &lt;Entry DisplayName="Public Methods"&gt;
+
+      &lt;Entry DisplayName="Public Methods" Priority="0"&gt;
           &lt;Entry.Match&gt;
               &lt;And&gt;
-                &lt;Kind Is="Method" /&gt;
-                &lt;Access Is="Public" /&gt;  
+                  &lt;Kind Is="Method" /&gt;
+                  &lt;Access Is="Public" /&gt;
               &lt;/And&gt;
           &lt;/Entry.Match&gt;
 
           &lt;Entry.SortBy&gt;
-              &lt;Name/&gt;
+              &lt;ImplementsInterface Immediate="true" /&gt;
           &lt;/Entry.SortBy&gt;
       &lt;/Entry&gt;
       
-  &lt;Entry DisplayName="All other members" /&gt;
-      
+      &lt;Entry DisplayName="Protected Methods" Priority="0"&gt;
+          &lt;Entry.Match&gt;
+              &lt;And&gt;
+                  &lt;Kind Is="Method" /&gt;
+                  &lt;Access Is="Protected" /&gt;
+              &lt;/And&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;ImplementsInterface Immediate="true" /&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="Private Methods" Priority="0"&gt;
+          &lt;Entry.Match&gt;
+              &lt;And&gt;
+                  &lt;Kind Is="Method" /&gt;
+                  &lt;Access Is="Private" /&gt;
+              &lt;/And&gt;
+          &lt;/Entry.Match&gt;
+
+          &lt;Entry.SortBy&gt;
+              &lt;ImplementsInterface Immediate="true" /&gt;
+          &lt;/Entry.SortBy&gt;
+      &lt;/Entry&gt;
+
+      &lt;Entry DisplayName="All other members" Priority="0" /&gt;
   &lt;/TypePattern&gt;
 &lt;/Patterns&gt;
-</s:String></wpf:ResourceDictionary>
+</s:String>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpKeepExistingMigration/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpPlaceEmbeddedOnSameLineMigration/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpUseContinuousIndentInsideBracesMigration/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EMigrateBlankLinesAroundFieldToBlankLinesAroundProperty/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=820110D4D359484DB5FAECCBC65F7637/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=820110D4D359484DB5FAECCBC65F7637/EntryName/@EntryValue">&lt;No Name&gt;</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=820110D4D359484DB5FAECCBC65F7637/Position/@EntryValue">10</s:Int64>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=F5FFB1BD05F2234593CC66337D5DA7A8/EntryName/@EntryValue"></s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/QuickList/=F0CA621CDF5AB24282D8CDC11C520997/Entry/=F5FFB1BD05F2234593CC66337D5DA7A8/Position/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Applicability/=File/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/CustomProperties/=Extension/@EntryIndexedValue">cs</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/CustomProperties/=FileName/@EntryIndexedValue">NewTest</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/CustomProperties/=ValidateFileName/@EntryIndexedValue">True</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Description/@EntryValue">&amp;Zenject Test</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Field/=CLASS/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Field/=CLASS/Expression/@EntryValue">getAlphaNumericFileNameWithoutExtension()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Field/=CLASS/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Field/=HEADER/@KeyIndexDefined">False</s:Boolean>
+	
+	
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Field/=NAMESPACE/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Field/=NAMESPACE/Expression/@EntryValue">fileDefaultNamespace()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Field/=NAMESPACE/InitialRange/@EntryValue">-1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Field/=NAMESPACE/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Reformat/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Scope/=E8F0594528C33E45BBFEC6CFE851095D/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue">InCSharpProjectFile</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/Text/@EntryValue">using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+using Zenject;
+
+namespace $NAMESPACE$
+{
+  // Zenject Dependencies for
+/* - Body Initialization:
+   -- ISessionDataProvider to SessionDataProvider
+   -- GameObjectFactory
+   -- BodyFactory
+   -- AtlasAssetProvider
+   -- IBodyGroup to MergedGroup */ 
+/* - Atlas Selector 
+   -- ISessionDataProvider to SessionDataProvider
+   -- IAtlasUi
+   -- ICameraFocus
+   -- ICameraUnFocus*/
+/* - Atlas Command Stream
+   -- ICameraReset*/
+/* - Atlas Mode Activator
+   -- ISessionDataProvider to SessionDataProvider
+   -- ISceneLoader
+   -- IBodyGroup
+   -- ICommonUi
+   -- ISelector
+   -- IAtlasUi
+   -- ICameraActivator
+   -- ICameraDeactivator*/
+  public class $CLASS$ : ZenjectIntegrationTestFixture
+  {
+    [SetUp]
+    public void SetUp()
+    {
+      PreInstall();
+      PostInstall();
+    }
+  }
+}</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=820110D4D359484DB5FAECCBC65F7637/UITag/@EntryValue">Class/Interface</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/@KeyIndexDefined">False</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Applicability/=File/@EntryIndexedValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Applicability/=File/@EntryIndexRemoved">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/CustomProperties/=Extension/@EntryIndexedValue"></s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/CustomProperties/=Extension/@EntryIndexRemoved">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/CustomProperties/=FileName/@EntryIndexedValue"></s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/CustomProperties/=FileName/@EntryIndexRemoved">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/CustomProperties/=ValidateFileName/@EntryIndexedValue"></s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/CustomProperties/=ValidateFileName/@EntryIndexRemoved">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Description/@EntryValue"></s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Field/=HEADER/Order/@EntryValue">-1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Field/=Monobehaviour/Order/@EntryValue">-1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Field/=NAMESPACE/Order/@EntryValue">-1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Reformat/@EntryValue">False</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Scope/=E8F0594528C33E45BBFEC6CFE851095D/Type/@EntryValue"></s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/ShortenQualifiedReferences/@EntryValue">False</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/Text/@EntryValue"></s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F5FFB1BD05F2234593CC66337D5DA7A8/UITag/@EntryValue"></s:String></wpf:ResourceDictionary>

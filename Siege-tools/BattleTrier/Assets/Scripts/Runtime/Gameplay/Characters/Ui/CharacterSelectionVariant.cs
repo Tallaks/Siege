@@ -33,18 +33,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       _mediator = mediator;
     }
 
-    public void Initialize(int configId)
-    {
-      _id = configId;
-      _icon.sprite = _dataProvider.ConfigById(configId).Icon;
-
-      _addButton.onClick.AddListener(OnAddButtonClicked);
-      _subButton.onClick.AddListener(OnSubButtonClicked);
-      _deselectAllButton.onClick.AddListener(OnDeselectButtonClicked);
-
-      HideSelectionUi();
-    }
-
     public void OnPointerClick(PointerEventData eventData)
     {
       if (!_characterSelection.PlayerHasCharactersOfConfig(_id))
@@ -55,6 +43,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
       _mediator.ShowConfigInfo(_id);
       _mediator.ChangeCharacterList();
+    }
+
+    public void Initialize(int configId)
+    {
+      _id = configId;
+      _icon.sprite = _dataProvider.ConfigById(configId).Icon;
+
+      _addButton.onClick.AddListener(OnAddButtonClicked);
+      _subButton.onClick.AddListener(OnSubButtonClicked);
+      _deselectAllButton.onClick.AddListener(OnDeselectButtonClicked);
+
+      HideSelectionUi();
     }
 
     private void ShowSelectionUi()

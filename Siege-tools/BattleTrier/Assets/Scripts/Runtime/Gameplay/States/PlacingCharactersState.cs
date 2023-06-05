@@ -5,8 +5,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class PlacingCharactersState : ParameterlessState
   {
-    private GameplayMediator _mediator;
-    private RoleBase _roleBase;
+    private readonly GameplayMediator _mediator;
+    private readonly RoleBase _roleBase;
 
     public PlacingCharactersState(GameplayMediator mediator, RoleBase roleBase)
     {

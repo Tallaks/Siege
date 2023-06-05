@@ -6,10 +6,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines
 {
   public class AggregateRunner : MonoBehaviour, ICoroutineRunner, IUpdateRunner
   {
+    private class SubscriberData
+    {
+      public float NextCallTime;
+      public float Period;
+    }
+
     private readonly Queue<Action> _pendingHandlers = new();
     private readonly Dictionary<Action, SubscriberData> _subscriberData = new();
     private readonly HashSet<Action> _subscribers = new();
-
 
     private void Update()
     {
@@ -41,19 +46,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines
         });
     }
 
-    public void Unsubscribe(Action updateAction)
-    {
+    public void Unsubscribe(Action updateAction) =>
       _pendingHandlers.Enqueue(() =>
       {
         _subscribers.Remove(updateAction);
         _subscriberData.Remove(updateAction);
       });
-    }
-
-    private class SubscriberData
-    {
-      public float NextCallTime;
-      public float Period;
-    }
   }
 }
