@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
 {
-  public class LocalCharacterSelection : ICharacterSelection
+  public class CharacterRegistryLocal : ICharacterRegistry
   {
     private readonly Dictionary<int, int> _characterGroup = new();
 
     private readonly HashSet<int> _selectedConfigs = new();
-    public IDictionary<int, int> Characters => _characterGroup;
+    public IReadOnlyDictionary<int, int> Characters => _characterGroup;
+    public IEnumerable<int> CharacterConfigsIds => _selectedConfigs;
 
     public bool PlayerHasCharactersOfConfig(int configId) =>
       _selectedConfigs.Contains(configId);

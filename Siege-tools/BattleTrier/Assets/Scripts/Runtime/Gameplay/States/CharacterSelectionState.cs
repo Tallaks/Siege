@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
@@ -14,21 +14,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
   {
     private readonly ICharacterFactory _characterFactory;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
-    private readonly ICharacterSelection _characterSelection;
+    private readonly ICharacterRegistry _characterRegistry;
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly GameplayMediator _mediator;
     private readonly RoleBase _role;
 
     public CharacterSelectionState(
       ICoroutineRunner coroutineRunner,
-      ICharacterSelection characterSelection,
+      ICharacterRegistry characterRegistry,
       ICharacterFactory characterFactory,
       CharacterRegistryNetwork characterRegistryNetwork,
       RoleBase role,
       GameplayMediator mediator)
     {
       _coroutineRunner = coroutineRunner;
-      _characterSelection = characterSelection;
+      _characterRegistry = characterRegistry;
       _characterFactory = characterFactory;
       _characterRegistryNetwork = characterRegistryNetwork;
       _role = role;
@@ -46,7 +46,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       Debug.Log("Exiting character selection state");
       _mediator.HideCharacterSelectionUi();
 
-      foreach (KeyValuePair<int, int> characterGroup in _characterSelection.Characters)
+      foreach (KeyValuePair<int, int> characterGroup in _characterRegistry.Characters)
         for (var i = 0; i < characterGroup.Value; i++)
           _characterRegistryNetwork.RegisterByIdServerRpc(characterGroup.Key, _role.State.Value);
 

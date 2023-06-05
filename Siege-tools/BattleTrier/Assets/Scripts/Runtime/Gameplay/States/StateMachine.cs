@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
@@ -14,7 +14,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
   {
     private readonly ICharacterFactory _characterFactory;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
-    private readonly ICharacterSelection _characterSelection;
+    private readonly ICharacterRegistry _characterRegistry;
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly GameplayMediator _mediator;
     private readonly RoleBase _role;
@@ -26,14 +26,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     public StateMachine(
       ICoroutineRunner coroutineRunner,
       RoleBase role,
-      ICharacterSelection characterSelection,
+      ICharacterRegistry characterRegistry,
       ICharacterFactory characterFactory,
       GameplayMediator mediator,
       CharacterRegistryNetwork characterRegistryNetwork)
     {
       _coroutineRunner = coroutineRunner;
       _role = role;
-      _characterSelection = characterSelection;
+      _characterRegistry = characterRegistry;
       _characterFactory = characterFactory;
       _mediator = mediator;
       _characterRegistryNetwork = characterRegistryNetwork;
@@ -43,7 +43,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       _states = new Dictionary<Type, IExitState>
       {
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
-        [typeof(CharacterSelectionState)] = new CharacterSelectionState(_coroutineRunner, _characterSelection,
+        [typeof(CharacterSelectionState)] = new CharacterSelectionState(_coroutineRunner, _characterRegistry,
           _characterFactory, _characterRegistryNetwork, _role, _mediator),
         [typeof(PlacingCharactersState)] = new PlacingCharactersState(_mediator, _role)
       };
