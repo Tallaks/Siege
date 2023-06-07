@@ -19,13 +19,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     public override void InstallBindings()
     {
       Container.Bind<MapSelectionNetwork>().FromInstance(_mapSelectionNetwork).AsSingle();
-
       Container.Bind<CharacterSelectionNetwork>().FromInstance(_characterSelectionNetwork).AsSingle();
-
       Container.Bind<CharacterRegistryNetwork>().FromInstance(_characterRegistryNetwork).AsSingle();
-
       Container.Bind<RoleBase>().FromInstance(_networkManager.LocalClient.PlayerObject.GetComponent<RoleBase>())
         .AsSingle();
     }
+
+    public T GetResolve<T>() =>
+      Container.Resolve<T>();
   }
 }

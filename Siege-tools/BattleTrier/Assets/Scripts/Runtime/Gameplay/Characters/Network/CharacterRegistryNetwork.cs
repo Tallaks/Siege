@@ -31,17 +31,18 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void RegisterByIdServerRpc(int characterId, RoleState role)
+    public void RegisterByIdServerRpc(int characterTypeId, RoleState role)
     {
-      var networkData = new CharacterNetworkData(characterId, role, _dataProvider);
+      int characterId = FirstPlayerCharacters.Count + SecondPlayerCharacters.Count;
+      var networkData = new CharacterNetworkData(characterTypeId, characterId, role, _dataProvider);
       if (role == RoleState.ChosenFirst)
       {
-        Debug.Log($"Added character with {characterId} for first player");
+        Debug.Log($"Added character {characterId} with config id {characterTypeId} for first player");
         FirstPlayerCharacters.Add(networkData);
       }
       else
       {
-        Debug.Log($"Added character with {characterId} for second player");
+        Debug.Log($"Added character {characterId} with config id {characterTypeId} for second player");
         SecondPlayerCharacters.Add(networkData);
       }
     }

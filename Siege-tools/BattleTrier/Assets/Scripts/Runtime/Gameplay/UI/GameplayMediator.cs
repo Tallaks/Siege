@@ -58,5 +58,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     public void ShowPlacementSpectatorUi() =>
       _characterPlacementUi.ShowPlacementSpectatorUi();
+
+    public void UpdatePlacementList() =>
+      _characterPlacementUi.UpdatePlacementList();
+
+    public void ShowSubmitButton() =>
+      _characterPlacementUi.ShowSubmitButton();
   }
 }

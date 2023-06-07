@@ -21,9 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Id: 2
-  Icon: {fileID: 21300000, guid: 0ccc508108fa6ed4fa11b4a467d7f609, type: 3}
-  Name: Soldier
   ActionPoints: 10
   HealthPoints: 40
+  Icon: {fileID: 21300000, guid: 047687fc6e25634478ccf3a691c1e443, type: 3}
+  Id: 2
+  Name: Soldier
   Prefab: {fileID: 9099577807979389012, guid: 59b3a59dabfbdbc46bd7efe3d070f34b, type: 3}

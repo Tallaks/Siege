@@ -9,15 +9,27 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
   public struct CharacterNetworkData : INetworkSerializable, IEquatable<CharacterNetworkData>
   {
     public int CurrentHp;
+    public int InstanceId;
     public RoleState PlayerRole;
     public Vector2 TilePosition;
     public int TypeId;
 
-    public CharacterNetworkData(int id, RoleState playerRole, IStaticDataProvider configProvider)
+    public CharacterNetworkData(int id, int instanceId, RoleState playerRole, IStaticDataProvider configProvider)
     {
       TypeId = id;
+      InstanceId = instanceId;
       PlayerRole = playerRole;
-      TilePosition = Vector2.positiveInfinity;
+      TilePosition = new Vector2(-100, -100);
+      CurrentHp = configProvider.ConfigById(id).HealthPoints;
+    }
+
+    public CharacterNetworkData(int id, int instanceId, RoleState playerRole, Vector2Int position,
+      IStaticDataProvider configProvider)
+    {
+      TypeId = id;
+      InstanceId = instanceId;
+      PlayerRole = playerRole;
+      TilePosition = position;
       CurrentHp = configProvider.ConfigById(id).HealthPoints;
     }
 
@@ -25,7 +37,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
       other.TypeId == TypeId &&
       other.PlayerRole == PlayerRole &&
       other.TilePosition == TilePosition &&
-      other.CurrentHp == CurrentHp;
+      other.CurrentHp == CurrentHp &&
+      other.InstanceId == InstanceId;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
@@ -33,6 +46,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
       serializer.SerializeValue(ref CurrentHp);
       serializer.SerializeValue(ref TilePosition);
       serializer.SerializeValue(ref PlayerRole);
+      serializer.SerializeValue(ref InstanceId);
     }
   }
 }
