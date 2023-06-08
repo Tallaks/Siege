@@ -21,6 +21,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     private readonly NetworkManager _networkManager;
     private readonly ISceneLoader _sceneLoader;
     private readonly Session<SessionPlayerData> _session;
+
+    public ConnectionState CurrentState { get; private set; }
     private Dictionary<Type, ConnectionState> _connections;
     [Inject] private IConnectionService _connectionService;
 
@@ -42,10 +44,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _lobbyService = lobbyService;
     }
 
-    public ConnectionState CurrentState { get; private set; }
-
-    public void Initialize()
-    {
+    public void Initialize() =>
       _connections = new Dictionary<Type, ConnectionState>
       {
         [typeof(OfflineState)] = new OfflineState(_networkManager, _sceneLoader, _lobbyService),
@@ -57,7 +56,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
         [typeof(StartingHostState)] =
           new StartingHostState(this, _connectionService, _networkManager, _session, _lobbyInfo)
       };
-    }
 
     public void Enter<TState>() where TState : NonParameterConnectionState
     {

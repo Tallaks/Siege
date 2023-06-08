@@ -226,6 +226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43cf243df5fd4b64ba1af4f72f6b12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _icon: {fileID: 5574921321225253955}
   _background: {fileID: 5574921321992537450}
   _button: {fileID: 5574921321992537452}
+  _icon: {fileID: 5574921321225253955}

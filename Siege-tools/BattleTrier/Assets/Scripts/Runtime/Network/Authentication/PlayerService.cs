@@ -10,15 +10,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication
     [SerializeField] private FirstPlayerBehaviour _firstPlayerPrefab;
     [SerializeField] private SecondPlayerBehaviour _secondPlayerPrefab;
 
-    /// <summary>
-    /// Gets called when the <see cref="NetworkObject"/> gets spawned, message handlers are ready to be registered and the network is setup.
-    /// </summary>
-    public override void OnNetworkSpawn()
-    {
-      base.OnNetworkSpawn();
-      Debug.Log("Player Service Spawn");
-    }
-
     [ServerRpc(RequireOwnership = false)]
     public void RegisterPlayerServerRpc(Role role)
     {
@@ -33,6 +24,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication
           secondPlayer.NetworkObject.Spawn();
           break;
       }
+    }
+
+    /// <summary>
+    /// Gets called when the <see cref="NetworkObject"/> gets spawned, message handlers are ready to be registered and the network is setup.
+    /// </summary>
+    public override void OnNetworkSpawn()
+    {
+      base.OnNetworkSpawn();
+      Debug.Log("Player Service Spawn");
     }
   }
 }

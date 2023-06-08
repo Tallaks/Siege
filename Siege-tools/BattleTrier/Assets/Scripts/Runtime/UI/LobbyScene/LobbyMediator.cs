@@ -78,7 +78,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       }
     }
 
-
     private void OnJoinedLobby(Lobby remoteLobby)
     {
       _lobbyService.SetRemoteLobby(remoteLobby);

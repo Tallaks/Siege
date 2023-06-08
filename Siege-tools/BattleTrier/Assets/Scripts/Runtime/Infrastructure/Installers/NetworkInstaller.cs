@@ -16,15 +16,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
     private IConnectionStateMachine _connectionStateMachine;
     private NetworkManager _networkManager;
 
-    public void Dispose()
-    {
-      _networkManager.OnServerStarted -= OnServerStarted;
-      _networkManager.OnClientConnectedCallback -= OnClientConnectedCallback;
-      _networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
-      _networkManager.ConnectionApprovalCallback -= ApprovalCheck;
-      _networkManager.OnTransportFailure -= OnTransportFailure;
-    }
-
     public void Initialize()
     {
       _connectionStateMachine = Container.Resolve<IConnectionStateMachine>();
@@ -41,6 +32,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       _networkManager.NetworkConfig.EnableNetworkLogs = true;
       _networkManager.ConnectionApprovalCallback += ApprovalCheck;
       _networkManager.OnTransportFailure += OnTransportFailure;
+    }
+
+    public void Dispose()
+    {
+      _networkManager.OnServerStarted -= OnServerStarted;
+      _networkManager.OnClientConnectedCallback -= OnClientConnectedCallback;
+      _networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
+      _networkManager.ConnectionApprovalCallback -= ApprovalCheck;
+      _networkManager.OnTransportFailure -= OnTransportFailure;
     }
 
     public override void InstallBindings()

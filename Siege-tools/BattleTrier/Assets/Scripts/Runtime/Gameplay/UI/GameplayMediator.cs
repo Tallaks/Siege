@@ -1,14 +1,18 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 {
   public class GameplayMediator : MonoBehaviour
   {
-    [SerializeField] private CharacterSelectionUi _characterSelectionUi;
-    [SerializeField] private MapSelectionUi _mapSelectionUi;
+    [SerializeField, Required] private CharacterSelectionUi _characterSelectionUi;
+    [SerializeField, Required] private MapSelectionUi _mapSelectionUi;
+    [SerializeField, Required] private CharacterPlacementUi _characterPlacementUi;
+
+    public bool CharacterPlacementUiIsActive => _characterPlacementUi.IsActivePanel;
 
     public void ChangeCharacterList() =>
       _characterSelectionUi.ChangeCharacterList();
@@ -45,5 +49,20 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     public void ShowConfigInfo(int configId) =>
       _characterSelectionUi.ShowConfigInfo(configId);
+
+    public void ShowPlacementActivePlayerUi() =>
+      _characterPlacementUi.ShowPlacementActivePlayerUi();
+
+    public void ShowPlacementWaitingPlayerUi() =>
+      _characterPlacementUi.ShowPlacementWaitingPlayerUi();
+
+    public void ShowPlacementSpectatorUi() =>
+      _characterPlacementUi.ShowPlacementSpectatorUi();
+
+    public void UpdatePlacementList() =>
+      _characterPlacementUi.UpdatePlacementList();
+
+    public void ShowSubmitButton() =>
+      _characterPlacementUi.ShowSubmitButton();
   }
 }

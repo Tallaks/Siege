@@ -28,16 +28,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
       _updateRunner = updateRunner;
     }
 
-    private void OnDestroy()
-    {
-      _refreshButton.onClick.RemoveAllListeners();
-      _updateRunner.Unsubscribe(Refresh);
-    }
-
     public void Initialize()
     {
       _refreshButton.onClick.AddListener(() => _mediator.QueryLobbiesRequest(true));
       _updateRunner.Subscribe(Refresh, 10);
+    }
+
+    private void OnDestroy()
+    {
+      _refreshButton.onClick.RemoveAllListeners();
+      _updateRunner.Unsubscribe(Refresh);
     }
 
     public void UpdateList(IEnumerable<Lobby> lobbies)

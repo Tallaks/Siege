@@ -8,8 +8,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 {
   public class RoleSelectionClient : MonoBehaviour
   {
-    [SerializeField] private NetCodeHook _hook;
     private readonly int _lastRoleSelected = -1;
+    [SerializeField] private NetCodeHook _hook;
     private bool _hasLocalPlayerLockedIn = false;
     private RoleMediator _mediator;
 

@@ -29,7 +29,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _lobbyService = lobbyService;
     }
 
-
     public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
       NetworkManager.ConnectionApprovalResponse response)
     {

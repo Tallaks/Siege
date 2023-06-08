@@ -16,9 +16,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     [SerializeField, Required, ChildGameObjectsOnly] private Image _iconImage;
     [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _nameText;
 
-    private IStaticDataProvider _dataProvider;
-
     public CharacterConfig Config { get; private set; }
+
+    private IStaticDataProvider _dataProvider;
 
     [Inject]
     private void Construct(IStaticDataProvider dataProvider) =>

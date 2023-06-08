@@ -15,10 +15,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
       ID = 4
     }
 
-    private string _id;
-    private bool _isHost;
-    private string _name;
-
     public bool IsHost
     {
       get => _isHost;
@@ -48,6 +44,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Data
         OnChanged?.Invoke(this);
       }
     }
+
+    private string _id;
+    private bool _isHost;
+    private string _name;
 
     public void CopyDataFrom(UserProfile lobbyUser)
     {

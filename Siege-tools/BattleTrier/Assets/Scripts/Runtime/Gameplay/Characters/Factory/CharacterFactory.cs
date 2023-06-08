@@ -1,7 +1,5 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
 using Zenject;
 
@@ -18,16 +16,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory
       _container = container;
     }
 
-    public Character Create(CharacterNetworkData networkData)
+    public Character Create(int id)
     {
-      CharacterConfig config = _dataProvider.ConfigById(networkData.TypeId);
-      var instantiatePrefabForComponent = _container.InstantiatePrefabForComponent<Character>(config.Prefab,
-        networkData.PlayerRole == RoleState.ChosenFirst ? new Vector3(-5, 0) : new Vector3(5, 0), Quaternion.identity,
-        null);
-      Debug.Log($"Instantiated {config.Name}", instantiatePrefabForComponent);
-      instantiatePrefabForComponent.name = config.Name;
-      instantiatePrefabForComponent.Renderer.sprite = config.Icon;
-      return instantiatePrefabForComponent;
+      CharacterConfig config = _dataProvider.ConfigById(id);
+      var character = _container.InstantiatePrefabForComponent<Character>(config.Prefab);
+      Debug.Log($"Instantiated {config.Name}", character);
+      character.name = config.Name;
+      character.Id = id;
+      character.Renderer.sprite = config.Icon;
+      return character;
     }
   }
 }

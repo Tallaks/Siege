@@ -4,6 +4,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs
 {
   public class OldInputService : MonoBehaviour, IInputService
   {
+    public Vector2 MoveDirection { get; private set; }
+
     private void Update()
     {
       MoveDirection = Vector2.zero;
@@ -12,7 +14,5 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs
       if (Input.GetKeyDown(KeyCode.A)) MoveDirection = new Vector2(-1, 0);
       if (Input.GetKeyDown(KeyCode.D)) MoveDirection = new Vector2(1, 0);
     }
-
-    public Vector2 MoveDirection { get; private set; }
   }
 }

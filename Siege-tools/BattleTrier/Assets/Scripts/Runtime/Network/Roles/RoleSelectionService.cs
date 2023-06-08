@@ -6,8 +6,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 {
   public class RoleSelectionService : NetworkBehaviour
   {
-    public NetworkList<PlayerRoleState> PlayerRoles;
     public NetworkVariable<bool> LobbyIsClosed { get; } = new();
+    public NetworkList<PlayerRoleState> PlayerRoles;
 
     private void Awake() =>
       PlayerRoles = new NetworkList<PlayerRoleState>();

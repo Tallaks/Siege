@@ -11,11 +11,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
     public Sprite Icon;
 
     public string Name;
-    private int _cols;
-    private int _rows;
-
-    [Space, TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = "DrawColoredEnumElement")]
-    public TileType[,] MapTiles;
 
     public int Cols
     {
@@ -48,6 +43,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
         PlayerPrefs.Save();
       }
     }
+
+    private int _cols;
+    private int _rows;
+
+    [Space, TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = "DrawColoredEnumElement")]
+    public TileType[,] MapTiles;
 
     public BoardConfig() =>
       MapTiles = new TileType[1, 1];

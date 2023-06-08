@@ -21,9 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Id: 1
-  Icon: {fileID: 21300000, guid: 3a0c527d7f890d64a9b56b086e6e766a, type: 3}
-  Name: Gregor
   ActionPoints: 10
   HealthPoints: 35
+  Icon: {fileID: 21300000, guid: 3020804b26a692242856c785357a391a, type: 3}
+  Id: 1
+  Name: Gregor
   Prefab: {fileID: 9099577807979389012, guid: 59b3a59dabfbdbc46bd7efe3d070f34b, type: 3}

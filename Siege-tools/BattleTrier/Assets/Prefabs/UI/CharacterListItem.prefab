@@ -907,10 +907,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _amountText: {fileID: 2004023249643662640}
-  _nameText: {fileID: 2004023250645879613}
-  _hpText: {fileID: 561120544}
   _apText: {fileID: 503510630}
+  _hpText: {fileID: 561120544}
   _iconImage: {fileID: 2004023251016628087}
+  _nameText: {fileID: 2004023250645879613}
 --- !u!1 &2004023251016628073
 GameObject:
   m_ObjectHideFlags: 0
