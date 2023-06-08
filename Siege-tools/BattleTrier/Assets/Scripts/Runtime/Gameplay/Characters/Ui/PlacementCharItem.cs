@@ -31,6 +31,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     }
 
     private void OnCharacterSelected() =>
-      _placementSelection.Select(_configById);
+      _placementSelection.SelectConfig(_configById);
   }
 }

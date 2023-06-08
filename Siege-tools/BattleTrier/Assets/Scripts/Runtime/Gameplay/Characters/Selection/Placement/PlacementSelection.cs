@@ -4,12 +4,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection.Plac
 {
   public class PlacementSelection : IPlacementSelection
   {
-    public CharacterConfig SelectedPlayer { get; private set; }
+    public CharacterConfig SelectedPlayerConfig { get; private set; }
+    public Character SelectedCharacter { get; private set; }
 
-    public void Select(CharacterConfig configById) =>
-      SelectedPlayer = configById;
+    public void SelectConfig(CharacterConfig configById) =>
+      SelectedPlayerConfig = configById;
 
     public void Unselect() =>
-      SelectedPlayer = null;
+      SelectedPlayerConfig = null;
+
+    public void SelectPlacedCharacter(Character characterOnTile) =>
+      SelectedCharacter = characterOnTile;
   }
 }

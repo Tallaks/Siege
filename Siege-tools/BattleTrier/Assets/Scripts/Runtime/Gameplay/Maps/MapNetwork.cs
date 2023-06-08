@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
@@ -74,8 +75,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       }
     }
 
-    public void PlacePlayerOn(Tile tileToPlace, CharacterConfig selectedPlayerConfig) =>
+    public void PlacePlayerFromConfigOn(Tile tileToPlace, CharacterConfig selectedPlayerConfig) =>
       _placer.PlaceNewCharacterOnTile(tileToPlace, selectedPlayerConfig);
+
+    public void MoveCharacterTo(Tile newTile, Character character)
+    {
+      Refresh();
+      Tile previousTile = _tiles.FirstOrDefault(k => k.Occupied && k.Coords == character.Position);
+      previousTile.UnOccupy();
+      _placer.PlaceExistingCharacterOnTile(newTile, character);
+      newTile.ChangeToSelectedColor();
+    }
 
     private void Refresh()
     {

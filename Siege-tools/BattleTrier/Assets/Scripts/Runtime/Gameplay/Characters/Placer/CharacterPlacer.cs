@@ -33,7 +33,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
 
     public void PlaceNewCharacterOnTile(Tile tileToPlace, CharacterConfig selectedPlayerConfig)
     {
-      tileToPlace.OccupyBy(_characterFactory.Create(selectedPlayerConfig.Id, tileToPlace.Coords));
+      Character character = _characterFactory.Create(selectedPlayerConfig.Id);
+      tileToPlace.OccupyBy(character);
+      character.MoveTo(tileToPlace.Coords);
       if (_roleBase.State.Value == RoleState.ChosenFirst)
       {
         for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
@@ -66,6 +68,40 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
       }
 
       _placementSelection.Unselect();
+    }
+
+    public void PlaceExistingCharacterOnTile(Tile newTile, Character character)
+    {
+      newTile.OccupyBy(character);
+      character.MoveTo(newTile.Coords);
+      if (_roleBase.State.Value == RoleState.ChosenFirst)
+      {
+        for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
+          if (_characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId == character.Id)
+          {
+            _characterRegistryNetwork.FirstPlayerCharacters[i] = new CharacterNetworkData(
+              _characterRegistryNetwork.FirstPlayerCharacters[i].TypeId,
+              character.Id,
+              RoleState.ChosenFirst,
+              newTile.Coords,
+              _staticDataProvider);
+            break;
+          }
+      }
+      else if (_roleBase.State.Value == RoleState.ChosenSecond)
+      {
+        for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
+          if (_characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId == character.Id)
+          {
+            _characterRegistryNetwork.SecondPlayerCharacters[i] = new CharacterNetworkData(
+              _characterRegistryNetwork.SecondPlayerCharacters[i].TypeId,
+              character.Id,
+              RoleState.ChosenSecond,
+              newTile.Coords,
+              _staticDataProvider);
+            break;
+          }
+      }
     }
   }
 }

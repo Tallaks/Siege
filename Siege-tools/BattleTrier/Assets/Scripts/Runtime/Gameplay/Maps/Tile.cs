@@ -30,13 +30,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
     {
       if (Occupied == false)
       {
-        if (_placementSelection.SelectedPlayer != null)
-          _mapNetwork.PlacePlayerOn(this, _placementSelection.SelectedPlayer);
+        if (_placementSelection.SelectedPlayerConfig != null)
+          _mapNetwork.PlacePlayerFromConfigOn(this, _placementSelection.SelectedPlayerConfig);
+        else if (_placementSelection.SelectedCharacter != null)
+          _mapNetwork.MoveCharacterTo(this, _placementSelection.SelectedCharacter);
         else
           _mapNetwork.OnTileSelected(this);
       }
       else
       {
+        _placementSelection.SelectPlacedCharacter(CharacterOnTile);
         _mapNetwork.OnTileSelected(this);
       }
     }
@@ -48,6 +51,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
     {
       CharacterOnTile = character;
       ChangeColor(new Color(1, 1, 1, 0.5f));
+    }
+
+    public void UnOccupy()
+    {
+      CharacterOnTile = null;
+      ChangeColor(Color.white);
     }
 
     public void ChangeToSelectedColor()

@@ -6,5 +6,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
   public interface ICharacterPlacer
   {
     void PlaceNewCharacterOnTile(Tile tileToPlace, CharacterConfig selectedPlayerConfig);
+    void PlaceExistingCharacterOnTile(Tile newTile, Character character);
   }
 }

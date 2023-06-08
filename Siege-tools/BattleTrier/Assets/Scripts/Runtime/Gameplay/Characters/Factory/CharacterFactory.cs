@@ -16,16 +16,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory
       _container = container;
     }
 
-    public Character Create(int id, Vector2Int position)
+    public Character Create(int id)
     {
       CharacterConfig config = _dataProvider.ConfigById(id);
-      var character = _container.InstantiatePrefabForComponent<Character>(config.Prefab,
-        new Vector3(-4f, -1.5f, 0) + new Vector3(position.x, position.y) * 0.7f, Quaternion.identity,
-        null);
+      var character = _container.InstantiatePrefabForComponent<Character>(config.Prefab);
       Debug.Log($"Instantiated {config.Name}", character);
       character.name = config.Name;
+      character.Id = id;
       character.Renderer.sprite = config.Icon;
-      character.Position = position;
       return character;
     }
   }
