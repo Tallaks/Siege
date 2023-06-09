@@ -37,7 +37,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       Debug.Log("Exiting character selection state");
       _mediator.HideCharacterSelectionUi();
 
-      foreach (KeyValuePair<int, int> characterGroup in _characterRegistry.Characters)
+      foreach (KeyValuePair<int, int> characterGroup in _characterRegistry.CharactersGroupsByConfigId)
         for (var i = 0; i < characterGroup.Value; i++)
           _characterRegistryNetwork.RegisterByIdServerRpc(characterGroup.Key, _role.State.Value);
     }

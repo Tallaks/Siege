@@ -28,11 +28,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void ChangeCharacterList()
     {
-      foreach (KeyValuePair<int, int> characterGroup in _characterRegistry.Characters)
+      foreach (KeyValuePair<int, int> characterGroup in _characterRegistry.CharactersGroupsByConfigId)
       {
         for (var index = 0; index < _characterList.Count; index++)
         {
-          if (!_characterRegistry.Characters.ContainsKey(_characterList[index].Config.Id))
+          if (!_characterRegistry.CharactersGroupsByConfigId.ContainsKey(_characterList[index].Config.Id))
           {
             Destroy(_characterList[index].gameObject);
             _characterList.Remove(_characterList[index]);
@@ -52,7 +52,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
         }
       }
 
-      if (_characterRegistry.Characters.Count == 0)
+      if (_characterRegistry.CharactersGroupsByConfigId.Count == 0)
         _mediator.DisableCharacterSelectSubmitButton();
       else
         _mediator.EnableCharacterSelectSubmitButton();

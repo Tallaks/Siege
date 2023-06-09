@@ -22,7 +22,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
     public void Initialize(int col, int row, MapNetwork mapNetwork)
     {
       _mapNetwork = mapNetwork;
-      _placementSelection = ServiceProvider.ResolveFromOfflineInstaller<IPlacementSelection>();
+      _placementSelection = ServiceProvider.GetResolve<IPlacementSelection>();
       Coords = new Vector2Int(col, row);
     }
 

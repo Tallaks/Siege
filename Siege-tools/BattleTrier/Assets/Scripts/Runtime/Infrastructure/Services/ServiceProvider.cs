@@ -5,10 +5,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services
 {
   public static class ServiceProvider
   {
-    public static T ResolveFromOfflineInstaller<T>() =>
-      Object.FindObjectOfType<OfflineGameplayInstaller>().GetResolve<T>();
+    public static T GetResolve<T>()
+    {
+      foreach (StaticInstaller installer in Object.FindObjectsOfType<StaticInstaller>())
+        if (installer.HasResolve<T>())
+          return installer.GetResolve<T>();
 
-    public static T ResolveFromOnlineInstaller<T>() =>
-      Object.FindObjectOfType<OnlineGameplayInstaller>().GetResolve<T>();
+      return default;
+    }
   }
 }

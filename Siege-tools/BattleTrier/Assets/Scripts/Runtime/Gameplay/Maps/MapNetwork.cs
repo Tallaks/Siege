@@ -2,10 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection.Placement;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services;
@@ -22,14 +19,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
     private GameplayMediator Mediator =>
       _mediator == null ? _mediator = FindObjectOfType<GameplayMediator>() : _mediator;
 
-    private ICharacterFactory _characterFactory;
-
     private BoardConfig _config;
     private int[,] _mapBoard;
 
     private GameplayMediator _mediator;
-    private CharacterRegistryNetwork _networkRegistry;
-    private IPlacementSelection _placementSelection;
     private ICharacterPlacer _placer;
 
     [ServerRpc(RequireOwnership = false)]
@@ -54,10 +47,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
     [ClientRpc]
     public void SpawnTilesClientRpc(string configName)
     {
-      _characterFactory = ServiceProvider.ResolveFromOfflineInstaller<ICharacterFactory>();
-      _placementSelection = ServiceProvider.ResolveFromOfflineInstaller<IPlacementSelection>();
-      _networkRegistry = ServiceProvider.ResolveFromOnlineInstaller<CharacterRegistryNetwork>();
-      _placer = ServiceProvider.ResolveFromOfflineInstaller<ICharacterPlacer>();
+      _placer = ServiceProvider.GetResolve<ICharacterPlacer>();
       _config = Resources.Load<BoardConfig>("Configs/Boards/" + configName);
       TileType[,] mapTiles = _config.MapTiles;
       Debug.Log("Spawn Tiles");

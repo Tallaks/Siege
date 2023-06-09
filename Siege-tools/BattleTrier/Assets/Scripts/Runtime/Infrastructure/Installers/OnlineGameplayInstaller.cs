@@ -8,7 +8,7 @@ using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
-  public class OnlineGameplayInstaller : MonoInstaller
+  public class OnlineGameplayInstaller : StaticInstaller
   {
     [SerializeField, Required] private CharacterRegistryNetwork _characterRegistryNetwork;
     [SerializeField, Required] private CharacterSelectionNetwork _characterSelectionNetwork;
@@ -24,8 +24,5 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind<RoleBase>().FromInstance(_networkManager.LocalClient.PlayerObject.GetComponent<RoleBase>())
         .AsSingle();
     }
-
-    public T GetResolve<T>() =>
-      Container.Resolve<T>();
   }
 }

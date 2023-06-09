@@ -5,35 +5,39 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
 {
   public class CharacterRegistryLocal : ICharacterRegistry
   {
-    private readonly Dictionary<int, int> _characterGroup = new();
-
+    private readonly Dictionary<int, int> _characterGroupByConfigId = new();
+    private readonly Dictionary<int, Character> _charactersById = new();
     private readonly HashSet<int> _selectedConfigs = new();
-    public IReadOnlyDictionary<int, int> Characters => _characterGroup;
-    public IEnumerable<int> CharacterConfigsIds => _selectedConfigs;
+
+    public IReadOnlyDictionary<int, int> CharactersGroupsByConfigId => _characterGroupByConfigId;
+    public IReadOnlyDictionary<int, Character> CharactersById => _charactersById;
 
     public bool PlayerHasCharactersOfConfig(int configId) =>
       _selectedConfigs.Contains(configId);
 
-    public void AddCharacter(int configId, int amount)
+    public void AddCharacterGroup(int configId, int amount)
     {
       Debug.Log($"Id {configId} added by {amount.ToString()}");
       _selectedConfigs.Add(configId);
 
-      if (!_characterGroup.ContainsKey(configId))
-        _characterGroup.Add(configId, amount);
+      if (!_characterGroupByConfigId.ContainsKey(configId))
+        _characterGroupByConfigId.Add(configId, amount);
       else
-        _characterGroup[configId] += amount;
+        _characterGroupByConfigId[configId] += amount;
     }
 
-    public void RemoveCharacter(int configId, int amount)
+    public void RemoveCharacterGroup(int configId, int amount)
     {
       Debug.Log($"Id {configId} removed by {amount.ToString()}");
-      _characterGroup[configId] -= amount;
-      if (_characterGroup[configId] <= 0)
+      _characterGroupByConfigId[configId] -= amount;
+      if (_characterGroupByConfigId[configId] <= 0)
       {
-        _characterGroup.Remove(configId);
+        _characterGroupByConfigId.Remove(configId);
         _selectedConfigs.Remove(configId);
       }
     }
+
+    public void Register(Character character) =>
+      _charactersById.Add(character.Id, character);
   }
 }

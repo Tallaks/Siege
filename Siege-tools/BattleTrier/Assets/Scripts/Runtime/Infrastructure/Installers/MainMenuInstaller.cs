@@ -6,10 +6,8 @@ using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
-  public class MainMenuInstaller : MonoInstaller, IInitializable
+  public class MainMenuInstaller : StaticInstaller, IInitializable
   {
-    public static string JoinCode;
-
     [SerializeField] private MainMenuMediator _mainMenuMediator;
 
     private AuthenticationServiceFacade _authenticationService;

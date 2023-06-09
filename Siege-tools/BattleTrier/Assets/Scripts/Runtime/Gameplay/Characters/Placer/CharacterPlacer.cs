@@ -48,6 +48,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
               RoleState.ChosenFirst,
               tileToPlace.Coords,
               _staticDataProvider);
+            character.Id = _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId;
             break;
           }
       }
@@ -63,6 +64,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
               RoleState.ChosenSecond,
               tileToPlace.Coords,
               _staticDataProvider);
+            character.Id = _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId;
             break;
           }
       }

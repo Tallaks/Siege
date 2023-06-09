@@ -1,23 +1,16 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
-using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI;
-using Unity.Netcode;
 using UnityEngine;
 using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
-  public class RoleSelectInstaller : MonoInstaller, IInitializable
+  public class RoleSelectInstaller : StaticInstaller, IInitializable
   {
     [SerializeField] private RoleSelectionClient _client;
     [SerializeField] private RoleMediator _mediator;
     [SerializeField] private RoleSelectionService _selectionService;
     [SerializeField] private RoleSelectionServer _server;
-    [Inject] private ICoroutineRunner _coroutineRunner;
-
-    [Inject] private NetworkManager _networkManager;
-    [Inject] private ISceneLoader _sceneLoader;
 
     public void Initialize() =>
       Container.Resolve<RoleMediator>().Initialize();
