@@ -12,7 +12,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     private readonly RoleBase _roleBase;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
 
-    public PlacingFirstPlayerCharactersState(GameplayMediator mediator, RoleBase roleBase,
+    public PlacingFirstPlayerCharactersState(
+      GameplayMediator mediator,
+      RoleBase roleBase,
       CharacterRegistryNetwork characterRegistryNetwork)
     {
       _mediator = mediator;

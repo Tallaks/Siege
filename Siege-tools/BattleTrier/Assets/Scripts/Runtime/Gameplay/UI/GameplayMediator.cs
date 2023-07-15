@@ -76,5 +76,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     public void HidePlacementWaitingUi() =>
       _characterPlacementUi.HidePlacementWaitingUi();
+
+    public void HideAllPlacementUi() =>
+      _characterPlacementUi.HideAll();
   }
 }

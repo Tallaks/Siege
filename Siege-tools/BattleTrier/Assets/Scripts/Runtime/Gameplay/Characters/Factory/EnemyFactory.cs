@@ -1,5 +1,4 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Zenject;
 
@@ -9,13 +8,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory
   {
     private readonly DiContainer _diContainer;
     private readonly IStaticDataProvider _dataProvider;
-    private readonly ICharacterRegistry _registry;
 
-    public EnemyFactory(DiContainer diContainer, IStaticDataProvider dataProvider, ICharacterRegistry registry)
+    public EnemyFactory(DiContainer diContainer, IStaticDataProvider dataProvider)
     {
       _diContainer = diContainer;
       _dataProvider = dataProvider;
-      _registry = registry;
     }
 
     public Enemy Create(int configId)

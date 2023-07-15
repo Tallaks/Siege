@@ -70,8 +70,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
 
     public void OccupyBy(Character character)
     {
+      Debug.Log($"Tile {Coords} occupied by {character.name}");
       CharacterOnTile = character;
-      ChangeColor(new Color(1, 1, 1, 0.5f));
+      if (character.GetComponent<Enemy>())
+        ChangeColor(new Color(1, 0, 0, 0.2f));
+      else
+        ChangeColor(new Color(0, 1, 0, 0.2f));
     }
 
     public void UnOccupy()

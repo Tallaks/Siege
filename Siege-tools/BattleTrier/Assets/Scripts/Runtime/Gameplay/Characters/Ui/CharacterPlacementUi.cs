@@ -91,8 +91,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     public void HidePlacementWaitingUi() =>
       _waitingPlayerPanel.SetActive(false);
 
+    public void HideAll()
+    {
+      _activePlayerPanel.SetActive(false);
+      _waitingPlayerPanel.SetActive(false);
+      _spectatorPanel.SetActive(false);
+    }
+
     private void OnReadyButtonClicked() =>
-      _placementStateNetwork.ChangeActivePlayerFromClientRpc(_role.State.Value);
+      _placementStateNetwork.ChangeActivePlayerFromServerRpc(_role.State.Value);
 
     private void ShowActivePlayerUi()
     {

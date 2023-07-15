@@ -43,7 +43,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
         [typeof(PlacingFirstPlayerCharactersState)] =
           new PlacingFirstPlayerCharactersState(_mediator, _role, _characterRegistryNetwork),
         [typeof(PlacingSecondPlayerCharactersState)] =
-          new PlacingSecondPlayerCharactersState(_mediator, _role, _characterRegistryNetwork, _characterPlacer)
+          new PlacingSecondPlayerCharactersState(_mediator, _role, _characterRegistryNetwork, _characterPlacer),
+        [typeof(BattleInitializationState)] = new BattleInitializationState()
       };
 
     public void Enter<TState>() where TState : ParameterlessState

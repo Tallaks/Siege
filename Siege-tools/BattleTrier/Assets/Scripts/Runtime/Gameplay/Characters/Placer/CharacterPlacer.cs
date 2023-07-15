@@ -35,6 +35,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
 
     public void PlaceNewCharacterOnTile(Tile tileToPlace, CharacterConfig selectedPlayerConfig)
     {
+      Debug.Log($"Placing new character with type id {selectedPlayerConfig.Id} on tile {tileToPlace.Coords}");
       Character character = _characterFactory.Create(selectedPlayerConfig.Id);
       tileToPlace.OccupyBy(character);
       character.MoveTo(tileToPlace.Coords);
@@ -44,8 +45,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
           if (_characterRegistryNetwork.FirstPlayerCharacters[i].TypeId == selectedPlayerConfig.Id &&
               _characterRegistryNetwork.FirstPlayerCharacters[i].TilePosition == new Vector2(-100, -100))
           {
-            _characterRegistryNetwork.ChangeCharacterPositionServerRpc(tileToPlace.Coords,
-              _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId);
+            _characterRegistryNetwork.ChangeCharacterPositionServerRpc(
+              tileToPlace.Coords,
+              _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId,
+              _roleBase.State.Value);
             character.Id = _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId;
             break;
           }
@@ -54,10 +57,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
       {
         for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
           if (_characterRegistryNetwork.SecondPlayerCharacters[i].TypeId == selectedPlayerConfig.Id &&
-              _characterRegistryNetwork.SecondPlayerCharacters[i].TilePosition == Vector2.positiveInfinity)
+              _characterRegistryNetwork.SecondPlayerCharacters[i].TilePosition == new Vector2(-100, -100))
           {
-            _characterRegistryNetwork.ChangeCharacterPositionServerRpc(tileToPlace.Coords,
-              _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId);
+            _characterRegistryNetwork.ChangeCharacterPositionServerRpc(
+              tileToPlace.Coords,
+              _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId,
+              _roleBase.State.Value);
             character.Id = _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId;
             break;
           }
@@ -66,15 +71,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
       _placementSelection.Unselect();
     }
 
-    public void PlaceExistingCharacterOnTile(Tile newTile, Character character)
-    {
-      newTile.OccupyBy(character);
-      character.MoveTo(newTile.Coords);
-      _characterRegistryNetwork.ChangeCharacterPositionServerRpc(newTile.Coords, character.Id);
-    }
-
     public void PlaceEnemiesOnTheirPositions()
     {
+      Debug.Log("Placing enemies on their positions");
       if (_roleBase.State.Value == RoleState.ChosenSecond)
         for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
         {
@@ -99,6 +98,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
           tile.OccupyBy(enemy);
           enemy.MoveTo(tile.Coords);
         }
+    }
+
+    public void PlaceExistingCharacterOnTile(Tile newTile, Character character)
+    {
+      newTile.OccupyBy(character);
+      character.MoveTo(newTile.Coords);
+      _characterRegistryNetwork.ChangeCharacterPositionServerRpc(newTile.Coords, character.Id, _roleBase.State.Value);
     }
   }
 }

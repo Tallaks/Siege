@@ -23,5 +23,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Network
       else if (role == RoleState.ChosenSecond)
         _stateMachine.Enter<BattleInitializationState>();
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ChangeActivePlayerFromServerRpc(RoleState role)
+    {
+      Debug.Log("ChangeActivePlayerFromServerRpc");
+      ChangeActivePlayerFromClientRpc(role);
+    }
   }
 }

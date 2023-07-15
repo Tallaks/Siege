@@ -1,4 +1,3 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Unity.Netcode;
@@ -10,18 +9,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
   public class CharacterRegistryNetwork : NetworkBehaviour
   {
     private IStaticDataProvider _dataProvider;
-    private GameplayMediator _mediator;
-    private RoleBase _playerRole;
     public NetworkList<CharacterNetworkData> FirstPlayerCharacters;
     public NetworkList<CharacterNetworkData> SecondPlayerCharacters;
 
     [Inject]
-    private void Construct(IStaticDataProvider dataProvider, GameplayMediator mediator, RoleBase playerRole)
-    {
+    private void Construct(IStaticDataProvider dataProvider) =>
       _dataProvider = dataProvider;
-      _mediator = mediator;
-      _playerRole = playerRole;
-    }
 
     private void Awake()
     {
@@ -37,35 +30,42 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ChangeCharacterPositionServerRpc(Vector2Int tilePosition, int characterId)
+    public void ChangeCharacterPositionServerRpc(Vector2Int tilePosition, int characterId, RoleState changerRole)
     {
+      if (FirstPlayerCharacters.Count + SecondPlayerCharacters.Count <= characterId)
+      {
+        Debug.LogError($"Character with id {characterId} not found");
+        return;
+      }
+
       for (var i = 0; i < FirstPlayerCharacters.Count; i++)
-        if (_playerRole.State.Value == RoleState.ChosenFirst)
-        {
+        if (changerRole == RoleState.ChosenFirst)
           if (FirstPlayerCharacters[i].InstanceId == characterId)
           {
+            Debug.Log($"Changing server position of character {characterId} to {tilePosition}");
             FirstPlayerCharacters[i] = new CharacterNetworkData(
               FirstPlayerCharacters[i].TypeId,
               characterId,
-              RoleState.ChosenFirst,
+              changerRole,
               tilePosition,
               _dataProvider);
-            break;
+            return;
+            ;
           }
-        }
-        else
-        {
+
+      for (var i = 0; i < SecondPlayerCharacters.Count; i++)
+        if (changerRole == RoleState.ChosenSecond)
           if (SecondPlayerCharacters[i].InstanceId == characterId)
           {
+            Debug.Log($"Changing server position of character {characterId} to {tilePosition}");
             SecondPlayerCharacters[i] = new CharacterNetworkData(
-              FirstPlayerCharacters[i].TypeId,
+              SecondPlayerCharacters[i].TypeId,
               characterId,
-              RoleState.ChosenFirst,
+              changerRole,
               tilePosition,
               _dataProvider);
             break;
           }
-        }
     }
 
     [ServerRpc(RequireOwnership = false)]

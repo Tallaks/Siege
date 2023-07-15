@@ -14,8 +14,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
     private readonly ICharacterPlacer _characterPlacer;
 
-    public PlacingSecondPlayerCharactersState(GameplayMediator mediator, RoleBase roleBase,
-      CharacterRegistryNetwork characterRegistryNetwork, ICharacterPlacer characterPlacer)
+    public PlacingSecondPlayerCharactersState(
+      GameplayMediator mediator,
+      RoleBase roleBase,
+      CharacterRegistryNetwork characterRegistryNetwork,
+      ICharacterPlacer characterPlacer)
     {
       _mediator = mediator;
       _roleBase = roleBase;
@@ -46,11 +49,16 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
     public override void Exit()
     {
+      if (_roleBase.State.Value == RoleState.ChosenSecond)
+        _characterRegistryNetwork.SecondPlayerCharacters.OnListChanged -= OnSecondPlayerCharactersPlaced;
+      else
+        _characterPlacer.PlaceEnemiesOnTheirPositions();
+      _mediator.HideAllPlacementUi();
     }
 
     private void OnSecondPlayerCharactersPlaced(NetworkListEvent<CharacterNetworkData> changeevent)
     {
-      Debug.Log("OnFirstPlayerCharactersPlaced");
+      Debug.Log("OnSecondPlayerCharactersPlaced");
       for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
         if (_characterRegistryNetwork.SecondPlayerCharacters[i].TilePosition == Vector2.one * -100)
         {
