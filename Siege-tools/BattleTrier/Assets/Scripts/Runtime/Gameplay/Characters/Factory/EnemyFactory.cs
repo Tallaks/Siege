@@ -26,7 +26,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory
       var character = enemy.GetComponent<Character>();
       character.name = config.Name;
       character.Renderer.sprite = config.Icon;
-      _registry.Register(character);
       return enemy;
     }
   }

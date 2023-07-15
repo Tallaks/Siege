@@ -8,11 +8,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 {
   public class GameplayMediator : MonoBehaviour
   {
-    [SerializeField, Required] private CharacterSelectionUi _characterSelectionUi;
-    [SerializeField, Required] private MapSelectionUi _mapSelectionUi;
-    [SerializeField, Required] private CharacterPlacementUi _characterPlacementUi;
+    [SerializeField] [Required]
+    private CharacterSelectionUi _characterSelectionUi;
+
+    [SerializeField] [Required]
+    private MapSelectionUi _mapSelectionUi;
+
+    [SerializeField] [Required]
+    private CharacterPlacementUi _characterPlacementUi;
 
     public bool CharacterPlacementUiIsActive => _characterPlacementUi.IsActivePanel;
+    public bool CharacterPlacementUiIsWaiting => _characterPlacementUi.IsWaitingPanel;
 
     public void ChangeCharacterList() =>
       _characterSelectionUi.ChangeCharacterList();
@@ -29,26 +35,26 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     public void EnableCharacterSelectSubmitButton() =>
       _characterSelectionUi.EnableCharacterSelectSubmitButton();
 
-    public void EnableMapSubmitButton() =>
-      _mapSelectionUi.EnableSubmitButton();
+    public void ShowConfigInfo(int configId) =>
+      _characterSelectionUi.ShowConfigInfo(configId);
 
     public void HideCharacterSelectionUi() =>
       _characterSelectionUi.HideCharacterSelectionUi();
 
-    public void HideMapSelectionUi() =>
-      _mapSelectionUi.HideMapSelectionUi();
-
     public void InitializeCharacterSelectionUi(RoleState stateValue) =>
       _characterSelectionUi.Initialize(stateValue);
+
+    public void EnableMapSubmitButton() =>
+      _mapSelectionUi.EnableSubmitButton();
+
+    public void HideMapSelectionUi() =>
+      _mapSelectionUi.HideMapSelectionUi();
 
     public void InitializeMapSelectionUi(RoleState stateValue) =>
       _mapSelectionUi.Initialize(stateValue);
 
     public void SetSelectedMap(MapSelectionButton selected) =>
       _mapSelectionUi.SetMap(selected);
-
-    public void ShowConfigInfo(int configId) =>
-      _characterSelectionUi.ShowConfigInfo(configId);
 
     public void ShowPlacementActivePlayerUi() =>
       _characterPlacementUi.ShowPlacementActivePlayerUi();
@@ -64,5 +70,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     public void ShowSubmitButton() =>
       _characterPlacementUi.ShowSubmitButton();
+
+    public void HidePlacementActivePlayerUi() =>
+      _characterPlacementUi.HidePlacementActivePlayerUi();
+
+    public void HidePlacementWaitingUi() =>
+      _characterPlacementUi.HidePlacementWaitingUi();
   }
 }

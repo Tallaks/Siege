@@ -10,9 +10,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class PlacementCharItem : MonoBehaviour
   {
-    [SerializeField, Required, ChildGameObjectsOnly] private Image _icon;
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _button;
-    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _count;
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Image _icon;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Button _button;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private TMP_Text _count;
 
     private CharacterConfig _configById;
 

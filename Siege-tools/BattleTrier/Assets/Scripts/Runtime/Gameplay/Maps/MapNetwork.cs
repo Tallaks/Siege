@@ -1,29 +1,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
-using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services;
+using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
+using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
 {
   public class MapNetwork : NetworkBehaviour
   {
     private readonly List<Tile> _tiles = new();
-    [SerializeField] private Tile _tilePrefab;
 
-    private GameplayMediator Mediator =>
-      _mediator == null ? _mediator = FindObjectOfType<GameplayMediator>() : _mediator;
+    [SerializeField] [Required] [AssetSelector(Paths = "Assets/Pefabs/", Filter = "t:GameObject")]
+    private Tile _tilePrefab;
+
+    public IEnumerable<Tile> Tiles => _tiles;
 
     private BoardConfig _config;
+    private DiContainer _container;
     private int[,] _mapBoard;
 
     private GameplayMediator _mediator;
-    private ICharacterPlacer _placer;
+
+    [Inject]
+    private void Construct(DiContainer container, GameplayMediator mediator)
+    {
+      _container = container;
+      _mediator = mediator;
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void InitMapBoardServerRpc()
@@ -47,7 +54,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
     [ClientRpc]
     public void SpawnTilesClientRpc(string configName)
     {
-      _placer = ServiceProvider.GetResolve<ICharacterPlacer>();
       _config = Resources.Load<BoardConfig>("Configs/Boards/" + configName);
       TileType[,] mapTiles = _config.MapTiles;
       Debug.Log("Spawn Tiles");
@@ -57,7 +63,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
 
     public void OnTileSelected(Tile selectedTile)
     {
-      if (Mediator.CharacterPlacementUiIsActive)
+      if (_mediator.CharacterPlacementUiIsActive)
       {
         Refresh();
         selectedTile.ChangeToSelectedColor();
@@ -65,21 +71,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       }
     }
 
-    public void PlacePlayerFromConfigOn(Tile tileToPlace, CharacterConfig selectedPlayerConfig) =>
-      _placer.PlaceNewCharacterOnTile(tileToPlace, selectedPlayerConfig);
-
     public void MoveCharacterTo(Tile newTile, Character character)
     {
       Refresh();
-      Tile previousTile = _tiles.FirstOrDefault(k => k.Occupied && k.Coords == character.Position);
+      Tile previousTile = _tiles.FirstOrDefault(k => k.IsOccupied && k.Coords == character.Position);
       previousTile.UnOccupy();
-      _placer.PlaceExistingCharacterOnTile(newTile, character);
       newTile.ChangeToSelectedColor();
     }
 
     private void Refresh()
     {
-      foreach (Tile tile in _tiles.Where(k => !k.Occupied))
+      foreach (Tile tile in _tiles.Where(k => !k.IsOccupied))
         tile.ChangeToUnselectedColor();
     }
 
@@ -104,9 +106,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       for (var row = 0; row < mapTiles.GetLength(1); row++)
         if (mapTiles[col, row] == TileType.Default)
         {
-          Tile tile = Instantiate(_tilePrefab, new Vector3(-4f, -1.5f, 0) + new Vector3(col, row) * 0.7f,
-            Quaternion.identity);
-          tile.Initialize(col, row, this);
+          var tile = _container.InstantiatePrefabForComponent<Tile>(
+            _tilePrefab,
+            new Vector3(-4f, -1.5f, 0) + new Vector3(col, row) * 0.7f,
+            Quaternion.identity,
+            null);
+          tile.Initialize(col, row);
           _tiles.Add(tile);
         }
     }

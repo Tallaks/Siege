@@ -12,11 +12,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterSelectionVariant : MonoBehaviour, IPointerClickHandler
   {
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _addButton;
-    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _amountText;
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _deselectAllButton;
-    [SerializeField, Required, ChildGameObjectsOnly] private Image _icon;
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _subButton;
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Button _addButton;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private TMP_Text _amountText;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Button _deselectAllButton;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Image _icon;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Button _subButton;
+
     private ICharacterRegistry _characterRegistry;
 
     private IStaticDataProvider _dataProvider;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
@@ -14,6 +15,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     private readonly ICharacterRegistry _characterRegistry;
     private readonly GameplayMediator _mediator;
     private readonly RoleBase _role;
+    private readonly ICharacterPlacer _characterPlacer;
 
     public IExitState CurrentState { get; private set; }
 
@@ -22,12 +24,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     public StateMachine(RoleBase role,
       ICharacterRegistry characterRegistry,
       GameplayMediator mediator,
-      CharacterRegistryNetwork characterRegistryNetwork)
+      CharacterRegistryNetwork characterRegistryNetwork,
+      ICharacterPlacer characterPlacer)
     {
       _role = role;
       _characterRegistry = characterRegistry;
       _mediator = mediator;
       _characterRegistryNetwork = characterRegistryNetwork;
+      _characterPlacer = characterPlacer;
     }
 
     public void Initialize() =>
@@ -36,7 +40,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
         [typeof(CharacterSelectionState)] =
           new CharacterSelectionState(_characterRegistry, _characterRegistryNetwork, _role, _mediator),
-        [typeof(PlacingCharactersState)] = new PlacingCharactersState(_mediator, _role, _characterRegistryNetwork)
+        [typeof(PlacingFirstPlayerCharactersState)] =
+          new PlacingFirstPlayerCharactersState(_mediator, _role, _characterRegistryNetwork),
+        [typeof(PlacingSecondPlayerCharactersState)] =
+          new PlacingSecondPlayerCharactersState(_mediator, _role, _characterRegistryNetwork, _characterPlacer)
       };
 
     public void Enter<TState>() where TState : ParameterlessState
