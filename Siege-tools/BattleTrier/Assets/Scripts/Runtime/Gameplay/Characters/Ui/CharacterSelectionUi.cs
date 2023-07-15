@@ -6,9 +6,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterSelectionUi : MonoBehaviour
   {
-    [SerializeField, Required, Searchable] private CharacterSelectionPanel _characterSelectionPanel;
-    [SerializeField, Required] private GameObject _waitingAsPlayerPanel;
-    [SerializeField, Required] private GameObject _waitingAsSpectatorPanel;
+    [SerializeField] [Required] [Searchable]
+    private CharacterSelectionPanel _characterSelectionPanel;
+
+    [SerializeField] [Required]
+    private GameObject _waitingAsPlayerPanel;
+
+    [SerializeField] [Required]
+    private GameObject _waitingAsSpectatorPanel;
 
     private RoleState _roleState;
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
@@ -11,19 +12,33 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterPlacementUi : MonoBehaviour
   {
-    [SerializeField, Required, AssetSelector] private PlacementCharItem _charItemPrefab;
-    [SerializeField, Required, ChildGameObjectsOnly] private Transform _listContent;
-    [SerializeField, Required, ChildGameObjectsOnly] private GameObject _activePlayerPanel;
-    [SerializeField, Required, ChildGameObjectsOnly] private GameObject _waitingPlayerPanel;
-    [SerializeField, Required, ChildGameObjectsOnly] private GameObject _spectatorPanel;
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _readyButton;
+    [SerializeField] [Required] [AssetSelector]
+    private PlacementCharItem _charItemPrefab;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Transform _listContent;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private GameObject _activePlayerPanel;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private GameObject _waitingPlayerPanel;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private GameObject _spectatorPanel;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Button _readyButton;
 
     public bool IsActivePanel =>
       _activePlayerPanel.activeInHierarchy;
 
-    private CharacterRegistryNetwork _characterRegistryNetwork;
+    public bool IsWaitingPanel =>
+      _waitingPlayerPanel.activeInHierarchy;
 
+    private CharacterRegistryNetwork _characterRegistryNetwork;
     private DiContainer _container;
+    private PlacementStateNetwork _placementStateNetwork;
     private RoleBase _role;
     private IStaticDataProvider _staticDataProvider;
 
@@ -31,11 +46,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     private void Construct(
       DiContainer container,
       IStaticDataProvider staticDataProvider,
+      PlacementStateNetwork placementStateNetwork,
       RoleBase role,
       CharacterRegistryNetwork characterRegistryNetwork)
     {
       _container = container;
       _staticDataProvider = staticDataProvider;
+      _placementStateNetwork = placementStateNetwork;
       _role = role;
       _characterRegistryNetwork = characterRegistryNetwork;
     }
@@ -44,6 +61,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     {
       _activePlayerPanel.SetActive(true);
       _readyButton.gameObject.SetActive(false);
+      _readyButton.onClick.AddListener(OnReadyButtonClicked);
       ShowActivePlayerUi();
     }
 
@@ -63,6 +81,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     public void ShowSubmitButton() =>
       _readyButton.gameObject.SetActive(true);
+
+    public void HidePlacementActivePlayerUi()
+    {
+      _activePlayerPanel.SetActive(false);
+      _readyButton.onClick.RemoveListener(OnReadyButtonClicked);
+    }
+
+    public void HidePlacementWaitingUi() =>
+      _waitingPlayerPanel.SetActive(false);
+
+    public void HideAll()
+    {
+      _activePlayerPanel.SetActive(false);
+      _waitingPlayerPanel.SetActive(false);
+      _spectatorPanel.SetActive(false);
+    }
+
+    private void OnReadyButtonClicked() =>
+      _placementStateNetwork.ChangeActivePlayerFromServerRpc(_role.State.Value);
 
     private void ShowActivePlayerUi()
     {

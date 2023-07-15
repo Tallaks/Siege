@@ -9,7 +9,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
   public class CharacterRegistryNetwork : NetworkBehaviour
   {
     private IStaticDataProvider _dataProvider;
-    private RoleBase _playerRole;
     public NetworkList<CharacterNetworkData> FirstPlayerCharacters;
     public NetworkList<CharacterNetworkData> SecondPlayerCharacters;
 
@@ -28,6 +27,45 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
       base.OnDestroy();
       FirstPlayerCharacters?.Dispose();
       SecondPlayerCharacters?.Dispose();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ChangeCharacterPositionServerRpc(Vector2Int tilePosition, int characterId, RoleState changerRole)
+    {
+      if (FirstPlayerCharacters.Count + SecondPlayerCharacters.Count <= characterId)
+      {
+        Debug.LogError($"Character with id {characterId} not found");
+        return;
+      }
+
+      for (var i = 0; i < FirstPlayerCharacters.Count; i++)
+        if (changerRole == RoleState.ChosenFirst)
+          if (FirstPlayerCharacters[i].InstanceId == characterId)
+          {
+            Debug.Log($"Changing server position of character {characterId} to {tilePosition}");
+            FirstPlayerCharacters[i] = new CharacterNetworkData(
+              FirstPlayerCharacters[i].TypeId,
+              characterId,
+              changerRole,
+              tilePosition,
+              _dataProvider);
+            return;
+            ;
+          }
+
+      for (var i = 0; i < SecondPlayerCharacters.Count; i++)
+        if (changerRole == RoleState.ChosenSecond)
+          if (SecondPlayerCharacters[i].InstanceId == characterId)
+          {
+            Debug.Log($"Changing server position of character {characterId} to {tilePosition}");
+            SecondPlayerCharacters[i] = new CharacterNetworkData(
+              SecondPlayerCharacters[i].TypeId,
+              characterId,
+              changerRole,
+              tilePosition,
+              _dataProvider);
+            break;
+          }
     }
 
     [ServerRpc(RequireOwnership = false)]

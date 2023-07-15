@@ -11,7 +11,7 @@ using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
-  public class NetworkInstaller : MonoInstaller, IInitializable, IDisposable
+  public class NetworkInstaller : StaticInstaller, IInitializable, IDisposable
   {
     private IConnectionStateMachine _connectionStateMachine;
     private NetworkManager _networkManager;

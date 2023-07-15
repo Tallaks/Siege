@@ -10,9 +10,10 @@ using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
-  public class OfflineGameplayInstaller : MonoInstaller, IInitializable
+  public class OfflineGameplayInstaller : StaticInstaller, IInitializable
   {
-    [SerializeField, Required] private GameplayMediator _mediator;
+    [SerializeField] [Required]
+    private GameplayMediator _mediator;
 
     public void Initialize()
     {
@@ -27,11 +28,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       Container.Bind<GameplayMediator>().FromInstance(_mediator).AsSingle();
       Container.Bind<StateMachine>().FromNew().AsSingle();
       Container.Bind<ICharacterFactory>().To<CharacterFactory>().FromNew().AsSingle();
+      Container.Bind<IEnemyFactory>().To<EnemyFactory>().FromNew().AsSingle();
       Container.Bind<IPlacementSelection>().To<PlacementSelection>().FromNew().AsSingle();
       Container.Bind<ICharacterPlacer>().To<CharacterPlacer>().FromNew().AsSingle();
     }
-
-    public T GetResolve<T>() =>
-      Container.Resolve<T>();
   }
 }

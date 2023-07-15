@@ -4,7 +4,7 @@ using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
 {
-  public class LobbyInstaller : MonoInstaller, IInitializable
+  public class LobbyInstaller : StaticInstaller, IInitializable
   {
     [SerializeField] private LobbyMediator _lobbyMediator;
 

@@ -3,26 +3,25 @@ using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
 {
   public class MapSelectionNetwork : NetworkBehaviour
   {
-    [FormerlySerializedAs("_mapPrefab"), SerializeField] private MapNetwork _mapNetworkPrefab;
-
     public NetworkVariable<bool> MapSelected = new();
     private BoardConfig _config;
+    private MapNetwork _mapNetwork;
     private GameplayMediator _mediator;
 
     private StateMachine _stateMachine;
 
     [Inject]
-    private void Construct(GameplayMediator mediator, StateMachine stateMachine)
+    private void Construct(GameplayMediator mediator, StateMachine stateMachine, MapNetwork mapNetwork)
     {
       _mediator = mediator;
       _stateMachine = stateMachine;
+      _mapNetwork = mapNetwork;
     }
 
     private void Awake() =>
@@ -36,10 +35,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.Network
     public void SetSelectedServerRpc()
     {
       MapSelected.Value = true;
-      MapNetwork mapNetwork = Instantiate(_mapNetworkPrefab);
-      mapNetwork.NetworkObject.Spawn();
-      mapNetwork.SpawnTilesClientRpc(_config.name);
-      mapNetwork.InitMapBoardServerRpc();
+      _mapNetwork.SpawnTilesClientRpc(_config.name);
+      _mapNetwork.InitMapBoardServerRpc();
     }
 
     public void Select(string configName)

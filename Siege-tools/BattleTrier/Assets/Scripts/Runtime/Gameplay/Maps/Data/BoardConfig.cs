@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
 {
-  [CreateAssetMenu(menuName = "Kulinaria/Board"), Serializable]
+  [CreateAssetMenu(menuName = "Kulinaria/Board")]
+  [Serializable]
   public class BoardConfig : SerializedScriptableObject
   {
     public Sprite Icon;
@@ -47,7 +48,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Data
     private int _cols;
     private int _rows;
 
-    [Space, TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = "DrawColoredEnumElement")]
+    [Space] [TableMatrix(RowHeight = 50, ResizableColumns = false, DrawElementMethod = "DrawColoredEnumElement")]
     public TileType[,] MapTiles;
 
     public BoardConfig() =>

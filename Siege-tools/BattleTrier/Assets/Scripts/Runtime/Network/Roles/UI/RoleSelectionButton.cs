@@ -8,7 +8,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
   [RequireComponent(typeof(Button))]
   public class RoleSelectionButton : MonoBehaviour
   {
-    [FormerlySerializedAs("_buttonIndex"), SerializeField] public RoleState ButtonIndex;
+    [FormerlySerializedAs("_buttonIndex")] [SerializeField]
+    public RoleState ButtonIndex;
+
     private Button _button;
 
     private RoleSelectionClient _roleSelection;

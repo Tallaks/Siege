@@ -22,7 +22,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory
       var character = _container.InstantiatePrefabForComponent<Character>(config.Prefab);
       Debug.Log($"Instantiated {config.Name}", character);
       character.name = config.Name;
-      character.Id = id;
       character.Renderer.sprite = config.Icon;
       return character;
     }

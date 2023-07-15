@@ -12,11 +12,21 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 {
   public class CharacterSelectionVariant : MonoBehaviour, IPointerClickHandler
   {
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _addButton;
-    [SerializeField, Required, ChildGameObjectsOnly] private TMP_Text _amountText;
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _deselectAllButton;
-    [SerializeField, Required, ChildGameObjectsOnly] private Image _icon;
-    [SerializeField, Required, ChildGameObjectsOnly] private Button _subButton;
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Button _addButton;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private TMP_Text _amountText;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Button _deselectAllButton;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Image _icon;
+
+    [SerializeField] [Required] [ChildGameObjectsOnly]
+    private Button _subButton;
+
     private ICharacterRegistry _characterRegistry;
 
     private IStaticDataProvider _dataProvider;
@@ -49,7 +59,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     {
       if (!_characterRegistry.PlayerHasCharactersOfConfig(_id))
       {
-        _characterRegistry.AddCharacter(_id, 1);
+        _characterRegistry.AddCharacterGroup(_id, 1);
         ShowSelectionUi();
       }
 
@@ -63,7 +73,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
       _addButton.gameObject.SetActive(true);
       _subButton.gameObject.SetActive(true);
       _amountText.gameObject.SetActive(true);
-      _amountText.text = _characterRegistry.Characters[_id].ToString();
+      _amountText.text = _characterRegistry.CharactersGroupsByConfigId[_id].ToString();
     }
 
     private void HideSelectionUi()
@@ -76,25 +86,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
 
     private void OnAddButtonClicked()
     {
-      _characterRegistry.AddCharacter(_id, 1);
-      _amountText.text = _characterRegistry.Characters[_id].ToString();
+      _characterRegistry.AddCharacterGroup(_id, 1);
+      _amountText.text = _characterRegistry.CharactersGroupsByConfigId[_id].ToString();
       _mediator.ChangeCharacterList();
     }
 
     private void OnSubButtonClicked()
     {
-      _characterRegistry.RemoveCharacter(_id, 1);
+      _characterRegistry.RemoveCharacterGroup(_id, 1);
       if (!_characterRegistry.PlayerHasCharactersOfConfig(_id))
         HideSelectionUi();
       else
-        _amountText.text = _characterRegistry.Characters[_id].ToString();
+        _amountText.text = _characterRegistry.CharactersGroupsByConfigId[_id].ToString();
 
       _mediator.ChangeCharacterList();
     }
 
     private void OnDeselectButtonClicked()
     {
-      _characterRegistry.RemoveCharacter(_id, _characterRegistry.Characters[_id]);
+      _characterRegistry.RemoveCharacterGroup(_id, _characterRegistry.CharactersGroupsByConfigId[_id]);
       HideSelectionUi();
       _mediator.ChangeCharacterList();
     }

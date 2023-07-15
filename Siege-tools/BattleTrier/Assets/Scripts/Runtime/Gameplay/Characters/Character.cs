@@ -10,8 +10,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters
 
     public void MoveTo(Vector2Int newTileCoords)
     {
+      Debug.Log($"{name}: Moving to {newTileCoords}");
       Position = newTileCoords;
-      transform.position = new Vector3(-4f, -1.5f, 0) + new Vector3(Position.x, Position.y) * 0.7f;
+      transform.position = new Vector3(-4f, -1.5f, -0.1f) + new Vector3(Position.x, Position.y) * 0.7f;
     }
   }
 }
