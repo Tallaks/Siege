@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs
 {
   public class OldInputService : MonoBehaviour, IInputService
   {
+    public Action OnConsoleCalled { get; set; }
+
     public Vector2 MoveDirection { get; private set; }
 
     private void Update()
@@ -13,6 +16,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Inputs
       if (Input.GetKeyDown(KeyCode.S)) MoveDirection = new Vector2(0, -1);
       if (Input.GetKeyDown(KeyCode.A)) MoveDirection = new Vector2(-1, 0);
       if (Input.GetKeyDown(KeyCode.D)) MoveDirection = new Vector2(1, 0);
+      if (Input.GetKeyDown(KeyCode.BackQuote)) OnConsoleCalled?.Invoke();
     }
   }
 }
