@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.PlacementState
 {
   public class CharacterPlacementUi : MonoBehaviour
   {

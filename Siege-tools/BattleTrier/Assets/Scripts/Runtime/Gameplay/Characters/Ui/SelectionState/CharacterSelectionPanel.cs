@@ -6,12 +6,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionState
 {
   public class CharacterSelectionPanel : MonoBehaviour
   {
     [SerializeField] [Required] [ChildGameObjectsOnly]
-    private CharacterList _characterList;
+    private CharacterSelectionList _characterSelectionList;
 
     [SerializeField] [Required] [AssetSelector]
     private CharacterSelectionVariant _characterSelectionVariantPrefab;
@@ -59,7 +59,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
     }
 
     public void ChangeCharacterList() =>
-      _characterList.ChangeCharacterList();
+      _characterSelectionList.ChangeCharacterList();
 
     public void DisableCharacterSelectSubmitButton() =>
       _submitButton.interactable = false;

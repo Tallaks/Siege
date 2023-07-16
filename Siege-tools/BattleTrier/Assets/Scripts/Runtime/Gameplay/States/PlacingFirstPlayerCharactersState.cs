@@ -1,4 +1,6 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection.Placement;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Unity.Netcode;
@@ -8,17 +10,23 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class PlacingFirstPlayerCharactersState : ParameterlessState
   {
+    private readonly IPlacementSelection _placementSelection;
     private readonly GameplayMediator _mediator;
     private readonly RoleBase _roleBase;
+    private readonly MapNetwork _mapNetwork;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
 
     public PlacingFirstPlayerCharactersState(
+      IPlacementSelection placementSelection,
       GameplayMediator mediator,
       RoleBase roleBase,
+      MapNetwork mapNetwork,
       CharacterRegistryNetwork characterRegistryNetwork)
     {
+      _placementSelection = placementSelection;
       _mediator = mediator;
       _roleBase = roleBase;
+      _mapNetwork = mapNetwork;
       _characterRegistryNetwork = characterRegistryNetwork;
     }
 
@@ -40,8 +48,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       }
     }
 
-    public override void Exit() =>
+    public override void Exit()
+    {
       _characterRegistryNetwork.FirstPlayerCharacters.OnListChanged -= OnFirstPlayerCharactersPlaced;
+      _mapNetwork.Refresh();
+      _placementSelection.UnselectCharacter();
+    }
 
     private void OnFirstPlayerCharactersPlaced(NetworkListEvent<CharacterNetworkData> changeEvent)
     {

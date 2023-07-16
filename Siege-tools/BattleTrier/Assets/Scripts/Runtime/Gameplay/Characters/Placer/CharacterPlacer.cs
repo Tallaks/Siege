@@ -68,7 +68,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
           }
       }
 
-      _placementSelection.Unselect();
+      _placementSelection.UnselectConfig();
     }
 
     public void PlaceEnemiesOnTheirPositions()

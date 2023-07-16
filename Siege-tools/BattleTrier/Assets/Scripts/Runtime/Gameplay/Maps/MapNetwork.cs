@@ -79,7 +79,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       newTile.ChangeToSelectedColor();
     }
 
-    private void Refresh()
+    public void Refresh()
     {
       foreach (Tile tile in _tiles.Where(k => !k.IsOccupied))
         tile.ChangeToUnselectedColor();

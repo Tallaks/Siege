@@ -1,4 +1,6 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.PlacementState;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionState;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps.Selection.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
@@ -16,6 +18,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     [SerializeField] [Required]
     private CharacterPlacementUi _characterPlacementUi;
+
+    [SerializeField] [Required] [SceneObjectsOnly]
+    private BattleUi _battleUi;
 
     public bool CharacterPlacementUiIsActive => _characterPlacementUi.IsActivePanel;
     public bool CharacterPlacementUiIsWaiting => _characterPlacementUi.IsWaitingPanel;
@@ -79,5 +84,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
 
     public void HideAllPlacementUi() =>
       _characterPlacementUi.HideAll();
+
+    public void ShowActivePlayerBattleUi() =>
+      _battleUi.ShowActivePlayerBattleUi();
+
+    public void ShowSpectatorBattleUi() =>
+      _battleUi.ShowSpectatorBattleUi();
   }
 }

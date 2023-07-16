@@ -6,9 +6,9 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionState
 {
-  public class CharacterList : MonoBehaviour
+  public class CharacterSelectionList : MonoBehaviour
   {
     private readonly List<CharacterListItem> _characterList = new();
 

@@ -818,7 +818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 138145e4fe934ad184350f5af045d1a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterList: {fileID: 661605146}
+  _characterSelectionList: {fileID: 661605146}
   _characterSelectionVariantPrefab: {fileID: 9092497469095704596, guid: fd68e22e7045b6c4cbd2383516262538, type: 3}
   _gridLayout: {fileID: 1987818730}
   _selectedConfigInfo: {fileID: 1405007204}
@@ -1980,6 +1980,7 @@ MonoBehaviour:
   _characterSelectionUi: {fileID: 1735509488}
   _mapSelectionUi: {fileID: 6074342}
   _characterPlacementUi: {fileID: 685217387}
+  _battleUi: {fileID: 1196955464}
 --- !u!1 &308864945
 GameObject:
   m_ObjectHideFlags: 0
@@ -8587,6 +8588,7 @@ GameObject:
   - component: {fileID: 1196955463}
   - component: {fileID: 1196955462}
   - component: {fileID: 1196955461}
+  - component: {fileID: 1196955464}
   m_Layer: 0
   m_Name: BattleUi
   m_TagString: Untagged
@@ -8677,6 +8679,20 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1196955464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196955459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abdf80f3723243aba4ca6e94ead1a807, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _activePlayerBattleUi: {fileID: 129792075}
+  _spectatorPlayerBattleUi: {fileID: 926508802}
 --- !u!1 &1220425165
 GameObject:
   m_ObjectHideFlags: 0

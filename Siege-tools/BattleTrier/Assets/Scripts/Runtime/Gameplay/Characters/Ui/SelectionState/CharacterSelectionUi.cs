@@ -2,7 +2,7 @@ using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionState
 {
   public class CharacterSelectionUi : MonoBehaviour
   {
