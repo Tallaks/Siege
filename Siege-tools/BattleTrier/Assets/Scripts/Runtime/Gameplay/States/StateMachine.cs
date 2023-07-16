@@ -18,10 +18,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     private readonly GameplayMediator _mediator;
     private readonly RoleBase _role;
     private readonly ICharacterPlacer _characterPlacer;
-
-    public IExitState CurrentState { get; private set; }
     private readonly MapNetwork _mapNetwork;
     private readonly IPlacementSelection _placementSelection;
+
+    public IExitState CurrentState { get; private set; }
 
     private Dictionary<Type, IExitState> _states;
 
@@ -47,7 +47,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       {
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
         [typeof(CharacterSelectionState)] = new CharacterSelectionState(
-            _characterRegistry, _placementSelection, _characterRegistryNetwork, _role, _mediator),
+          _characterRegistry, _placementSelection, _characterRegistryNetwork, _role, _mediator),
         [typeof(PlacingFirstPlayerCharactersState)] = new PlacingFirstPlayerCharactersState(
           _placementSelection, _mediator, _role, _mapNetwork, _characterRegistryNetwork),
         [typeof(PlacingSecondPlayerCharactersState)] = new PlacingSecondPlayerCharactersState(
