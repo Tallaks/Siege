@@ -1,48 +1,54 @@
+using System;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Weapons.Data
 {
+  [Serializable]
   [CreateAssetMenu(fileName = "WeaponConfig", menuName = "Kulinaria/Weapon", order = 1)]
   public class WeaponConfig : SerializedScriptableObject
   {
     private const string ConfigsWeaponPath = "Configs/Weapons/";
 
-    [ValidateInput(nameof(CheckIds))]
+    [ValidateInput(nameof(CheckIds))] [TableColumnWidth(20, false)]
     public int Id;
 
+    [Multiline] [BoxGroup("Name", ShowLabel = false)] [HideLabel] [TableColumnWidth(200, false)]
     public string Name;
 
-    [PreviewField(100, ObjectFieldAlignment.Left)] [HideLabel]
+    [PreviewField(100, ObjectFieldAlignment.Left)] [HideLabel] [TableColumnWidth(100, false)]
     public Sprite Icon;
 
-    [Range(1, 50)] public int Range;
+    [BoxGroup("Properties", ShowLabel = false)] [Range(1, 50)] 
+    public int Range;
 
-    [MinMaxSlider(nameof(DamageRange), true)]
-    public Vector2Int MinMaxDamage = new(25, 50);
+    [FormerlySerializedAs("MinMaxDamage")] [BoxGroup("Properties", ShowLabel = false)] [MinMaxSlider(nameof(DamageRange), true)]
+    public Vector2Int Damage = new(25, 50);
 
-    [Range(0, 1)] public float Accuracy;
+    [BoxGroup("Properties", ShowLabel = false)] [Range(0, 1)]
+    public float Accuracy;
 
-    [BoxGroup("Attack Property", ShowLabel = false)] [Range(1, 45)]
-    public int AmmoCapacity;
+    [FormerlySerializedAs("AmmoCapacity")] [BoxGroup("Properties", ShowLabel = false)] [Range(1, 45)]
+    public int Capacity;
 
-    [BoxGroup("Attack Property", ShowLabel = false)] [Range(1, 10)]
-    public int AttackActionPoints;
+    [FormerlySerializedAs("AttackActionPoints")] [BoxGroup("Properties", ShowLabel = false)] [Range(1, 10)]
+    public int AttackAP;
 
-    [BoxGroup("Attack Property", ShowLabel = false)] [Range(1, 10)]
-    public int AttackSpeedTicks;
+    [FormerlySerializedAs("AttackSpeedTicks")] [BoxGroup("Properties", ShowLabel = false)] [Range(1, 10)]
+    public int AttackSpeed;
 
-    [BoxGroup("Reload Property", ShowLabel = false)] [Range(1, 10)]
-    public int ReloadActionPoints;
+    [FormerlySerializedAs("ReloadActionPoints")] [BoxGroup("Properties", ShowLabel = false)] [Range(1, 10)]
+    public int ReloadAP;
 
-    [BoxGroup("Reload Property", ShowLabel = false)] [Range(1, 10)]
-    public int ReloadSpeedTicks;
+    [FormerlySerializedAs("ReloadSpeedTicks")] [BoxGroup("Properties", ShowLabel = false)] [Range(1, 10)]
+    public int ReloadSpeed;
 
     [HideInInspector] public Vector2Int DamageRange = new(1, 30);
 
-    public int MinDamage => MinMaxDamage.x;
-    public int MaxDamage => MinMaxDamage.y;
+    public int MinDamage => Damage.x;
+    public int MaxDamage => Damage.y;
 
     private bool CheckIds()
     {

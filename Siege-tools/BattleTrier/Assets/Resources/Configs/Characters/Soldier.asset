@@ -27,3 +27,5 @@ MonoBehaviour:
   Id: 2
   Name: Soldier
   Prefab: {fileID: 9099577807979389012, guid: 59b3a59dabfbdbc46bd7efe3d070f34b, type: 3}
+  Weapons:
+  - {fileID: 11400000, guid: 7c8e6df4a0422bf4ca3a21a59f371ea3, type: 2}
