@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b9b706c21244084b4b8e08c615cb806, type: 3}
-  m_Name: Soldier
+  m_Script: {fileID: 11500000, guid: 1314e4565807408db4218a9d2370bb25, type: 3}
+  m_Name: WeaponConfig
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,11 +21,15 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ActionPoints: 10
-  HealthPoints: 40
-  Icon: {fileID: 21300000, guid: 047687fc6e25634478ccf3a691c1e443, type: 3}
-  Id: 2
-  Name: Soldier
-  Prefab: {fileID: 9099577807979389012, guid: 59b3a59dabfbdbc46bd7efe3d070f34b, type: 3}
-  Weapons:
-  - {fileID: 11400000, guid: 7c8e6df4a0422bf4ca3a21a59f371ea3, type: 2}
+  Id: 0
+  Name: Rifle
+  Icon: {fileID: 21300000, guid: aa1c48eb4b2bf8344afcf160fe16317d, type: 3}
+  Range: 8
+  MinMaxDamage: {x: 6, y: 12}
+  Accuracy: 0.7
+  AmmoCapacity: 5
+  AttackActionPoints: 4
+  AttackSpeedTicks: 1
+  ReloadActionPoints: 6
+  ReloadSpeedTicks: 4
+  DamageRange: {x: 1, y: 30}

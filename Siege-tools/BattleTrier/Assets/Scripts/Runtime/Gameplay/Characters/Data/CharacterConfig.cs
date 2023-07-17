@@ -1,10 +1,11 @@
 using System.Linq;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Weapons.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
 {
-  [CreateAssetMenu(menuName = "Kulinaria/Character")]
+  [CreateAssetMenu(menuName = "Kulinaria/Character", order = 0)]
   public class CharacterConfig : SerializedScriptableObject
   {
     private const string ConfigsCharactersPath = "Configs/Characters/";
@@ -26,6 +27,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
     [Required] [AssetSelector]
     public Character Prefab;
 
+    [ValidateInput(nameof(CheckWeapons))] [TableList(DrawScrollView = true)]
+    public WeaponConfig[] Weapons;
+
     private bool CheckActionPoints() =>
       ActionPoints > 0;
 
@@ -37,5 +41,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
       CharacterConfig[] configs = Resources.LoadAll<CharacterConfig>(ConfigsCharactersPath);
       return configs.Select(k => k.Id).Distinct().Count() == configs.Select(k => k.Id).Count();
     }
+
+    private bool CheckWeapons() =>
+      Weapons is
+      {
+        Length: > 0
+      };
   }
 }
