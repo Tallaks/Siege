@@ -21,10 +21,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Weapons.Data
     [PreviewField(100, ObjectFieldAlignment.Left)] [HideLabel] [TableColumnWidth(100, false)]
     public Sprite Icon;
 
-    [BoxGroup("Properties", ShowLabel = false)] [Range(1, 50)] 
+    [BoxGroup("Properties", ShowLabel = false)] [Range(1, 50)]
     public int Range;
 
-    [FormerlySerializedAs("MinMaxDamage")] [BoxGroup("Properties", ShowLabel = false)] [MinMaxSlider(nameof(DamageRange), true)]
+    [FormerlySerializedAs("MinMaxDamage")]
+    [BoxGroup("Properties", ShowLabel = false)]
+    [MinMaxSlider(nameof(DamageRange), true)]
     public Vector2Int Damage = new(25, 50);
 
     [BoxGroup("Properties", ShowLabel = false)] [Range(0, 1)]
