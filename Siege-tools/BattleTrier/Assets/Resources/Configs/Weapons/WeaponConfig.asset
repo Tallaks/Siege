@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1314e4565807408db4218a9d2370bb25, type: 3}
+  m_Name: WeaponConfig
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  Id: 0
+  Name: Rifle
+  Icon: {fileID: 21300000, guid: aa1c48eb4b2bf8344afcf160fe16317d, type: 3}
+  Range: 8
+  MinMaxDamage: {x: 6, y: 12}
+  Accuracy: 0.7
+  AmmoCapacity: 5
+  AttackActionPoints: 4
+  AttackSpeedTicks: 1
+  ReloadActionPoints: 6
+  ReloadSpeedTicks: 4
+  DamageRange: {x: 1, y: 30}

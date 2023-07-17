@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data
 {
-  [CreateAssetMenu(menuName = "Kulinaria/Character")]
+  [CreateAssetMenu(menuName = "Kulinaria/Character", order = 0)]
   public class CharacterConfig : SerializedScriptableObject
   {
     private const string ConfigsCharactersPath = "Configs/Characters/";
