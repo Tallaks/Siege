@@ -8,7 +8,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     private readonly GameplayMediator _gameplayMediator;
     private readonly RoleBase _role;
 
-    public BattleInitializationState(RoleBase role, GameplayMediator gameplayMediator)
+    public BattleInitializationState(RoleBase role,
+      GameplayMediator gameplayMediator)
     {
       _role = role;
       _gameplayMediator = gameplayMediator;

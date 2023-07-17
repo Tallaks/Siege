@@ -59,10 +59,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     {
       Debug.Log("OnFirstPlayerCharactersPlaced");
       for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
-        Debug.Log(_characterRegistryNetwork.FirstPlayerCharacters[i].TilePosition + " " +
-                  _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId);
-
-      for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
         if (_characterRegistryNetwork.FirstPlayerCharacters[i].TilePosition == Vector2.one * -100)
         {
           _mediator.UpdatePlacementList();

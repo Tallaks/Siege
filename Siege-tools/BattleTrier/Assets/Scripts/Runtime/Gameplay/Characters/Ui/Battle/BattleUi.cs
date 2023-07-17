@@ -1,6 +1,8 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -9,6 +11,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
 {
   public class BattleUi : MonoBehaviour
   {
+    [SerializeField] [Required] [ChildGameObjectsOnly(IncludeInactive = true)]
+    private BattleLog _battleLog;
+
     [SerializeField] [Required] [ChildGameObjectsOnly(IncludeInactive = true)]
     private GameObject _activePlayerBattleUi;
 
@@ -33,16 +38,24 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
     [SerializeField] [Required] [AssetSelector(Paths = "Assets/Prefabs/UI")]
     private BattleEnemyListElement _enemyListElementPrefab;
 
-    private CharacterRegistryNetwork _characterRegistryNetwork;
-    private IInstantiator _instantiator;
+    [SerializeField] [Required] [ChildGameObjectsOnly(IncludeInactive = true)]
+    private TMP_Text _currentStatusText;
 
+    private ICharacterRegistry _characterRegistry;
+    private CharacterRegistryNetwork _characterRegistryNetwork;
+
+    private IInstantiator _instantiator;
     private RoleBase _roleBase;
 
     [Inject]
-    private void Construct(IInstantiator instantiator, CharacterRegistryNetwork characterRegistryNetwork,
+    private void Construct(
+      IInstantiator instantiator,
+      ICharacterRegistry characterRegistry,
+      CharacterRegistryNetwork characterRegistryNetwork,
       RoleBase roleBase)
     {
       _instantiator = instantiator;
+      _characterRegistry = characterRegistry;
       _characterRegistryNetwork = characterRegistryNetwork;
       _roleBase = roleBase;
     }
@@ -52,6 +65,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
       _activePlayerBattleUi.SetActive(true);
       InitializePlayerList();
       InitializeEnemyList();
+      _currentStatusText.text = "Initialization";
     }
 
     public void ShowSpectatorBattleUi() =>
@@ -63,26 +77,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
     public void HideWaitingPlayerBattleUi() =>
       _spectatorPlayerBattleUi.SetActive(false);
 
-    private void InitializeEnemyList()
-    {
-      if (_roleBase.State.Value == RoleState.ChosenFirst)
-        for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
-        {
-          var enemyListElement =
-            _instantiator.InstantiatePrefabForComponent<BattleEnemyListElement>(_enemyListElementPrefab,
-              _enemyListScrollRect.content);
-          enemyListElement.Initialize(_characterRegistryNetwork.SecondPlayerCharacters[i]);
-        }
-      else if (_roleBase.State.Value == RoleState.ChosenSecond)
-        for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
-        {
-          var enemyListElement =
-            _instantiator.InstantiatePrefabForComponent<BattleEnemyListElement>(_enemyListElementPrefab,
-              _enemyListScrollRect.content);
-          enemyListElement.Initialize(_characterRegistryNetwork.FirstPlayerCharacters[i]);
-        }
-    }
-
     private void InitializePlayerList()
     {
       if (_roleBase.State.Value == RoleState.ChosenFirst)
@@ -92,6 +86,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
             _instantiator.InstantiatePrefabForComponent<BattlePlayerListElement>(_playerListElementPrefab,
               _playerListScrollRect.content);
           playerListElement.Initialize(_characterRegistryNetwork.FirstPlayerCharacters[i]);
+          Character character =
+            _characterRegistry.CharactersById[_characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId];
+          _battleLog.AddLog(
+            $"Player <color=green>{character.Name}_{_characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId}</color>" +
+            $" placed on {character.Position}");
         }
       else if (_roleBase.State.Value == RoleState.ChosenSecond)
         for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
@@ -100,6 +99,39 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
             _instantiator.InstantiatePrefabForComponent<BattlePlayerListElement>(_playerListElementPrefab,
               _playerListScrollRect.content);
           playerListElement.Initialize(_characterRegistryNetwork.SecondPlayerCharacters[i]);
+          Character character =
+            _characterRegistry.CharactersById[_characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId];
+          _battleLog.AddLog(
+            $"Player <color=green>{character.Name}_{_characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId}</color>" +
+            $" placed on {character.Position}");
+        }
+    }
+
+    private void InitializeEnemyList()
+    {
+      if (_roleBase.State.Value == RoleState.ChosenFirst)
+        for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
+        {
+          var enemyListElement =
+            _instantiator.InstantiatePrefabForComponent<BattleEnemyListElement>(_enemyListElementPrefab,
+              _enemyListScrollRect.content);
+          enemyListElement.Initialize(_characterRegistryNetwork.SecondPlayerCharacters[i]);
+          Enemy enemy = _characterRegistry.EnemiesById[_characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId];
+          _battleLog.AddLog(
+            $"Enemy <color=red>{enemy.Character.Name}_{_characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId}</color>" +
+            $" placed on {enemy.Character.Position}");
+        }
+      else if (_roleBase.State.Value == RoleState.ChosenSecond)
+        for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
+        {
+          var enemyListElement =
+            _instantiator.InstantiatePrefabForComponent<BattleEnemyListElement>(_enemyListElementPrefab,
+              _enemyListScrollRect.content);
+          enemyListElement.Initialize(_characterRegistryNetwork.FirstPlayerCharacters[i]);
+          Enemy enemy = _characterRegistry.EnemiesById[_characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId];
+          _battleLog.AddLog(
+            $"Enemy <color=red>{enemy.Character.Name}_{_characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId}</color>" +
+            $" placed on {enemy.Character.Position}");
         }
     }
   }

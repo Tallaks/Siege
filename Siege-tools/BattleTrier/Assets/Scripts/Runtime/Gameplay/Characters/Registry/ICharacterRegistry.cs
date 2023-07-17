@@ -6,9 +6,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
   {
     IReadOnlyDictionary<int, int> CharactersGroupsByConfigId { get; }
     IReadOnlyDictionary<int, Character> CharactersById { get; }
+    IReadOnlyDictionary<int, Enemy> EnemiesById { get; }
     void AddCharacterGroup(int configId, int amount);
-    bool PlayerHasCharactersOfConfig(int configId);
     void RemoveCharacterGroup(int configId, int amount);
-    void Register(Character character);
+    void AddEnemy(Enemy enemy);
+    void RemoveEnemy(int id);
+    void AddCharacter(Character character);
+    void RemoveCharacter(int id);
+    bool PlayerHasCharactersOfConfig(int configId);
   }
 }

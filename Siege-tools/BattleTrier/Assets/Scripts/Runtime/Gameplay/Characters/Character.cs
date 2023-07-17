@@ -5,6 +5,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters
   public class Character : MonoBehaviour
   {
     public int Id;
+    public string Name;
     public SpriteRenderer Renderer;
     public Vector2Int Position;
 
