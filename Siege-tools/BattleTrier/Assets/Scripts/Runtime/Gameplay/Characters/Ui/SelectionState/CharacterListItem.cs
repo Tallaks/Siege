@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui
+namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionState
 {
   public class CharacterListItem : MonoBehaviour
   {

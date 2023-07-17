@@ -60,7 +60,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps
       else
       {
         if (_mediator.CharacterPlacementUiIsActive)
-          _placementSelection.SelectPlacedCharacter(CharacterOnTile);
+          _placementSelection.SelectCharacter(CharacterOnTile);
         _mapNetwork.OnTileSelected(this);
       }
     }

@@ -2,8 +2,10 @@ using System.Linq;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Factory;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection.Placement;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
 
@@ -17,8 +19,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
     private readonly MapNetwork _mapNetwork;
     private readonly IEnemyFactory _enemyFactory;
+    private readonly ICharacterRegistry _characterRegistry;
+    private readonly IStaticDataProvider _staticDataProvider;
 
-    public CharacterPlacer(ICharacterFactory characterFactory,
+    public CharacterPlacer(
+      ICharacterFactory characterFactory,
+      ICharacterRegistry characterRegistry,
+      IStaticDataProvider staticDataProvider,
       IEnemyFactory enemyFactory,
       IPlacementSelection placementSelection,
       RoleBase roleBase,
@@ -26,6 +33,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
       MapNetwork mapNetwork)
     {
       _characterFactory = characterFactory;
+      _characterRegistry = characterRegistry;
+      _staticDataProvider = staticDataProvider;
       _enemyFactory = enemyFactory;
       _placementSelection = placementSelection;
       _roleBase = roleBase;
@@ -50,6 +59,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
               _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId,
               _roleBase.State.Value);
             character.Id = _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId;
+            character.Name = _staticDataProvider.ConfigById(_characterRegistryNetwork.FirstPlayerCharacters[i].TypeId)
+              .Name;
+            _characterRegistry.AddCharacter(character);
             break;
           }
       }
@@ -64,11 +76,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
               _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId,
               _roleBase.State.Value);
             character.Id = _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId;
+            character.Name = _staticDataProvider.ConfigById(_characterRegistryNetwork.SecondPlayerCharacters[i].TypeId)
+              .Name;
+
+            _characterRegistry.AddCharacter(character);
             break;
           }
       }
 
-      _placementSelection.Unselect();
+      _placementSelection.UnselectConfig();
     }
 
     public void PlaceEnemiesOnTheirPositions()
@@ -82,8 +98,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
           if (tile.IsOccupied)
             continue;
           Character enemy = _enemyFactory.Create(_characterRegistryNetwork.FirstPlayerCharacters[i].TypeId).Character;
+          enemy.Id = _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId;
+          enemy.Name = _staticDataProvider.ConfigById(_characterRegistryNetwork.FirstPlayerCharacters[i].TypeId).Name;
           tile.OccupyBy(enemy);
           enemy.MoveTo(tile.Coords);
+          _characterRegistry.AddEnemy(enemy.GetComponent<Enemy>());
         }
       else
         for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
@@ -95,8 +114,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
           if (tile.IsOccupied)
             continue;
           Character enemy = _enemyFactory.Create(_characterRegistryNetwork.SecondPlayerCharacters[i].TypeId).Character;
+          enemy.Id = _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId;
+          enemy.Name = _staticDataProvider.ConfigById(_characterRegistryNetwork.SecondPlayerCharacters[i].TypeId).Name;
           tile.OccupyBy(enemy);
           enemy.MoveTo(tile.Coords);
+          _characterRegistry.AddEnemy(enemy.GetComponent<Enemy>());
         }
     }
 

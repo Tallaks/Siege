@@ -7,10 +7,27 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
   {
     private readonly Dictionary<int, int> _characterGroupByConfigId = new();
     private readonly Dictionary<int, Character> _charactersById = new();
+    private readonly Dictionary<int, Enemy> _enemiesById = new();
     private readonly HashSet<int> _selectedConfigs = new();
 
     public IReadOnlyDictionary<int, int> CharactersGroupsByConfigId => _characterGroupByConfigId;
     public IReadOnlyDictionary<int, Character> CharactersById => _charactersById;
+    public IReadOnlyDictionary<int, Enemy> EnemiesById => _enemiesById;
+
+    public void RemoveEnemy(int id)
+    {
+      if (_enemiesById.ContainsKey(id))
+        _enemiesById.Remove(id);
+    }
+
+    public void AddCharacter(Character character) =>
+      _charactersById.Add(character.Id, character);
+
+    public void RemoveCharacter(int id)
+    {
+      if (_charactersById.ContainsKey(id))
+        _charactersById.Remove(id);
+    }
 
     public bool PlayerHasCharactersOfConfig(int configId) =>
       _selectedConfigs.Contains(configId);
@@ -37,7 +54,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry
       }
     }
 
-    public void Register(Character character) =>
-      _charactersById.Add(character.Id, character);
+    public void AddEnemy(Enemy enemy) =>
+      _enemiesById.Add(enemy.Character.Id, enemy);
   }
 }

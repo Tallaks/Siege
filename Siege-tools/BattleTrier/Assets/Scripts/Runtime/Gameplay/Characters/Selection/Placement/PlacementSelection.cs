@@ -10,10 +10,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection.Plac
     public void SelectConfig(CharacterConfig configById) =>
       SelectedPlayerConfig = configById;
 
-    public void Unselect() =>
+    public void UnselectConfig() =>
       SelectedPlayerConfig = null;
 
-    public void SelectPlacedCharacter(Character characterOnTile) =>
+    public void SelectCharacter(Character characterOnTile) =>
       SelectedCharacter = characterOnTile;
+
+    public void UnselectCharacter() =>
+      SelectedCharacter = null;
   }
 }

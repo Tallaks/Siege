@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection.Placement;
+using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using UnityEngine;
@@ -16,6 +18,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     private readonly GameplayMediator _mediator;
     private readonly RoleBase _role;
     private readonly ICharacterPlacer _characterPlacer;
+    private readonly MapNetwork _mapNetwork;
+    private readonly IPlacementSelection _placementSelection;
 
     public IExitState CurrentState { get; private set; }
 
@@ -25,26 +29,30 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       ICharacterRegistry characterRegistry,
       GameplayMediator mediator,
       CharacterRegistryNetwork characterRegistryNetwork,
-      ICharacterPlacer characterPlacer)
+      MapNetwork mapNetwork,
+      ICharacterPlacer characterPlacer,
+      IPlacementSelection placementSelection)
     {
       _role = role;
       _characterRegistry = characterRegistry;
       _mediator = mediator;
       _characterRegistryNetwork = characterRegistryNetwork;
+      _mapNetwork = mapNetwork;
       _characterPlacer = characterPlacer;
+      _placementSelection = placementSelection;
     }
 
     public void Initialize() =>
       _states = new Dictionary<Type, IExitState>
       {
         [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
-        [typeof(CharacterSelectionState)] =
-          new CharacterSelectionState(_characterRegistry, _characterRegistryNetwork, _role, _mediator),
-        [typeof(PlacingFirstPlayerCharactersState)] =
-          new PlacingFirstPlayerCharactersState(_mediator, _role, _characterRegistryNetwork),
-        [typeof(PlacingSecondPlayerCharactersState)] =
-          new PlacingSecondPlayerCharactersState(_mediator, _role, _characterRegistryNetwork, _characterPlacer),
-        [typeof(BattleInitializationState)] = new BattleInitializationState()
+        [typeof(CharacterSelectionState)] = new CharacterSelectionState(
+          _characterRegistry, _placementSelection, _characterRegistryNetwork, _role, _mediator),
+        [typeof(PlacingFirstPlayerCharactersState)] = new PlacingFirstPlayerCharactersState(
+          _placementSelection, _mediator, _role, _mapNetwork, _characterRegistryNetwork),
+        [typeof(PlacingSecondPlayerCharactersState)] = new PlacingSecondPlayerCharactersState(
+          _placementSelection, _mediator, _role, _mapNetwork, _characterRegistryNetwork, _characterPlacer),
+        [typeof(BattleInitializationState)] = new BattleInitializationState(_role, _mediator)
       };
 
     public void Enter<TState>() where TState : ParameterlessState
