@@ -23,7 +23,7 @@ MonoBehaviour:
     SerializationNodes: []
   ActionPoints: 10
   HealthPoints: 40
-  Icon: {fileID: 21300000, guid: 047687fc6e25634478ccf3a691c1e443, type: 3}
+  Icon: {fileID: 21300000, guid: 0fa075ed639b031409f3e6fa1e402766, type: 3}
   Id: 2
   Name: Soldier
   Prefab: {fileID: 9099577807979389012, guid: 59b3a59dabfbdbc46bd7efe3d070f34b, type: 3}
