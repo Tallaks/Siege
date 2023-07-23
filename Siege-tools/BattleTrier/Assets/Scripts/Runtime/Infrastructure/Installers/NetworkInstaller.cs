@@ -65,19 +65,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
       NetworkManager.ConnectionApprovalResponse response)
     {
       Debug.Log("Attempt to approve check");
-      ((IApprovalCheck)_connectionStateMachine.CurrentState)?.ApprovalCheck(request, response);
+      (_connectionStateMachine.CurrentState as IApprovalCheck)?.ApprovalCheck(request, response);
     }
+
+    private void OnClientConnectedCallback(ulong clientId) =>
+      (_connectionStateMachine.CurrentState as IClientConnect)?.OnClientConnect(clientId);
 
     private void OnClientDisconnectCallback(ulong clientId) =>
-      ((IClientDisconnect)_connectionStateMachine.CurrentState)?.ReactToClientDisconnect(clientId);
-
-    private void OnClientConnectedCallback(ulong clientId)
-    {
-      if (_connectionStateMachine.CurrentState is StartingHostState)
-        return;
-      _connectionStateMachine.Enter<ClientConnectedState, ulong, ConnectionState>(clientId,
-        _connectionStateMachine.CurrentState);
-    }
+      (_connectionStateMachine.CurrentState as IClientDisconnect)?.ReactToClientDisconnect(clientId);
 
     private void OnServerStarted() => _connectionStateMachine.Enter<HostingState, bool>(true);
   }

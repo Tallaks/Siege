@@ -22,13 +22,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Network
       SecondPlayerCharacters = new NetworkList<CharacterNetworkData>();
     }
 
-    public override void OnDestroy()
-    {
-      base.OnDestroy();
-      FirstPlayerCharacters?.Dispose();
-      SecondPlayerCharacters?.Dispose();
-    }
-
     [ServerRpc(RequireOwnership = false)]
     public void ChangeCharacterPositionServerRpc(Vector2Int tilePosition, int characterId, RoleState changerRole)
     {

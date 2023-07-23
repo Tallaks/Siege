@@ -1,3 +1,4 @@
+using System;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applications;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Data;
@@ -49,7 +50,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Installers
         .AsSingle();
 
       Container
-        .Bind(typeof(IApplicationService), typeof(IInitializable))
+        .Bind(typeof(IApplicationService), typeof(IInitializable), typeof(IDisposable))
         .To<ApplicationService>()
         .FromNew()
         .AsSingle();

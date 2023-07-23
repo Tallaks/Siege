@@ -47,10 +47,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes
     {
       switch (sceneEvent.SceneEventType)
       {
-        case SceneEventType.Load: // Server told client to load a scene
-          // Only executes on client
+        case SceneEventType.Load:
           if (_networkManager.IsClient)
-            // Only start a new loading screen if scene loaded in Single mode, else simply update
             if (sceneEvent.LoadSceneMode == LoadSceneMode.Single)
             {
               /*m_ClientLoadingScreen.StartLoadingScreen(sceneEvent.SceneName);

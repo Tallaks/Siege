@@ -4,7 +4,6 @@ using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Authentication;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Cooldown;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
-using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -15,13 +14,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
   public class LobbyServiceFacade
   {
     private readonly AuthenticationServiceFacade _authentication;
-    private readonly RateLimitCooldown _joinLobbyLimit;
     private readonly UnityLobbyApi _lobbyApi;
     private readonly LobbyInfo _lobbyInfo;
     private readonly UserProfile _localUser;
+    private readonly IUpdateRunner _updateRunner;
 
     private readonly RateLimitCooldown _queryForLobbiesLimit;
-    private readonly IUpdateRunner _updateRunner;
+    private readonly RateLimitCooldown _joinLobbyLimit;
+    private readonly RateLimitCooldown _rateHostLimit;
 
     public Lobby CurrentLobby { get; set; }
     private float _heartbeatTime;
@@ -43,6 +43,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
 
       _queryForLobbiesLimit = new RateLimitCooldown(1f);
       _joinLobbyLimit = new RateLimitCooldown(3f);
+      _rateHostLimit = new RateLimitCooldown(3f);
     }
 
     public void DoLobbyHeartbeat(float deltaTime)
@@ -88,9 +89,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       {
         _updateRunner.Unsubscribe(UpdateLobby);
         _isTracking = false;
+        _heartbeatTime = 0;
         _lobbyHeartbeat.EndTracking();
       }
 
+      Debug.Log("EndTracking");
       return task;
     }
 
@@ -165,8 +168,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
     }
 
-    public async Task<(bool Success, Lobby Lobby)> TryCreateLobby(string lobbyName)
+    public async Task<(bool Success, Lobby Lobby)> TryCreateLobbyAsync(string lobbyName)
     {
+      if (!_rateHostLimit.CanCall)
+      {
+        Debug.LogWarning("Create Lobby hit the rate limit.");
+        return (false, null);
+      }
+
       try
       {
         Lobby lobby = await _lobbyApi.CreateLobby(lobbyName);
@@ -174,7 +183,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
       catch (LobbyServiceException exception)
       {
-        Debug.LogError(exception.Reason);
+        if (exception.Reason == LobbyExceptionReason.RateLimited)
+          _rateHostLimit.PutOnCooldown();
+        else
+          Debug.LogError(exception.Reason);
       }
 
       return (false, null);
@@ -217,6 +229,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
 
     public async Task UpdateLobbyDataAsync(Dictionary<string, DataObject> dataObjects)
     {
+      if (!_queryForLobbiesLimit.CanCall)
+        return;
+
       Dictionary<string, DataObject> dataCurr = CurrentLobby.Data ?? new Dictionary<string, DataObject>();
 
       foreach (KeyValuePair<string, DataObject> dataNew in dataObjects)
@@ -237,7 +252,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
       catch (LobbyServiceException e)
       {
-        Debug.LogError(e.Reason);
+        if (e.Reason == LobbyExceptionReason.RateLimited)
+          _queryForLobbiesLimit.PutOnCooldown();
+        else if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
+          Debug.LogError(e.Reason);
       }
     }
 
@@ -252,29 +270,33 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
           _authentication.PlayerId, data, null, null);
 
         if (result != null)
-          CurrentLobby =
-            result; // Store the most up-to-date lobby now since we have it, instead of waiting for the next heartbeat.
+          CurrentLobby = result;
       }
       catch (LobbyServiceException e)
       {
         if (e.Reason == LobbyExceptionReason.RateLimited)
           _queryForLobbiesLimit.PutOnCooldown();
-        else if (e.Reason != LobbyExceptionReason.LobbyNotFound &&
-                 !_localUser.IsHost) // If Lobby is not found and if we are not the host, it has already been deleted. No need to publish the error here.
+        else if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
           Debug.LogError(e.Reason);
       }
     }
 
     public async Task UpdatePlayerRelayInfoAsync(string allocationId, string connectionInfo)
     {
+      if (!_queryForLobbiesLimit.CanCall)
+        return;
+
       try
       {
-        await _lobbyApi.UpdatePlayer(CurrentLobby.Id, AuthenticationService.Instance.PlayerId,
+        await _lobbyApi.UpdatePlayer(CurrentLobby.Id, _authentication.PlayerId,
           new Dictionary<string, PlayerDataObject>(), allocationId, connectionInfo);
       }
       catch (LobbyServiceException e)
       {
-        Debug.LogError(e.Reason);
+        if (e.Reason == LobbyExceptionReason.RateLimited)
+          _queryForLobbiesLimit.PutOnCooldown();
+        else if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
+          Debug.LogError(e.Reason);
       }
     }
 
@@ -301,7 +323,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
       }
       catch (LobbyServiceException e)
       {
-        Debug.LogError(e.Reason);
+        if (e.Reason == LobbyExceptionReason.RateLimited)
+          _queryForLobbiesLimit.PutOnCooldown();
+        else if (e.Reason != LobbyExceptionReason.LobbyNotFound && !_localUser.IsHost)
+          Debug.LogError(e.Reason);
       }
     }
 
@@ -331,6 +356,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies
         {
           Debug.LogError(e.Reason);
         }
+      else
+        Debug.LogError("Only the host can delete the lobby.");
     }
   }
 }

@@ -25,11 +25,11 @@ MonoBehaviour:
   Name: Rifle
   Icon: {fileID: 21300000, guid: aa1c48eb4b2bf8344afcf160fe16317d, type: 3}
   Range: 8
-  MinMaxDamage: {x: 6, y: 12}
+  Damage: {x: 6, y: 12}
   Accuracy: 0.7
-  AmmoCapacity: 5
-  AttackActionPoints: 4
-  AttackSpeedTicks: 1
-  ReloadActionPoints: 6
-  ReloadSpeedTicks: 4
+  Capacity: 5
+  AttackAP: 4
+  AttackSpeed: 1
+  ReloadAP: 6
+  ReloadSpeed: 4
   DamageRange: {x: 1, y: 30}

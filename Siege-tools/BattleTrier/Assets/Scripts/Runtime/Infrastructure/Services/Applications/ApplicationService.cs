@@ -1,47 +1,58 @@
 using System;
 using System.Collections;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Lobbies;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applications
 {
-  public class ApplicationService : IApplicationService
+  public class ApplicationService : IApplicationService, IDisposable
   {
+    private readonly ICoroutineRunner _runner;
     private readonly LobbyInfo _lobbyInfo;
     private readonly LobbyServiceFacade _lobbyServiceFacade;
-    private readonly ICoroutineRunner _runner;
-    private readonly IConnectionStateMachine _connectionStateMachine;
 
     public ApplicationService(
       ICoroutineRunner runner,
       LobbyInfo lobbyInfo,
-      LobbyServiceFacade lobbyServiceFacade,
-      IConnectionStateMachine connectionStateMachine)
+      LobbyServiceFacade lobbyServiceFacade)
     {
       _runner = runner;
       _lobbyInfo = lobbyInfo;
       _lobbyServiceFacade = lobbyServiceFacade;
-      _connectionStateMachine = connectionStateMachine;
     }
 
-    public void Initialize() =>
+    public void Initialize()
+    {
+#if UNITY_EDITOR
+      UnityEditor.EditorApplication.playModeStateChanged += _ =>
+      {
+        if (_ == UnityEditor.PlayModeStateChange.ExitingPlayMode)
+          OnWantToQuit();
+      };
+#else
       Application.wantsToQuit += OnWantToQuit;
+#endif
+    }
 
     public void QuitApplication()
     {
 #if UNITY_EDITOR
       UnityEditor.EditorApplication.isPlaying = false;
 #else
+      Debug.Log("QuitApplication");
       Application.Quit();
 #endif
     }
 
+    public void Dispose() =>
+      _lobbyServiceFacade?.EndTracking();
+
     private bool OnWantToQuit()
     {
-      bool canQuit = _connectionStateMachine.CurrentState is IOnlineState;
+      Debug.Log("OnWantToQuit");
+      bool canQuit = string.IsNullOrEmpty(_lobbyInfo?.Id);
       if (!canQuit)
         _runner.StartCoroutine(LeaveBeforeQuit());
       return canQuit;
@@ -49,9 +60,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applicatio
 
     private IEnumerator LeaveBeforeQuit()
     {
+      Debug.Log("LeaveBeforeQuit");
       try
       {
-        (_connectionStateMachine.CurrentState as IRequestShutdown)?.OnUserRequestedShutdown();
+        _lobbyServiceFacade.EndTracking();
       }
       catch (Exception e)
       {
@@ -59,7 +71,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Applicatio
       }
 
       yield return null;
-      QuitApplication();
+      Application.Quit();
     }
   }
 }

@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
-  public class HostingState : ParameterConnectionState<bool>, IOnlineState, IApprovalCheck, IClientDisconnect
+  public class HostingState : ParameterConnectionState<bool>, IOnlineState, IApprovalCheck, IClientConnect,
+    IClientDisconnect
   {
     private readonly IConnectionStateMachine _connectionStateMachine;
     private readonly LobbyServiceFacade _lobbyService;
@@ -66,6 +67,9 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       if (_lobbyService.CurrentLobby != null)
         _lobbyService.RemovePlayerFromLobbyAsync(connectionPayload.PlayerId, _lobbyService.CurrentLobby.Id);
     }
+
+    public void OnClientConnect(ulong clientId) =>
+      Debug.Log($"Client {clientId} connected");
 
     public void ReactToClientDisconnect(ulong clientId)
     {

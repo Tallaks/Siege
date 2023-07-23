@@ -67,7 +67,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.UI.LobbyScene
 
     public async void TryCreateLobby(string lobbyName)
     {
-      (bool Success, Lobby Lobby) lobbyCreationAttempt = await _lobbyService.TryCreateLobby(lobbyName);
+      (bool Success, Lobby Lobby) lobbyCreationAttempt = await _lobbyService.TryCreateLobbyAsync(lobbyName);
       if (lobbyCreationAttempt.Success)
       {
         _localUser.IsHost = true;

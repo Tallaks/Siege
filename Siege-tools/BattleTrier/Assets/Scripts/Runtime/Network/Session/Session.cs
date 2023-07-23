@@ -99,8 +99,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Session
         return;
       }
 
-      if (_clientData.ContainsKey(playerId))
-        if (!_clientData[playerId].IsConnected)
+      if (_clientData.TryGetValue(playerId, out T value))
+        if (!value.IsConnected)
           isReconnecting = true;
 
       if (isReconnecting)

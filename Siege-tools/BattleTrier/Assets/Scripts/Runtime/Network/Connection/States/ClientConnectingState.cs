@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
 {
-  public class ClientConnectingState : ParameterConnectionState<string>, IOnlineState, IClientDisconnect
+  public class ClientConnectingState : ParameterConnectionState<string>, IOnlineState, IClientConnect, IClientDisconnect
   {
     private readonly IConnectionService _connectionService;
     private readonly IConnectionStateMachine _connectionStateMachine;
@@ -19,6 +19,10 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       _connectionStateMachine = connectionStateMachine;
       _connectionService = connectionService;
     }
+
+    public void OnClientConnect(ulong clientId) =>
+      _connectionStateMachine.Enter<ClientConnectedState, ulong, ConnectionState>(clientId,
+        _connectionStateMachine.CurrentState);
 
     public void ReactToClientDisconnect(ulong clientId)
     {
