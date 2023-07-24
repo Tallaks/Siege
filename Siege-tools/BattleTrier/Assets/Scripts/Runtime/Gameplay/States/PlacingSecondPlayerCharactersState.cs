@@ -12,7 +12,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
   public class PlacingSecondPlayerCharactersState : ParameterlessState
   {
     private readonly GameplayMediator _mediator;
-    private readonly RoleBase _roleBase;
+    private readonly RoleState _role;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
     private readonly ICharacterPlacer _characterPlacer;
     private readonly MapNetwork _mapNetwork;
@@ -21,14 +21,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     public PlacingSecondPlayerCharactersState(
       IPlacementSelection placementSelection,
       GameplayMediator mediator,
-      RoleBase roleBase,
       MapNetwork mapNetwork,
       CharacterRegistryNetwork characterRegistryNetwork,
       ICharacterPlacer characterPlacer)
     {
       _placementSelection = placementSelection;
       _mediator = mediator;
-      _roleBase = roleBase;
       _mapNetwork = mapNetwork;
       _characterRegistryNetwork = characterRegistryNetwork;
       _characterPlacer = characterPlacer;
@@ -36,7 +34,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
     public override void Enter()
     {
-      switch (_roleBase.State.Value)
+      switch (_role)
       {
         case RoleState.ChosenFirst:
           _mediator.HidePlacementActivePlayerUi();
@@ -57,7 +55,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
     public override void Exit()
     {
-      if (_roleBase.State.Value == RoleState.ChosenSecond)
+      if (_role == RoleState.ChosenSecond)
         _characterRegistryNetwork.SecondPlayerCharacters.OnListChanged -= OnSecondPlayerCharactersPlaced;
       else
         _characterPlacer.PlaceEnemiesOnTheirPositions();
@@ -66,7 +64,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
       _placementSelection.UnselectCharacter();
     }
 
-    private void OnSecondPlayerCharactersPlaced(NetworkListEvent<CharacterNetworkData> changeevent)
+    private void OnSecondPlayerCharactersPlaced(NetworkListEvent<CharacterNetworkData> changeEvent)
     {
       Debug.Log("OnSecondPlayerCharactersPlaced");
       for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)

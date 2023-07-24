@@ -28,19 +28,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionSt
     private CharacterSelectionNetwork _characterSelectionNetwork;
 
     private DiContainer _container;
-    private RoleBase _role;
+    private RoleState _role;
     private IStaticDataProvider _staticDataProvider;
 
     [Inject]
     private void Construct(
       DiContainer container,
       IStaticDataProvider staticDataProvider,
-      RoleBase role,
       CharacterSelectionNetwork characterSelectionNetwork)
     {
       _container = container;
       _staticDataProvider = staticDataProvider;
-      _role = role;
       _characterSelectionNetwork = characterSelectionNetwork;
     }
 
@@ -73,7 +71,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionSt
     private void OnSubmitButton()
     {
       DisableCharacterSelectSubmitButton();
-      _characterSelectionNetwork.SubmitSelectionServerRpc((int)_role.State.Value);
+      _characterSelectionNetwork.SubmitSelectionServerRpc((int)_role);
     }
   }
 }

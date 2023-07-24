@@ -1,13 +1,9 @@
-using Kulinaria.Tools.BattleTrier.Runtime.Gameplay;
 using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Coroutines;
-using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Session;
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Utilities;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
@@ -16,11 +12,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
   {
     [SerializeField] private NetCodeHook _hook;
     private ICoroutineRunner _coroutineRunner;
-    private RoleMediator _mediator;
     private NetworkManager _networkManager;
-    private RoleSelectionClient _roleSelectionClient;
     private RoleSelectionService _roleSelectionService;
-    private ISceneLoader _sceneLoader;
     private Session<SessionPlayerData> _session;
 
     private Coroutine _waitToEndLobbyCoroutine;
@@ -28,19 +21,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     [Inject]
     public void Construct(
       ICoroutineRunner coroutineRunner,
-      ISceneLoader sceneLoader,
       NetworkManager networkManager,
       Session<SessionPlayerData> session,
-      RoleMediator mediator,
-      RoleSelectionClient roleSelectionClient,
       RoleSelectionService roleSelectionService)
     {
       _coroutineRunner = coroutineRunner;
-      _sceneLoader = sceneLoader;
       _networkManager = networkManager;
       _session = session;
-      _mediator = mediator;
-      _roleSelectionClient = roleSelectionClient;
       _roleSelectionService = roleSelectionService;
     }
 
@@ -66,7 +53,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       Debug.Log("Network spawn: server");
 
       _networkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
-      _roleSelectionService.OnClientChoseRole += OnClientChoseRole;
       _networkManager.SceneManager.OnSceneEvent += OnSceneEvent;
     }
 
@@ -75,42 +61,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       Debug.Log("Network despawn: server");
 
       _networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
-      _roleSelectionService.OnClientChoseRole -= OnClientChoseRole;
       _networkManager.SceneManager.OnSceneEvent -= OnSceneEvent;
-    }
-
-    private void OnClientChoseRole(ulong clientId, int roleButtonId)
-    {
-      for (var i = 0; i < _roleSelectionService.PlayerRoles.Count; i++)
-        if (_roleSelectionService.PlayerRoles[i].ClientId == clientId &&
-            _roleSelectionService.PlayerRoles[i].State != (RoleState)roleButtonId)
-        {
-          _roleSelectionService.PlayerRoles[i] = new PlayerRoleState(
-            clientId,
-            (RoleState)roleButtonId,
-            Time.time
-          );
-
-          if (_roleSelectionService.PlayerRoles[i].ClientId != clientId &&
-              _roleSelectionService.PlayerRoles[i].State == (RoleState)roleButtonId)
-            _roleSelectionService.PlayerRoles[i] = new PlayerRoleState(
-              clientId,
-              (RoleState)roleButtonId,
-              Time.time
-            );
-
-          foreach (NetworkClient client in _networkManager.ConnectedClientsList)
-            if (client.ClientId == clientId)
-              client.PlayerObject.GetComponent<RoleBase>().State.Value = (RoleState)roleButtonId;
-        }
-
-      CloseLobbyIfReady();
     }
 
     private void OnSceneEvent(SceneEvent sceneEvent)
     {
       Debug.Log("Server sceneEvent: " + sceneEvent.SceneEventType);
-      if (sceneEvent.SceneEventType != SceneEventType.LoadComplete) return;
+      if (sceneEvent.SceneEventType != SceneEventType.LoadComplete || sceneEvent.SceneName != "RoleSelection") return;
       SeatNewPlayer(sceneEvent.ClientId);
     }
 
@@ -122,40 +79,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
           _roleSelectionService.PlayerRoles.RemoveAt(i);
           break;
         }
-
-      if (!_roleSelectionService.LobbyIsClosed.Value)
-        CloseLobbyIfReady();
-    }
-
-    private void CloseLobbyIfReady()
-    {
-      var first = false;
-      var second = false;
-      foreach (PlayerRoleState playerRole in _roleSelectionService.PlayerRoles)
-      {
-        if (playerRole.State == RoleState.ChosenFirst)
-          first = true;
-        if (playerRole.State == RoleState.ChosenSecond)
-          second = true;
-      }
-
-      if (first && second)
-      {
-        _mediator.DestroyButtons();
-        _sceneLoader.LoadScene("Gameplay", true, LoadSceneMode.Single);
-      }
-    }
-
-    private void SaveLobbyResults()
-    {
-      foreach (PlayerRoleState playerInfo in _roleSelectionService.PlayerRoles)
-      {
-        NetworkObject playerNetworkObject = _networkManager.SpawnManager.GetPlayerNetworkObject(playerInfo.ClientId);
-
-        if (playerNetworkObject && playerNetworkObject.TryGetComponent(out Player persistentPlayer))
-        {
-        }
-      }
     }
 
     private void SeatNewPlayer(ulong clientId)

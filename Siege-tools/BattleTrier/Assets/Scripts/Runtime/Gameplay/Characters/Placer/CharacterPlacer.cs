@@ -15,7 +15,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
   {
     private readonly ICharacterFactory _characterFactory;
     private readonly IPlacementSelection _placementSelection;
-    private readonly RoleBase _roleBase;
+    private readonly RoleState _role;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
     private readonly MapNetwork _mapNetwork;
     private readonly IEnemyFactory _enemyFactory;
@@ -28,7 +28,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
       IStaticDataProvider staticDataProvider,
       IEnemyFactory enemyFactory,
       IPlacementSelection placementSelection,
-      RoleBase roleBase,
       CharacterRegistryNetwork characterRegistryNetwork,
       MapNetwork mapNetwork)
     {
@@ -37,7 +36,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
       _staticDataProvider = staticDataProvider;
       _enemyFactory = enemyFactory;
       _placementSelection = placementSelection;
-      _roleBase = roleBase;
       _characterRegistryNetwork = characterRegistryNetwork;
       _mapNetwork = mapNetwork;
     }
@@ -48,7 +46,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
       Character character = _characterFactory.Create(selectedPlayerConfig.Id);
       tileToPlace.OccupyBy(character);
       character.MoveTo(tileToPlace.Coords);
-      if (_roleBase.State.Value == RoleState.ChosenFirst)
+      if (_role == RoleState.ChosenFirst)
       {
         for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
           if (_characterRegistryNetwork.FirstPlayerCharacters[i].TypeId == selectedPlayerConfig.Id &&
@@ -57,7 +55,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
             _characterRegistryNetwork.ChangeCharacterPositionServerRpc(
               tileToPlace.Coords,
               _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId,
-              _roleBase.State.Value);
+              _role);
             character.Id = _characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId;
             character.Name = _staticDataProvider.ConfigById(_characterRegistryNetwork.FirstPlayerCharacters[i].TypeId)
               .Name;
@@ -65,7 +63,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
             break;
           }
       }
-      else if (_roleBase.State.Value == RoleState.ChosenSecond)
+      else if (_role == RoleState.ChosenSecond)
       {
         for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
           if (_characterRegistryNetwork.SecondPlayerCharacters[i].TypeId == selectedPlayerConfig.Id &&
@@ -74,7 +72,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
             _characterRegistryNetwork.ChangeCharacterPositionServerRpc(
               tileToPlace.Coords,
               _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId,
-              _roleBase.State.Value);
+              _role);
             character.Id = _characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId;
             character.Name = _staticDataProvider.ConfigById(_characterRegistryNetwork.SecondPlayerCharacters[i].TypeId)
               .Name;
@@ -90,7 +88,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
     public void PlaceEnemiesOnTheirPositions()
     {
       Debug.Log("Placing enemies on their positions");
-      if (_roleBase.State.Value == RoleState.ChosenSecond)
+      if (_role == RoleState.ChosenSecond)
         for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
         {
           Tile tile = _mapNetwork.Tiles
@@ -126,7 +124,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Placer
     {
       newTile.OccupyBy(character);
       character.MoveTo(newTile.Coords);
-      _characterRegistryNetwork.ChangeCharacterPositionServerRpc(newTile.Coords, character.Id, _roleBase.State.Value);
+      _characterRegistryNetwork.ChangeCharacterPositionServerRpc(newTile.Coords, character.Id, _role);
     }
   }
 }

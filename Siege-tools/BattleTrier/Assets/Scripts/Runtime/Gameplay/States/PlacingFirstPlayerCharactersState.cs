@@ -12,27 +12,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
   {
     private readonly IPlacementSelection _placementSelection;
     private readonly GameplayMediator _mediator;
-    private readonly RoleBase _roleBase;
+    private readonly RoleState _role;
     private readonly MapNetwork _mapNetwork;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
 
     public PlacingFirstPlayerCharactersState(
       IPlacementSelection placementSelection,
       GameplayMediator mediator,
-      RoleBase roleBase,
       MapNetwork mapNetwork,
       CharacterRegistryNetwork characterRegistryNetwork)
     {
       _placementSelection = placementSelection;
       _mediator = mediator;
-      _roleBase = roleBase;
       _mapNetwork = mapNetwork;
       _characterRegistryNetwork = characterRegistryNetwork;
     }
 
     public override void Enter()
     {
-      switch (_roleBase.State.Value)
+      switch (_role)
       {
         case RoleState.ChosenFirst:
           _mediator.ShowPlacementActivePlayerUi();

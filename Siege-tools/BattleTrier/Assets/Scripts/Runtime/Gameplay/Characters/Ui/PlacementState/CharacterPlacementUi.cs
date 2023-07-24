@@ -39,7 +39,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.PlacementSt
     private CharacterRegistryNetwork _characterRegistryNetwork;
     private DiContainer _container;
     private PlacementStateNetwork _placementStateNetwork;
-    private RoleBase _role;
+    private RoleState _role;
     private IStaticDataProvider _staticDataProvider;
 
     [Inject]
@@ -47,13 +47,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.PlacementSt
       DiContainer container,
       IStaticDataProvider staticDataProvider,
       PlacementStateNetwork placementStateNetwork,
-      RoleBase role,
       CharacterRegistryNetwork characterRegistryNetwork)
     {
       _container = container;
       _staticDataProvider = staticDataProvider;
       _placementStateNetwork = placementStateNetwork;
-      _role = role;
       _characterRegistryNetwork = characterRegistryNetwork;
     }
 
@@ -99,11 +97,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.PlacementSt
     }
 
     private void OnReadyButtonClicked() =>
-      _placementStateNetwork.ChangeActivePlayerFromServerRpc(_role.State.Value);
+      _placementStateNetwork.ChangeActivePlayerFromServerRpc(_role);
 
     private void ShowActivePlayerUi()
     {
-      if (_role.State.Value == RoleState.ChosenFirst)
+      if (_role == RoleState.ChosenFirst)
       {
         var notPlacedCharactersById = new Dictionary<int, int>();
         for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
@@ -121,7 +119,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.PlacementSt
           item.Initialize(_staticDataProvider.ConfigById(character.Key), character.Value);
         }
       }
-      else if (_role.State.Value == RoleState.ChosenSecond)
+      else if (_role == RoleState.ChosenSecond)
       {
         var notPlacedCharactersById = new Dictionary<int, int>();
         for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)

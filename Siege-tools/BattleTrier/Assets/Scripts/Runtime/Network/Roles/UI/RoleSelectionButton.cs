@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -12,15 +13,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
     public RoleState ButtonIndex;
 
     private Button _button;
-
-    private RoleSelectionClient _roleSelection;
+    private NetworkManager _networkManager;
     private RoleSelectionService _selectionService;
 
     [Inject]
-    private void Construct(RoleSelectionClient roleSelection, RoleSelectionService selectionService)
+    private void Construct(RoleSelectionService selectionService, NetworkManager networkManager)
     {
       _selectionService = selectionService;
-      _roleSelection = roleSelection;
+      _networkManager = networkManager;
     }
 
     private void Awake()
@@ -29,21 +29,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
       _button.onClick.AddListener(OnRoleChosen);
     }
 
-    private void Update()
+    public void SetInteractable(bool interactable)
     {
-      if (ButtonIndex == RoleState.ChosenSpectator)
-        return;
-      foreach (PlayerRoleState playerRole in _selectionService.PlayerRoles)
-        if (playerRole.State == ButtonIndex)
-        {
-          _button.interactable = false;
-          return;
-        }
-
-      _button.interactable = true;
+      if (_button == null)
+        _button = GetComponent<Button>();
+      _button.interactable = interactable;
     }
 
     private void OnRoleChosen() =>
-      _roleSelection.OnPlayerChosenRole(ButtonIndex);
+      _selectionService.ChangeSeatServerRpc(_networkManager.LocalClientId, (int)ButtonIndex);
   }
 }

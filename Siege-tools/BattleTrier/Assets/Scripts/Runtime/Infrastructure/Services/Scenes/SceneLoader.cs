@@ -32,10 +32,12 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes
       else
       {
         // Load using SceneManager
-        if (mode == LoadSceneMode.Single)
-          _coroutineRunner.StartCoroutine(LoadCoroutine(name, mode));
+        _coroutineRunner.StartCoroutine(LoadCoroutine(name, mode));
       }
     }
+
+    public void UnloadScene(string name) =>
+      SceneManager.UnloadSceneAsync(name, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
 
     public void AddOnSceneEventCallback()
     {

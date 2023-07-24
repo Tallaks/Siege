@@ -12,8 +12,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
     public void Initialize() =>
       _roleUi.Initialize();
 
-    public void ConfigureUIForLobbyMode(RoleUiMode mode) =>
-      _roleUi.ConfigureUiForLobbyMode(mode);
+    public void UpdateLobbyUi() =>
+      _roleUi.UpdateLobbyUi();
 
     public void DestroyButtons() =>
       _roleUi.DestroyButtons();

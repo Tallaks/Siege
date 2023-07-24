@@ -13,27 +13,25 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     private readonly ICharacterRegistry _characterRegistry;
     private readonly IPlacementSelection _placementSelection;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
-    private readonly RoleBase _role;
+    private readonly RoleState _role;
     private readonly GameplayMediator _mediator;
 
     public CharacterSelectionState(
       ICharacterRegistry characterRegistry,
       IPlacementSelection placementSelection,
       CharacterRegistryNetwork characterRegistryNetwork,
-      RoleBase role,
       GameplayMediator mediator)
     {
       _characterRegistry = characterRegistry;
       _placementSelection = placementSelection;
       _characterRegistryNetwork = characterRegistryNetwork;
-      _role = role;
       _mediator = mediator;
     }
 
     public override void Enter()
     {
       Debug.Log("Entering character selection state");
-      _mediator.InitializeCharacterSelectionUi(_role.State.Value);
+      _mediator.InitializeCharacterSelectionUi(_role);
     }
 
     public override void Exit()
@@ -44,7 +42,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
       foreach (KeyValuePair<int, int> characterGroup in _characterRegistry.CharactersGroupsByConfigId)
         for (var i = 0; i < characterGroup.Value; i++)
-          _characterRegistryNetwork.RegisterByIdServerRpc(characterGroup.Key, _role.State.Value);
+          _characterRegistryNetwork.RegisterByIdServerRpc(characterGroup.Key, _role);
     }
   }
 }

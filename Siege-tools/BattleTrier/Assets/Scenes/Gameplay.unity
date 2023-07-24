@@ -12622,7 +12622,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _parentNewObjectsUnderSceneContext: 0
-  _contractNames: []
+  _contractNames:
+  - Gameplay
   _parentContractNames: []
 --- !u!1 &2040720703
 GameObject:

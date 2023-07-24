@@ -45,19 +45,17 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
     private CharacterRegistryNetwork _characterRegistryNetwork;
 
     private IInstantiator _instantiator;
-    private RoleBase _roleBase;
+    private RoleState _role;
 
     [Inject]
     private void Construct(
       IInstantiator instantiator,
       ICharacterRegistry characterRegistry,
-      CharacterRegistryNetwork characterRegistryNetwork,
-      RoleBase roleBase)
+      CharacterRegistryNetwork characterRegistryNetwork)
     {
       _instantiator = instantiator;
       _characterRegistry = characterRegistry;
       _characterRegistryNetwork = characterRegistryNetwork;
-      _roleBase = roleBase;
     }
 
     public void ShowActivePlayerBattleUi()
@@ -79,7 +77,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
 
     private void InitializePlayerList()
     {
-      if (_roleBase.State.Value == RoleState.ChosenFirst)
+      if (_role == RoleState.ChosenFirst)
         for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
         {
           var playerListElement =
@@ -92,7 +90,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
             $"Player <color=green>{character.Name}_{_characterRegistryNetwork.FirstPlayerCharacters[i].InstanceId}</color>" +
             $" placed on {character.Position}");
         }
-      else if (_roleBase.State.Value == RoleState.ChosenSecond)
+      else if (_role == RoleState.ChosenSecond)
         for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
         {
           var playerListElement =
@@ -109,7 +107,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
 
     private void InitializeEnemyList()
     {
-      if (_roleBase.State.Value == RoleState.ChosenFirst)
+      if (_role == RoleState.ChosenFirst)
         for (var i = 0; i < _characterRegistryNetwork.SecondPlayerCharacters.Count; i++)
         {
           var enemyListElement =
@@ -121,7 +119,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.Battle
             $"Enemy <color=red>{enemy.Character.Name}_{_characterRegistryNetwork.SecondPlayerCharacters[i].InstanceId}</color>" +
             $" placed on {enemy.Character.Position}");
         }
-      else if (_roleBase.State.Value == RoleState.ChosenSecond)
+      else if (_role == RoleState.ChosenSecond)
         for (var i = 0; i < _characterRegistryNetwork.FirstPlayerCharacters.Count; i++)
         {
           var enemyListElement =

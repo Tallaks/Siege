@@ -6,5 +6,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes
   {
     void AddOnSceneEventCallback();
     void LoadScene(string name, bool useNetwork, LoadSceneMode mode);
+    void UnloadScene(string name);
   }
 }

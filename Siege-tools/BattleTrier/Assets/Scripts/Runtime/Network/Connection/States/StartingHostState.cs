@@ -21,11 +21,11 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       Session<SessionPlayerData> session,
       LobbyInfo lobbyInfo)
     {
-      _connectionService = connectionService;
       _connectionStateMachine = connectionStateMachine;
-      _lobbyInfo = lobbyInfo;
-      _session = session;
+      _connectionService = connectionService;
       _networkManager = networkManager;
+      _session = session;
+      _lobbyInfo = lobbyInfo;
     }
 
     public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
@@ -42,7 +42,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
             payload); // https://docs.unity3d.com/2020.2/Documentation/Manual/JSONSerialization.html
 
         _session.SetupConnectingPlayerSessionData(clientId, connectionPayload.PlayerId,
-          new SessionPlayerData(clientId, connectionPayload.PlayerName, new NetworkGuid(), 0, true));
+          new SessionPlayerData(clientId, connectionPayload.PlayerName, new NetworkGuid(), true));
 
         response.Approved = true;
         response.CreatePlayerObject = true;

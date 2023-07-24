@@ -70,15 +70,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Session
       _hasSessionStarted = false;
     }
 
+    public void OnSessionStarted() =>
+      _hasSessionStarted = true;
+
     public void OnSessionEnded()
     {
       ClearDisconnectedPlayersData();
       ReinitializePlayersData();
       _hasSessionStarted = false;
     }
-
-    public void OnSessionStarted() =>
-      _hasSessionStarted = true;
 
     public void SetPlayerData(ulong clientId, T sessionPlayerData)
     {

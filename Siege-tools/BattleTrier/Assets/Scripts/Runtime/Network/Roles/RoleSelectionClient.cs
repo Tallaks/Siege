@@ -8,9 +8,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 {
   public class RoleSelectionClient : MonoBehaviour
   {
-    private readonly int _lastRoleSelected = -1;
     [SerializeField] private NetCodeHook _hook;
-    private bool _hasLocalPlayerLockedIn = false;
     private RoleMediator _mediator;
 
     private NetworkManager _networkManager;
@@ -36,7 +34,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
         _hook.OnNetworkDeSpawnHook += OnNetworkDeSpawn;
       }
 
-      _mediator.ConfigureUIForLobbyMode(RoleUiMode.ChooseSeat);
+      _mediator.UpdateLobbyUi();
     }
 
     private void OnDestroy()
@@ -45,23 +43,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
       _hook.OnNetworkDeSpawnHook -= OnNetworkDeSpawn;
     }
 
-    public void OnPlayerChosenRole(RoleState buttonIndex)
-    {
-      if (_roleSelectionService.IsSpawned)
-        _roleSelectionService.ChangeSeatServerRpc(_networkManager.LocalClientId, (int)buttonIndex);
-    }
-
     private void OnNetworkSpawn()
     {
       Debug.Log("Network spawn: client");
-      _roleSelectionService.LobbyIsClosed.OnValueChanged += OnLobbyClosedChanged;
       _roleSelectionService.PlayerRoles.OnListChanged += OnLobbyPlayerStateChanged;
     }
 
     private void OnNetworkDeSpawn()
     {
       Debug.Log("Network despawn: client");
-      _roleSelectionService.LobbyIsClosed.OnValueChanged -= OnLobbyClosedChanged;
       _roleSelectionService.PlayerRoles.OnListChanged -= OnLobbyPlayerStateChanged;
     }
 
@@ -69,18 +59,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     {
       Debug.Log("Player states list changed");
       UpdatePlayerCount();
-
-      for (var i = 0; i < _roleSelectionService.PlayerRoles.Count; i++)
-        Debug.Log(_roleSelectionService.PlayerRoles[i].ClientId + " " +
-                  _roleSelectionService.PlayerRoles[i].State);
-    }
-
-    private void OnLobbyClosedChanged(bool wasLobbyClosed, bool isLobbyClosed)
-    {
-      if (isLobbyClosed)
-        _mediator.ConfigureUIForLobbyMode(RoleUiMode.LobbyEnding);
-      else
-        _mediator.ConfigureUIForLobbyMode(_lastRoleSelected == -1 ? RoleUiMode.ChooseSeat : RoleUiMode.SeatChosen);
+      _mediator.UpdateLobbyUi();
     }
 
     private void UpdatePlayerCount()

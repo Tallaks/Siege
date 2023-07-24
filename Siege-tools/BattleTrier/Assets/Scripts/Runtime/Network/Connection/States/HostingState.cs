@@ -44,15 +44,13 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
       }
 
       string payload = System.Text.Encoding.UTF8.GetString(connectionData);
-      var connectionPayload =
-        JsonUtility.FromJson<ConnectionPayload>(
-          payload); // https://docs.unity3d.com/2020.2/Documentation/Manual/JSONSerialization.html
+      var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload);
       ConnectStatus gameReturnStatus = GetConnectStatus(connectionPayload);
 
       if (gameReturnStatus == ConnectStatus.Success)
       {
         _session.SetupConnectingPlayerSessionData(clientId, connectionPayload.PlayerId,
-          new SessionPlayerData(clientId, connectionPayload.PlayerName, new NetworkGuid(), 0, true));
+          new SessionPlayerData(clientId, connectionPayload.PlayerName, new NetworkGuid(), true));
 
         // connection approval will create a player object for you
         response.Approved = true;
@@ -69,7 +67,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     }
 
     public void OnClientConnect(ulong clientId) =>
-      Debug.Log($"Client {clientId} connected");
+      Debug.Log($"Client {_session.GetPlayerData(clientId)?.PlayerName} connected");
 
     public void ReactToClientDisconnect(ulong clientId)
     {
@@ -110,15 +108,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Connection.States
     {
       if (loadScene)
       {
-        _sceneLoader.LoadScene("RoleSelection", true, LoadSceneMode.Single);
+        _sceneLoader.LoadScene("Gameplay", true, LoadSceneMode.Single);
         if (_lobbyService.CurrentLobby != null)
           _lobbyService.StartTracking();
       }
     }
 
-    public override void Exit()
-    {
-    }
+    public override void Exit() =>
+      _session.OnServerEnded();
 
     private ConnectStatus GetConnectStatus(ConnectionPayload connectionPayload)
     {

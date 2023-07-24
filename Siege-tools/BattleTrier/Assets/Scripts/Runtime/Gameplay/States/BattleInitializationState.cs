@@ -6,18 +6,14 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
   public class BattleInitializationState : ParameterlessState
   {
     private readonly GameplayMediator _gameplayMediator;
-    private readonly RoleBase _role;
+    private readonly RoleState _role;
 
-    public BattleInitializationState(RoleBase role,
-      GameplayMediator gameplayMediator)
-    {
-      _role = role;
+    public BattleInitializationState(GameplayMediator gameplayMediator) =>
       _gameplayMediator = gameplayMediator;
-    }
 
     public override void Enter()
     {
-      if (_role.State.Value == RoleState.ChosenSpectator)
+      if (_role == RoleState.ChosenSpectator)
         _gameplayMediator.ShowSpectatorBattleUi();
       else
         _gameplayMediator.ShowActivePlayerBattleUi();

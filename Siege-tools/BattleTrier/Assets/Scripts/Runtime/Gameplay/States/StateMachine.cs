@@ -6,38 +6,48 @@ using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Registry;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Selection.Placement;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Maps;
 using Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI;
-using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
+using Kulinaria.Tools.BattleTrier.Runtime.Infrastructure.Services.Scenes;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Data;
+using Kulinaria.Tools.BattleTrier.Runtime.Network.Session;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class StateMachine
   {
-    private readonly CharacterRegistryNetwork _characterRegistryNetwork;
+    private readonly ISceneLoader _sceneLoader;
     private readonly ICharacterRegistry _characterRegistry;
     private readonly GameplayMediator _mediator;
-    private readonly RoleBase _role;
-    private readonly ICharacterPlacer _characterPlacer;
+    private readonly CharacterRegistryNetwork _characterRegistryNetwork;
     private readonly MapNetwork _mapNetwork;
+    private readonly Session<SessionPlayerData> _session;
+    private readonly ICharacterPlacer _characterPlacer;
     private readonly IPlacementSelection _placementSelection;
 
     public IExitState CurrentState { get; private set; }
+    private readonly NetworkManager _networkManager;
 
     private Dictionary<Type, IExitState> _states;
 
-    public StateMachine(RoleBase role,
+    public StateMachine(
+      ISceneLoader sceneLoader,
       ICharacterRegistry characterRegistry,
+      NetworkManager networkManager,
       GameplayMediator mediator,
       CharacterRegistryNetwork characterRegistryNetwork,
       MapNetwork mapNetwork,
+      Session<SessionPlayerData> session,
       ICharacterPlacer characterPlacer,
       IPlacementSelection placementSelection)
     {
-      _role = role;
+      _sceneLoader = sceneLoader;
       _characterRegistry = characterRegistry;
+      _networkManager = networkManager;
       _mediator = mediator;
       _characterRegistryNetwork = characterRegistryNetwork;
       _mapNetwork = mapNetwork;
+      _session = session;
       _characterPlacer = characterPlacer;
       _placementSelection = placementSelection;
     }
@@ -45,14 +55,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
     public void Initialize() =>
       _states = new Dictionary<Type, IExitState>
       {
-        [typeof(MapSelectionState)] = new MapSelectionState(_role, _mediator),
+        [typeof(RoleSelectionState)] = new RoleSelectionState(_sceneLoader),
+        [typeof(MapSelectionState)] = new MapSelectionState(_session, _networkManager, _mediator),
         [typeof(CharacterSelectionState)] = new CharacterSelectionState(
-          _characterRegistry, _placementSelection, _characterRegistryNetwork, _role, _mediator),
+          _characterRegistry, _placementSelection, _characterRegistryNetwork, _mediator),
         [typeof(PlacingFirstPlayerCharactersState)] = new PlacingFirstPlayerCharactersState(
-          _placementSelection, _mediator, _role, _mapNetwork, _characterRegistryNetwork),
+          _placementSelection, _mediator, _mapNetwork, _characterRegistryNetwork),
         [typeof(PlacingSecondPlayerCharactersState)] = new PlacingSecondPlayerCharactersState(
-          _placementSelection, _mediator, _role, _mapNetwork, _characterRegistryNetwork, _characterPlacer),
-        [typeof(BattleInitializationState)] = new BattleInitializationState(_role, _mediator)
+          _placementSelection, _mediator, _mapNetwork, _characterRegistryNetwork, _characterPlacer),
+        [typeof(BattleInitializationState)] = new BattleInitializationState(_mediator)
       };
 
     public void Enter<TState>() where TState : ParameterlessState
