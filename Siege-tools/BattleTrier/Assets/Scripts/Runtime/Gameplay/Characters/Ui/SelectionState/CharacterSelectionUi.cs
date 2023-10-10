@@ -1,6 +1,8 @@
 using Kulinaria.Tools.BattleTrier.Runtime.Network.Roles;
 using Sirenix.OdinInspector;
+using Unity.Netcode;
 using UnityEngine;
+using Zenject;
 
 namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionState
 {
@@ -16,10 +18,15 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.Characters.Ui.SelectionSt
     private GameObject _waitingAsSpectatorPanel;
 
     private RoleState _roleState;
+    private NetworkManager _networkManager;
 
-    public void Initialize(RoleState stateValue)
+    [Inject]
+    private void Construct(NetworkManager networkManager) =>
+      _networkManager = networkManager;
+
+    public void Initialize()
     {
-      _roleState = stateValue;
+      _roleState = _networkManager.LocalClient.PlayerObject.GetComponent<NetworkPlayerObject>().State.Value;
       if (_roleState is RoleState.ChosenFirst or RoleState.ChosenSecond)
         ShowCharacterSelectionPanel();
       else

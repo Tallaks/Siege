@@ -11,22 +11,24 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 {
   public class PlacingSecondPlayerCharactersState : ParameterlessState
   {
+    private readonly IPlacementSelection _placementSelection;
     private readonly GameplayMediator _mediator;
-    private readonly RoleState _role;
+    private readonly NetworkManager _networkManager;
+    private readonly MapNetwork _mapNetwork;
     private readonly CharacterRegistryNetwork _characterRegistryNetwork;
     private readonly ICharacterPlacer _characterPlacer;
-    private readonly MapNetwork _mapNetwork;
-    private readonly IPlacementSelection _placementSelection;
 
     public PlacingSecondPlayerCharactersState(
       IPlacementSelection placementSelection,
       GameplayMediator mediator,
+      NetworkManager networkManager,
       MapNetwork mapNetwork,
       CharacterRegistryNetwork characterRegistryNetwork,
       ICharacterPlacer characterPlacer)
     {
       _placementSelection = placementSelection;
       _mediator = mediator;
+      _networkManager = networkManager;
       _mapNetwork = mapNetwork;
       _characterRegistryNetwork = characterRegistryNetwork;
       _characterPlacer = characterPlacer;
@@ -34,7 +36,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
     public override void Enter()
     {
-      switch (_role)
+      switch (_networkManager.LocalClient.PlayerObject.GetComponent<NetworkPlayerObject>().State.Value)
       {
         case RoleState.ChosenFirst:
           _mediator.HidePlacementActivePlayerUi();
@@ -55,7 +57,7 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.States
 
     public override void Exit()
     {
-      if (_role == RoleState.ChosenSecond)
+      if (_networkManager.LocalClient.PlayerObject.GetComponent<NetworkPlayerObject>().State.Value == RoleState.ChosenSecond)
         _characterRegistryNetwork.SecondPlayerCharacters.OnListChanged -= OnSecondPlayerCharactersPlaced;
       else
         _characterPlacer.PlaceEnemiesOnTheirPositions();

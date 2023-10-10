@@ -43,7 +43,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
 
     private void OnDestroy()
     {
-      Debug.Log("Role Selection Server Initialization");
       _hook.OnNetworkSpawnHook -= OnNetworkSpawn;
       _hook.OnNetworkDeSpawnHook -= OnNetworkDespawn;
     }
@@ -51,7 +50,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private void OnNetworkSpawn()
     {
       Debug.Log("Network spawn: server");
-
       _networkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
       _networkManager.SceneManager.OnSceneEvent += OnSceneEvent;
     }
@@ -59,7 +57,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles
     private void OnNetworkDespawn()
     {
       Debug.Log("Network despawn: server");
-
       _networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
       _networkManager.SceneManager.OnSceneEvent -= OnSceneEvent;
     }

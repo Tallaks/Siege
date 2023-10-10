@@ -46,8 +46,8 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Gameplay.UI
     public void HideCharacterSelectionUi() =>
       _characterSelectionUi.HideCharacterSelectionUi();
 
-    public void InitializeCharacterSelectionUi(RoleState stateValue) =>
-      _characterSelectionUi.Initialize(stateValue);
+    public void InitializeCharacterSelectionUi() =>
+      _characterSelectionUi.Initialize();
 
     public void EnableMapSubmitButton() =>
       _mapSelectionUi.EnableSubmitButton();

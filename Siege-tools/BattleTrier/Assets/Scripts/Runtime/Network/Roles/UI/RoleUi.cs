@@ -66,7 +66,6 @@ namespace Kulinaria.Tools.BattleTrier.Runtime.Network.Roles.UI
       foreach (List<GameObject> gameObjects in _lobbyUiElementsByMode.Values)
         gameObjects.ForEach(go => go.SetActive(false));
 
-      Debug.Log(_roleSelectionService.PlayerRoles.Count);
       foreach (PlayerRoleState playerRole in _roleSelectionService.PlayerRoles)
       {
         if (playerRole.State == RoleState.ChosenFirst)
