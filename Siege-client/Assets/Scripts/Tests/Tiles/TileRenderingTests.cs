@@ -37,7 +37,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			PrepareTiles();
 			_gridMap.GenerateMap();
 
-			TileRenderer[] tiles = Object.FindObjectsOfType<TileRenderer>(includeInactive: true);
+			TileRenderer[] tiles = Object.FindObjectsOfType<TileRenderer>(true);
 			string shaderName = tiles[0].GetComponent<MeshRenderer>().material.shader.name;
 
 			Assert.AreEqual("Shader Graphs/Tile", shaderName);
@@ -61,7 +61,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			PrepareTiles();
 			_gridMap.GenerateMap();
 
-			CustomTile[] tiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
+			CustomTile[] tiles = Object.FindObjectsOfType<CustomTile>(true);
 
 			Assert.IsTrue(tiles.All(k => !k.Active));
 

@@ -28,13 +28,13 @@ namespace Kulinaria.Siege.Tests.InputService
 
 			// Act
 			PlayerInput player = PlayerInput.Instantiate(prefabPlayerInput, controlScheme: "Keyboard&Mouse");
-			
+
 			// Assert
 			Assert.That(player.devices, Is.EquivalentTo(new InputDevice[] { keyboard, mouse }));
 			Assert.That(player.currentControlScheme, Is.EqualTo("Keyboard&Mouse"));
-			
-			PlayerInput.DestroyImmediate(prefabPlayerInput);
-			PlayerInput.DestroyImmediate(player);
+
+			Object.DestroyImmediate(prefabPlayerInput);
+			Object.DestroyImmediate(player);
 		}
 	}
 }

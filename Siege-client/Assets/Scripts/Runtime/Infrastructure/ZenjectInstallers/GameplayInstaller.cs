@@ -10,7 +10,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 	{
 		[SerializeField, Required] private CameraMover _cameraMover;
 		[SerializeField, Required] private BattleMediator _battleMediator;
-		
+
 		public override void InstallBindings()
 		{
 			Container

@@ -7,12 +7,16 @@ namespace Kulinaria.Siege.Runtime.Extensions
 {
 	public static class GridExtensions
 	{
-		public static Vector3 ToWorld(this Vector2Int cellPosition) =>
-			new(0.5f + cellPosition.x, 0.1f, 0.5f + cellPosition.y);
-		
-		public static Vector2Int ToCell(this Vector3 worldPosition) =>
-			new(Mathf.RoundToInt(worldPosition.x - 0.1f), Mathf.RoundToInt(worldPosition.z  - 0.1f));
-		
+		public static Vector3 ToWorld(this Vector2Int cellPosition)
+		{
+			return new Vector3(0.5f + cellPosition.x, 0.1f, 0.5f + cellPosition.y);
+		}
+
+		public static Vector2Int ToCell(this Vector3 worldPosition)
+		{
+			return new Vector2Int(Mathf.RoundToInt(worldPosition.x - 0.1f), Mathf.RoundToInt(worldPosition.z - 0.1f));
+		}
+
 		public static IEnumerable<Vector2Int> MissingNeighboursPositions(this CustomTile tile)
 		{
 			Vector2Int[] allPositions =
@@ -27,11 +31,11 @@ namespace Kulinaria.Siege.Runtime.Extensions
 				new(tile.CellPosition.x, tile.CellPosition.y - 1)
 			};
 
-			return 
+			return
 				from position in allPositions
-					let neighbourPositions = tile.ActiveNeighbours.Select(k => k.CellPosition) 
-					where !neighbourPositions.Contains(position) 
-					select position;
+				let neighbourPositions = tile.ActiveNeighbours.Select(k => k.CellPosition)
+				where !neighbourPositions.Contains(position)
+				select position;
 		}
 
 		public static bool? IsDiagonalPositionTo(this Vector2Int point, Vector2Int target)
@@ -41,10 +45,10 @@ namespace Kulinaria.Siege.Runtime.Extensions
 
 			if (deltaX > 1 || deltaY > 1)
 				return null;
-			
+
 			return deltaX + deltaY == 2;
 		}
-		
+
 		public static bool? IsDiagonalPositionTo(this CustomTile a, CustomTile b)
 		{
 			int deltaX = Mathf.Abs(a.CellPosition.x - b.CellPosition.x);
@@ -52,9 +56,8 @@ namespace Kulinaria.Siege.Runtime.Extensions
 
 			if (deltaY > 1 || deltaX > 1)
 				return null;
-			
+
 			return deltaX + deltaY == 2;
 		}
-
 	}
 }

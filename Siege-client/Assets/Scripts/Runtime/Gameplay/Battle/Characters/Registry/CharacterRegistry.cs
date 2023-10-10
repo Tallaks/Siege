@@ -20,11 +20,15 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Registry
 			foreach (BaseEnemy enemy in _enemies)
 				enemy.MaxAP = newValue;
 		}
-		
-		public void RegisterPlayer(BasePlayer player) =>
-			_players.Add(player);
 
-		public void RegisterEnemy(BaseEnemy enemy) =>
+		public void RegisterPlayer(BasePlayer player)
+		{
+			_players.Add(player);
+		}
+
+		public void RegisterEnemy(BaseEnemy enemy)
+		{
 			_enemies.Add(enemy);
+		}
 	}
 }

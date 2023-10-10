@@ -12,13 +12,13 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Prototype
 		public static int[,] GridArray;
 
 		private readonly TilemapFactory _tilemapFactory;
-		private List<CustomTile> _tiles = new();
-
-		public ArrayGridMap(TilemapFactory tilemapFactory) => 
-			_tilemapFactory = tilemapFactory;
 
 		public IEnumerable<CustomTile> AllTiles => _tiles;
 		public IEnumerable<CustomTile> EmptyTiles => _tiles.Where(k => !k.HasVisitor);
+		private List<CustomTile> _tiles = new();
+
+		public ArrayGridMap(TilemapFactory tilemapFactory) =>
+			_tilemapFactory = tilemapFactory;
 
 		public void GenerateMap()
 		{

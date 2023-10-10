@@ -14,12 +14,15 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 		private readonly IInputService _inputService;
 		private readonly IPathRenderer _pathRenderer;
 		private readonly CameraMover _cameraMover;
-		private ICoroutineRunner _coroutineRunner;
+		private readonly ICoroutineRunner _coroutineRunner;
+
+		public bool HasPath => _firstPoint != null && _secondPoint != null;
+		public bool HasFirstSelectedTile => _firstPoint != null;
+		private Coroutine _currentCoroutine;
 
 		private CustomTile _firstPoint;
-		private CustomTile _secondPoint;
 		private CustomTile _previewSecondPoint;
-		private Coroutine _currentCoroutine;
+		private CustomTile _secondPoint;
 
 		public PathSelector(
 			ILoggerService loggerService,
@@ -34,9 +37,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 			_pathRenderer = pathRenderer;
 			_cameraMover = cameraMover;
 		}
-
-		public bool HasPath => _firstPoint != null && _secondPoint != null;
-		public bool HasFirstSelectedTile => _firstPoint != null;
 
 		public void Dispose()
 		{
@@ -90,10 +90,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 						}
 					}
 					else
+					{
 						_pathRenderer.Clear();
+					}
 				}
 				else
+				{
 					_pathRenderer.Clear();
+				}
 			}
 		}
 	}

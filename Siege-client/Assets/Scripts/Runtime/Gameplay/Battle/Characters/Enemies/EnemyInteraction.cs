@@ -35,7 +35,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Enemies
 			SelectEnemy();
 		}
 
-		private void SelectEnemy() => 
+		private void SelectEnemy()
+		{
 			_loggerService.Log($"Enemy {Visitor.Name} is interacted", LoggerLevel.Characters);
+		}
 	}
 }

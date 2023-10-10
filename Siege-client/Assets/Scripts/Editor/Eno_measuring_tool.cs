@@ -1,12 +1,3 @@
-//-------------------------------
-//            Eno
-// Released under GNU GPL v3.0
-// Developed by Linkage Games
-// Developed for u/miraoister
-// https://github.com/LinkageGames/Eno
-//-------------------------------
-
-
 using UnityEditor;
 using UnityEngine;
 
@@ -20,35 +11,29 @@ namespace Kulinaria.Siege.Editor
 			second,
 			showing,
 			none
-		};
+		}
+
+		private Vector3 first = Vector3.zero;
 
 		private measurementStates measurementState = measurementStates.none;
-		private Vector3 first = Vector3.zero;
 
 		private Vector3 second = Vector3.zero;
 
+		private bool test;
 
-		[MenuItem("Window/Eno")]
-		static void Init()
+		private void OnEnable()
 		{
-			Eno window = (Eno)EditorWindow.GetWindow(typeof(Eno));
-			window.minSize = new Vector2(215f, 22f);
-			window.maxSize = new Vector2(1000f, 222f);
-			window.position = new Rect(window.position.x, window.position.y, 215f, 22f);
+			SceneView.onSceneGUIDelegate += OnSceneGUI;
 		}
 
-		bool test;
-
-		void OnGUI()
+		private void OnGUI()
 		{
 			GUILayout.BeginHorizontal();
 
 			if (measurementState.Equals(measurementStates.none))
 			{
 				if (GUILayout.Button("Measure"))
-				{
 					measurementState = measurementStates.first;
-				}
 			}
 			else if (measurementState.Equals(measurementStates.first))
 			{
@@ -64,16 +49,9 @@ namespace Kulinaria.Siege.Editor
 			}
 
 			if (GUILayout.Button("Restart"))
-			{
 				Restart();
-			}
 
 			GUILayout.EndHorizontal();
-		}
-
-		void OnEnable()
-		{
-			SceneView.onSceneGUIDelegate += OnSceneGUI;
 		}
 
 		public void OnSceneGUI(SceneView sceneView)
@@ -112,12 +90,10 @@ namespace Kulinaria.Siege.Editor
 				Handles.DrawLine(first, second);
 				Handles.SphereHandleCap(42, first, Quaternion.identity, 0.05f, EventType.Repaint);
 				Handles.SphereHandleCap(42, second, Quaternion.identity, 0.05f, EventType.Repaint);
-				if (Event.current != null && (Event.current.button == 0) && Event.current.type.Equals(EventType.MouseDown))
-				{
+				if (Event.current != null && Event.current.button == 0 && Event.current.type.Equals(EventType.MouseDown))
 					Restart();
-				}
 
-				this.Repaint();
+				Repaint();
 			}
 			else
 			{
@@ -127,12 +103,19 @@ namespace Kulinaria.Siege.Editor
 			SceneView.RepaintAll();
 		}
 
+		[MenuItem("Window/Eno")]
+		private static void Init()
+		{
+			var window = (Eno)GetWindow(typeof(Eno));
+			window.minSize = new Vector2(215f, 22f);
+			window.maxSize = new Vector2(1000f, 222f);
+			window.position = new Rect(window.position.x, window.position.y, 215f, 22f);
+		}
 
 		private bool DropPoint(out Vector3 point)
 		{
 			point = Vector3.zero;
 			Event e = Event.current;
-
 
 			if (e.button == 0 && e.type.Equals(EventType.MouseDown))
 			{
@@ -161,7 +144,7 @@ namespace Kulinaria.Siege.Editor
 			if (e.keyCode == KeyCode.Escape && e.type.Equals(EventType.KeyDown))
 			{
 				Restart();
-				this.Repaint();
+				Repaint();
 			}
 		}
 	}

@@ -7,7 +7,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering.UvRotators
 	{
 		private readonly Vector2Int _missingTilePos;
 
-		public Uv7_1_0Rotator(Vector2Int missingTilePos) => 
+		public Uv7_1_0Rotator(Vector2Int missingTilePos) =>
 			_missingTilePos = missingTilePos;
 
 		public float AngleDeg(CustomTile sourceTile)

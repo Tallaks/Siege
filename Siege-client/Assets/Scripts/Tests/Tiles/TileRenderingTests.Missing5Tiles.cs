@@ -17,7 +17,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 1 },
 				{ 0, 1, 0 },
-				{ 1, 0, 1 },
+				{ 1, 0, 1 }
 			};
 
 			yield return AssertTileTextureFor(grid, config.Tile0_4_4);
@@ -26,7 +26,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 0, 1 },
 				{ 0, 1, 0 },
-				{ 1, 0, 0 },
+				{ 1, 0, 0 }
 			};
 
 			yield return AssertTileTextureFor(grid, config.Tile0_4_4);
@@ -35,7 +35,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 0, 0 },
 				{ 0, 1, 1 },
-				{ 0, 0, 1 },
+				{ 0, 0, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile1_3_4);
@@ -44,7 +44,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 0, 0 },
 				{ 0, 1, 1 },
-				{ 1, 0, 0 },
+				{ 1, 0, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile1_3_4);
@@ -53,7 +53,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 0, 1 },
 				{ 0, 1, 0 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile1_3_4);
@@ -62,7 +62,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 0, 0 },
 				{ 0, 1, 0 },
-				{ 1, 1, 0 },
+				{ 1, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile1_3_4);
@@ -71,7 +71,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 0, 0 },
 				{ 1, 1, 0 },
-				{ 0, 0, 1 },
+				{ 0, 0, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 270f, config.Tile1_3_4);
@@ -80,7 +80,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 1 },
 				{ 1, 1, 0 },
-				{ 0, 0, 1 },
+				{ 0, 0, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 270f, config.Tile1_3_4);
@@ -89,7 +89,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 1 },
 				{ 1, 1, 0 },
-				{ 1, 0, 0 },
+				{ 1, 0, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 270f, config.Tile1_3_4);
@@ -98,7 +98,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 0 },
 				{ 1, 1, 0 },
-				{ 1, 0, 1 },
+				{ 1, 0, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 270f, config.Tile1_3_4);
@@ -109,7 +109,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 0 },
 				{ 1, 1, 0 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 180f, config.Tile3_3_2);
@@ -118,7 +118,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 0 },
 				{ 1, 1, 1 },
-				{ 0, 0, 0 },
+				{ 0, 0, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile3_3_2);
@@ -127,7 +127,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 0 },
 				{ 0, 1, 1 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile3_3_2);
@@ -136,7 +136,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 0 },
 				{ 1, 1, 1 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 270f, config.Tile3_3_2);
@@ -147,7 +147,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 0 },
 				{ 1, 1, 0 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 180f, config.Tile3_3_2);
@@ -156,7 +156,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 0 },
 				{ 1, 1, 1 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 270f, config.Tile3_3_2);
@@ -165,7 +165,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 0 },
 				{ 0, 1, 1 },
-				{ 0, 1, 1 },
+				{ 0, 1, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile3_2_3);
@@ -176,7 +176,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 0 },
 				{ 1, 1, 0 },
-				{ 1, 0, 0 },
+				{ 1, 0, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 270f, config.Tile2_3_3);
@@ -185,7 +185,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 0 },
 				{ 0, 1, 1 },
-				{ 0, 0, 1 },
+				{ 0, 0, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 180f, config.Tile2_3_3);
@@ -194,7 +194,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 1, 0 },
 				{ 0, 1, 1 },
-				{ 0, 0, 0 },
+				{ 0, 0, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 180f, config.Tile2_3_3);
@@ -203,7 +203,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 0 },
 				{ 0, 1, 1 },
-				{ 1, 1, 0 },
+				{ 1, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile2_3_3);
@@ -212,7 +212,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 1 },
 				{ 0, 1, 1 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile2_3_3);
@@ -221,7 +221,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 0, 0 },
 				{ 1, 1, 0 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile2_3_3);
@@ -230,7 +230,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 0 },
 				{ 1, 1, 0 },
-				{ 0, 1, 1 },
+				{ 0, 1, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile2_3_3);
@@ -241,7 +241,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 1 },
 				{ 0, 1, 0 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile2_2_4);
@@ -250,7 +250,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 0 },
 				{ 0, 1, 0 },
-				{ 0, 1, 1 },
+				{ 0, 1, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile2_2_4);
@@ -259,7 +259,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 1, 0 },
 				{ 0, 1, 0 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile2_2_4);
@@ -268,7 +268,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 1, 0 },
 				{ 0, 1, 0 },
-				{ 1, 1, 0 },
+				{ 1, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0, config.Tile2_2_4);
@@ -277,7 +277,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 1 },
 				{ 1, 1, 1 },
-				{ 0, 0, 0 },
+				{ 0, 0, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile2_2_4);
@@ -286,7 +286,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 0 },
 				{ 1, 1, 1 },
-				{ 0, 0, 1 },
+				{ 0, 0, 1 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile2_2_4);
@@ -295,7 +295,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 1, 0, 0 },
 				{ 1, 1, 1 },
-				{ 0, 0, 0 },
+				{ 0, 0, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile2_2_4);
@@ -304,7 +304,7 @@ namespace Kulinaria.Siege.Tests.Tiles
 			{
 				{ 0, 0, 0 },
 				{ 1, 1, 1 },
-				{ 1, 0, 0 },
+				{ 1, 0, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 90f, config.Tile2_2_4);

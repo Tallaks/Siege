@@ -9,15 +9,15 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering
 #if UNITY_INCLUDE_TESTS
 		public static TileSpritesConfig ConfigForTests;
 #endif
-		
-		private TileSpritesConfig _config =
-			Resources.Load<TileSpritesConfig>("Configs/TileRules");
 
 		private readonly Dictionary<int, IMaterialPropertyChanger> _propertyChangers;
 
+		private readonly TileSpritesConfig _config =
+			Resources.Load<TileSpritesConfig>("Configs/TileRules");
+
 		public TilesRenderingAggregator()
 		{
-			_propertyChangers = new()
+			_propertyChangers = new Dictionary<int, IMaterialPropertyChanger>
 			{
 				[0] = new NoNeighboursPropertyChanger(_config),
 				[1] = new OneNeighbourPropertyChanger(_config),
@@ -29,13 +29,15 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering
 				[7] = new SevenNeighboursPropertyChanger(_config),
 				[8] = new EightNeighboursPropertyChanger(_config)
 			};
-			
+
 #if UNITY_INCLUDE_TESTS
-		ConfigForTests = _config;
+			ConfigForTests = _config;
 #endif
 		}
-		
-		public void ChangeMaterial(CustomTile tile, Material material, int neighboursNumber) => 
+
+		public void ChangeMaterial(CustomTile tile, Material material, int neighboursNumber)
+		{
 			_propertyChangers[neighboursNumber].ChangeMaterial(tile, material);
+		}
 	}
 }

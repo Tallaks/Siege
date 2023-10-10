@@ -7,20 +7,19 @@ using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 {
-	[RequireComponent(typeof(CustomTile))]
-	[RequireComponent(typeof(Collider))]
+	[RequireComponent(typeof(CustomTile)), RequireComponent(typeof(Collider))]
 	public class TileInteraction : MonoBehaviour, IInteractable
 	{
-		private IPathSelector _pathSelector;
-		private ILoggerService _loggerService;
-		private IDeselectService _deselectService;
-		private IPathFinder _pathFinder;
-
 		public CustomTile Tile => GetComponent<CustomTile>();
 		public BaseCharacter Visitor => Tile.Visitor;
+		private IDeselectService _deselectService;
+		private ILoggerService _loggerService;
+		private IPathFinder _pathFinder;
+		private IPathSelector _pathSelector;
 
 		[Inject]
-		private void Construct(ILoggerService loggerService, IPathFinder pathFinder, IPathSelector pathSelector, IDeselectService deselectService)
+		private void Construct(ILoggerService loggerService, IPathFinder pathFinder, IPathSelector pathSelector,
+			IDeselectService deselectService)
 		{
 			_pathFinder = pathFinder;
 			_deselectService = deselectService;
@@ -33,15 +32,19 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 			if (_pathSelector.HasFirstSelectedTile && !_pathSelector.HasPath)
 			{
 				_loggerService.Log("Draw path between two tiles", LoggerLevel.Map);
-				if(_pathFinder.GetShortestPath(to: Tile).Count != 0)
+				if (_pathFinder.GetShortestPath(Tile).Count != 0)
 					_pathSelector.SelectSecondTile(Tile);
 				else
 					Tile.Interaction.Interact();
 			}
 			else if (Tile.HasVisitor)
+			{
 				Visitor.Interaction.Interact();
+			}
 			else
+			{
 				_deselectService.Deselect();
+			}
 		}
 	}
 }

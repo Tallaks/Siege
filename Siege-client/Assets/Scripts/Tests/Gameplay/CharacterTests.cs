@@ -17,23 +17,10 @@ namespace Kulinaria.Siege.Tests.Gameplay
 	[TestFixture]
 	public class CharacterTests
 	{
-		private PlayerFactory _playerFactory;
-		private EnemyFactory _enemyFactory;
-		private Setup _spawnSetup;
 		private ICharacterRegistry _characterRegistry;
-
-		[UnitySetUp]
-		public IEnumerator LoadSceneAndReferences()
-		{
-			ApplicationInstaller.Testing = true;
-			yield return SceneManager.LoadSceneAsync(SceneNames.BattleScene);
-
-			DiContainer diContainer = Object.FindObjectOfType<SceneContext>().Container;
-			_spawnSetup = diContainer.Resolve<Setup>();
-			_playerFactory = diContainer.Resolve<PlayerFactory>();
-			_enemyFactory = diContainer.Resolve<EnemyFactory>();
-			_characterRegistry = diContainer.Resolve<ICharacterRegistry>();
-		}
+		private EnemyFactory _enemyFactory;
+		private PlayerFactory _playerFactory;
+		private Setup _spawnSetup;
 
 		[UnityTest]
 		public IEnumerator WhenBattleSceneLoaded_ThenCharacterServicesInstalled()
@@ -60,6 +47,19 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Assert.NotZero(Object.FindObjectsOfType<BasePlayer>().Length);
 			Assert.AreEqual(Object.FindObjectsOfType<BasePlayer>().Length, _spawnSetup.PlayerSlots.Count());
 			yield break;
+		}
+
+		[UnitySetUp]
+		public IEnumerator LoadSceneAndReferences()
+		{
+			ApplicationInstaller.Testing = true;
+			yield return SceneManager.LoadSceneAsync(SceneNames.BattleScene);
+
+			DiContainer diContainer = Object.FindObjectOfType<SceneContext>().Container;
+			_spawnSetup = diContainer.Resolve<Setup>();
+			_playerFactory = diContainer.Resolve<PlayerFactory>();
+			_enemyFactory = diContainer.Resolve<EnemyFactory>();
+			_characterRegistry = diContainer.Resolve<ICharacterRegistry>();
 		}
 	}
 }

@@ -26,7 +26,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 		public void Clear()
 		{
 			foreach (LineRenderer lineRenderer in _lineRenderers)
-				lineRenderer.gameObject.SetActive(false);
+				_pathRendererPool.Release(lineRenderer);
 
 			_lineRenderers = new List<LineRenderer>();
 		}
@@ -38,8 +38,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 
 			while (currentNode.Next != null)
 			{
-				LineRenderer lineRenderer =
-					_pathRendererPool.GetFreeElement(Vector3.zero, Quaternion.identity);
+				LineRenderer lineRenderer = _pathRendererPool.Get();
 
 				lineRenderer.positionCount = 2;
 				lineRenderer.SetPosition(0, currentNode.Value.transform.position);

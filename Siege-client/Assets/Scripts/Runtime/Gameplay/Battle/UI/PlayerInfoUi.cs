@@ -12,14 +12,20 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.UI
 		[SerializeField, Required, HideIf(nameof(CanvasIsValid))] private Canvas _canvas;
 		[SerializeField, Required] private Slider _healthSlider;
 		[SerializeField, Required] private Slider _actionSlider;
-		
-		public void ShowPanel() => 
+
+		public void ShowPanel()
+		{
 			_canvas.gameObject.SetActive(true);
+		}
 
-		public void HidePanel() => 
+		public void HidePanel()
+		{
 			_canvas.gameObject.SetActive(false);
+		}
 
-		private bool CanvasIsValid() =>
-			_canvas != null;
+		private bool CanvasIsValid()
+		{
+			return _canvas != null;
+		}
 	}
 }

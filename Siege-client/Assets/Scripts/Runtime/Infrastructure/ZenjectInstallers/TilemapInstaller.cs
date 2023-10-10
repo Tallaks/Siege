@@ -14,8 +14,10 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 		private ILoggerService _loggerService;
 
 		[Inject]
-		private void Construct(ILoggerService loggerService) => 
+		private void Construct(ILoggerService loggerService)
+		{
 			_loggerService = loggerService;
+		}
 
 		public void Initialize()
 		{
@@ -54,13 +56,13 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 				.To<BellmanFordPathFinder>()
 				.FromNew()
 				.AsSingle();
-			
+
 			Container
 				.Bind<ITileActivator>()
 				.To<TileActivator>()
 				.FromNew()
 				.AsSingle();
-			
+
 			Container
 				.Bind<IDeselectService>()
 				.To<DeselectService>()

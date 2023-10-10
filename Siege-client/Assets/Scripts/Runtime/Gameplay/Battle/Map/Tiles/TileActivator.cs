@@ -18,7 +18,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 			_pathFinder = pathFinder;
 			_map = map;
 		}
-		
+
 		public void ActivateTilesAround(BaseCharacter character)
 		{
 			CalculatePath(character.Interaction.Tile, character.MaxAP, out IEnumerable<CustomTile> availableTiles);

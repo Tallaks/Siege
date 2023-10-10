@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Config
 {
-	[CreateAssetMenu(menuName = "Siege/Enemy", fileName = "NewEnemy")]
-	[Serializable]
+	[CreateAssetMenu(menuName = "Siege/Enemy", fileName = "NewEnemy"), Serializable]
 	public class EnemyConfig : ScriptableObject
 	{
 		public string Name;

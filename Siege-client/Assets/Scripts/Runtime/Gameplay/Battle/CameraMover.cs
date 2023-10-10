@@ -22,8 +22,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle
 		private float _yDeg;
 
 		[Inject]
-		private void Construct(IInputService inputService) =>
+		private void Construct(IInputService inputService)
+		{
 			_inputService = inputService;
+		}
 
 		private void Awake()
 		{

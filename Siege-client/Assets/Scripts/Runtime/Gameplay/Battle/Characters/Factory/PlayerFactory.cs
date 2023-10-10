@@ -8,8 +8,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 {
 	public class PlayerFactory : PrefabFactory<BasePlayer>
 	{
-		private DiContainer _container;
 		private readonly ILoggerService _loggerService;
+		private readonly DiContainer _container;
 
 		public PlayerFactory(DiContainer container, ILoggerService loggerService)
 		{
@@ -30,7 +30,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Factory
 			player.Name = slot.Player.Name;
 
 			slot.Spawn.Tile.RegisterVisitor(player);
-			
+
 			_loggerService.Log($"Created: {player}", LoggerLevel.Characters);
 			return player;
 		}

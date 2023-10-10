@@ -23,10 +23,10 @@ namespace Kulinaria.Siege.Tests.Gameplay
 	public class CharacterSelectionTests : ZenjectIntegrationTestFixture
 	{
 		private IGridMap _gridMap;
-		private CustomTile _tile00;
-		private CustomTile _tile20;
 
 		private List<BasePlayer> _players = new();
+		private CustomTile _tile00;
+		private CustomTile _tile20;
 
 		[UnityTest]
 		public IEnumerator WhenOnePlayerSelected_ThenOtherPlayersTileNotActive()
@@ -114,7 +114,7 @@ namespace Kulinaria.Siege.Tests.Gameplay
 			Container.Resolve<Setup>().InitPlayers(new List<PlayerSlot>
 			{
 				new() { Player = playerConfig0, Spawn = playerTile0 },
-				new() { Player = playerConfig1, Spawn = playerTile1 },
+				new() { Player = playerConfig1, Spawn = playerTile1 }
 			});
 
 			_players = new List<BasePlayer>();

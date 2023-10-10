@@ -9,7 +9,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 		private readonly ILoggerService _loggerService;
 		private readonly IInputService _inputService;
 		private readonly CameraMover _cameraMover;
-		private IDeselectService _deselectService;
+		private readonly IDeselectService _deselectService;
 
 		public GridmapInteractor(
 			ILoggerService loggerService,
@@ -47,7 +47,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Selection
 					return;
 				}
 			}
-			
+
 			_deselectService.Deselect();
 		}
 	}

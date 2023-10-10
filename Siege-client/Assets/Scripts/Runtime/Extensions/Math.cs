@@ -13,7 +13,9 @@ namespace Kulinaria.Siege.Runtime.Extensions
 			return Mathf.Clamp(value, min, max);
 		}
 
-		public static Vector3 WithY(this Vector3 vector, float y) => 
-			new(vector.x, y, vector.z);
+		public static Vector3 WithY(this Vector3 vector, float y)
+		{
+			return new Vector3(vector.x, y, vector.z);
+		}
 	}
 }

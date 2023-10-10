@@ -56,8 +56,14 @@ namespace Kulinaria.Siege.Tests.Scenes
 			yield break;
 		}
 
-		private AsyncOperation LoadBootScene() => SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		private AsyncOperation LoadBootScene()
+		{
+			return SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		}
 
-		private AsyncOperation LoadBattleScene() => SceneManager.LoadSceneAsync(SceneNames.BattleScene);
+		private AsyncOperation LoadBattleScene()
+		{
+			return SceneManager.LoadSceneAsync(SceneNames.BattleScene);
+		}
 	}
 }

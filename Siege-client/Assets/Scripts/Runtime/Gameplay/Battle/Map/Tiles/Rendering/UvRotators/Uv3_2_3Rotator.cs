@@ -7,7 +7,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering.UvRotators
 	{
 		private readonly Vector2Int _diagonalPos;
 
-		public Uv3_2_3Rotator(Vector2Int diagonalPos) => 
+		public Uv3_2_3Rotator(Vector2Int diagonalPos) =>
 			_diagonalPos = diagonalPos;
 
 		public float AngleDeg(CustomTile sourceTile)

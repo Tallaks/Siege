@@ -29,14 +29,11 @@ namespace Kulinaria.Siege.Tests.Scenes
 			Assert.IsTrue(SceneManager.GetActiveScene().name == SceneNames.BootScene);
 		}
 
-		[Test]
-		public void WhenProjectContextResourceLoadingCalled_ThenProjectContextLoads()
+		[UnityTest]
+		public IEnumerator WhenBootSceneLoaded_ThenCoroutineRunnerExists()
 		{
-			// Arrange
-			// Act
-			var projectContextPrefab = Resources.Load<ProjectContext>("ProjectContext");
-			// Assert
-			Assert.IsNotNull(projectContextPrefab);
+			yield return LoadBootScene();
+			Assert.NotNull(Object.FindObjectOfType<CoroutineRunner>());
 		}
 
 		[UnityTest]
@@ -70,21 +67,22 @@ namespace Kulinaria.Siege.Tests.Scenes
 			Assert.AreEqual(1, Object.FindObjectsOfType<ApplicationInstaller>().Length);
 		}
 
-		[UnityTest]
-		public IEnumerator WhenBootSceneLoaded_ThenCoroutineRunnerExists()
+		[Test]
+		public void WhenProjectContextResourceLoadingCalled_ThenProjectContextLoads()
 		{
-			yield return LoadBootScene();
-			Assert.NotNull(Object.FindObjectOfType<CoroutineRunner>());
+			// Arrange
+			// Act
+			var projectContextPrefab = Resources.Load<ProjectContext>("ProjectContext");
+			// Assert
+			Assert.IsNotNull(projectContextPrefab);
 		}
 
 		[UnityTearDown]
 		public IEnumerator TearDown()
 		{
 			ICoroutineRunner resolvedRunner = null;
-			if(Object.FindObjectOfType<ProjectContext>() != null)
-			{
+			if (Object.FindObjectOfType<ProjectContext>() != null)
 				resolvedRunner = Object.FindObjectOfType<ProjectContext>().Container.Resolve<ICoroutineRunner>();
-			}
 
 			foreach (CoroutineRunner runner in Object.FindObjectsOfType<CoroutineRunner>())
 			{
@@ -103,6 +101,9 @@ namespace Kulinaria.Siege.Tests.Scenes
 			yield return new WaitForSeconds(0.5f);
 		}
 
-		private AsyncOperation LoadBootScene() => SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		private AsyncOperation LoadBootScene()
+		{
+			return SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		}
 	}
 }

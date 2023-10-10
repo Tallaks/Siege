@@ -18,13 +18,12 @@ namespace Kulinaria.Siege.Tests.GridMap
 		private SceneContext Context => Object.FindObjectOfType<SceneContext>();
 		private ApplicationInstaller ApplicationInstaller => Object.FindObjectOfType<ApplicationInstaller>();
 
-		[UnitySetUp]
-		public IEnumerator SetUp()
+		[UnityTest]
+		public IEnumerator WhenBattleSceneLoaded_ThenCustomTilesAreInstantiated()
 		{
-			ApplicationInstaller.Testing = false;
-			yield return LoadBootScene();
-			ApplicationInstaller.Initialize();
-			yield return new WaitForSeconds(2);
+			CustomTile[] tiles = Object.FindObjectsOfType<CustomTile>(true);
+			Assert.NotZero(tiles.Length);
+			yield break;
 		}
 
 		[UnityTest]
@@ -35,12 +34,13 @@ namespace Kulinaria.Siege.Tests.GridMap
 			yield break;
 		}
 
-		[UnityTest]
-		public IEnumerator WhenBattleSceneLoaded_ThenCustomTilesAreInstantiated()
+		[UnitySetUp]
+		public IEnumerator SetUp()
 		{
-			CustomTile[] tiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
-			Assert.NotZero(tiles.Length);
-			yield break;
+			ApplicationInstaller.Testing = false;
+			yield return LoadBootScene();
+			ApplicationInstaller.Initialize();
+			yield return new WaitForSeconds(2);
 		}
 
 		[UnityTearDown]
@@ -60,7 +60,9 @@ namespace Kulinaria.Siege.Tests.GridMap
 			yield break;
 		}
 
-		private AsyncOperation LoadBootScene() => 
-			SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		private AsyncOperation LoadBootScene()
+		{
+			return SceneManager.LoadSceneAsync(SceneNames.BootScene, LoadSceneMode.Single);
+		}
 	}
 }

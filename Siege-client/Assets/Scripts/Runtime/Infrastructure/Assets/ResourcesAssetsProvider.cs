@@ -7,7 +7,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.Assets
 	{
 		private readonly ILoggerService _loggerService;
 
-		public ResourcesAssetsProvider(ILoggerService loggerService) => 
+		public ResourcesAssetsProvider(ILoggerService loggerService) =>
 			_loggerService = loggerService;
 
 		public T LoadAsset<T>(string arg) where T : Object

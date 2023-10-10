@@ -1,89 +1,61 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Utilities
 {
-	public class Pool<TElement> : IInitializable where TElement : Component
+	public class Pool<TElement> : IInitializable where TElement : Component, new()
 	{
-		private readonly DiContainer _diContainer;
+		private readonly IInstantiator _instantiator;
 		private readonly Transform _poolContainer;
-		private GameObject _prefab;
-		private int _minCapacity;
-		private int _maxCapacity = 100;
-		private bool _autoExpand;
-		private List<TElement> _pool = new();
+		private readonly GameObject _prefab;
+		private IObjectPool<TElement> _pool;
 
-		public Pool(DiContainer diContainer, GameObject prefab, int minCapacity, bool autoExpand = true)
+		public Pool(IInstantiator instantiator, GameObject prefab)
 		{
-			_diContainer = diContainer;
-			_prefab = prefab;
-			_minCapacity = minCapacity;
-			_autoExpand = autoExpand;
-
-			if (_autoExpand)
-			{
-				_maxCapacity = Int32.MaxValue;
-			}
-
+			_instantiator = instantiator;
 			_poolContainer = new GameObject($"PoolContainer {typeof(TElement).Name}").transform;
+			_prefab = prefab;
 		}
 
-		public void Initialize() =>
-			CreatePool();
-
-		public TElement GetFreeElement(Vector3 position, Quaternion rotation)
+		public void Initialize()
 		{
-			TElement element = GetFreeElement();
-			Transform transform = element.transform;
-			transform.position = position;
-			transform.rotation = rotation;
-			return element;
+			CreatePool();
+		}
+
+		public TElement Get()
+		{
+			return _pool.Get();
+		}
+
+		public void Release(TElement element)
+		{
+			_pool.Release(element);
 		}
 
 		private void CreatePool()
 		{
-			_pool = new List<TElement>(_minCapacity);
-
-			for (var i = 0; i < _minCapacity; i++)
-				CreateElement();
+			_pool = new ObjectPool<TElement>(CreateElement, GetFreeElement, ReleaseElement, OnDestroyElement);
 		}
 
-		private TElement CreateElement(bool isActiveByDefault = false)
+		private void OnDestroyElement(TElement element)
 		{
-			TElement createObject =
-				_diContainer.InstantiatePrefabForComponent<TElement>(_prefab.GetComponent<TElement>(), _poolContainer);
-			createObject.gameObject.SetActive(isActiveByDefault);
-
-			_pool.Add(createObject);
-
-			return createObject;
+			Object.Destroy(element.gameObject);
 		}
 
-		private bool TryGetElement(out TElement element)
+		private void ReleaseElement(TElement element)
 		{
-			int index = _pool.FindIndex(item => item.gameObject.activeInHierarchy == false);
-			if (index != -1)
-			{
-				element = _pool[index];
-				element.gameObject.SetActive(true);
-				return true;
-			}
-
-			element = null;
-			return false;
+			element.gameObject.SetActive(false);
 		}
 
-		private TElement GetFreeElement()
+		private void GetFreeElement(TElement element)
 		{
-			if (TryGetElement(out TElement element))
-				return element;
+			element.gameObject.SetActive(true);
+		}
 
-			if (_autoExpand || _pool.Count < _maxCapacity)
-				return CreateElement(true);
-
-			throw new Exception($"Pool of {typeof(TElement).Name} is Over!");
+		private TElement CreateElement()
+		{
+			return _instantiator.InstantiatePrefabForComponent<TElement>(_prefab.GetComponent<TElement>(), _poolContainer);
 		}
 	}
 }

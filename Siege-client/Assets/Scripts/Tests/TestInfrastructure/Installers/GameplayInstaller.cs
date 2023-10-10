@@ -8,10 +8,14 @@ namespace Kulinaria.Siege.Tests.TestInfrastructure.Installers
 	{
 		private CameraMover _cameraMover;
 
-		public void PreInstall(params object[] args) => 
+		public void PreInstall(params object[] args)
+		{
 			_cameraMover = AssetDatabase.LoadAssetAtPath<CameraMover>("Assets/Prefabs/Battle/CameraMover.prefab");
+		}
 
-		public void Install(DiContainer container) => 
+		public void Install(DiContainer container)
+		{
 			container.Bind<CameraMover>().FromComponentInNewPrefab(_cameraMover).AsSingle();
+		}
 	}
 }

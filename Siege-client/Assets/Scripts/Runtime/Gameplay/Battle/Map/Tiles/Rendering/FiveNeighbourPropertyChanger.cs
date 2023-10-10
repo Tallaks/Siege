@@ -105,7 +105,6 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering
 				material.SetTexture(TileRenderer.TileTex, _config.Tile3_2_3);
 				var uvRotator = new Uv3_2_3Rotator(diagonalBetweenSidesPos);
 				material.SetFloat(TileRenderer.AngleProperty, uvRotator.AngleDeg(sourceTile));
-				return;
 			}
 		}
 	}

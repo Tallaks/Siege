@@ -12,11 +12,13 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 		private Dictionary<CustomTile, CustomTile> _predecessors;
 		private CustomTile _startTile;
 
-		public BellmanFordPathFinder(IGridMap map) => 
+		public BellmanFordPathFinder(IGridMap map) =>
 			_map = map;
 
-		public int Distance(CustomTile to) =>
-			_distances[to];
+		public int Distance(CustomTile to)
+		{
+			return _distances[to];
+		}
 
 		public LinkedList<CustomTile> GetShortestPath(CustomTile tile)
 		{
@@ -45,8 +47,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Path
 			return path;
 		}
 
-		public IEnumerable<CustomTile> GetAvailableTilesByDistance(int distance) =>
-			_map.AllTiles.Where(k => _distances[k] <= distance);
+		public IEnumerable<CustomTile> GetAvailableTilesByDistance(int distance)
+		{
+			return _map.AllTiles.Where(k => _distances[k] <= distance);
+		}
 
 		public void FindDistancesToAllTilesFrom(CustomTile startTile)
 		{

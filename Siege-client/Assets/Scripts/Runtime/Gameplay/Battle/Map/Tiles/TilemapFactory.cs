@@ -11,11 +11,13 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 		private readonly DiContainer _container;
 		private Transform _parent;
 
-		public TilemapFactory(DiContainer container) => 
+		public TilemapFactory(DiContainer container) =>
 			_container = container;
 
-		public void Initialize(Transform parent) => 
+		public void Initialize(Transform parent)
+		{
 			_parent = parent;
+		}
 
 		public CustomTile Create(Vector2Int cellPosition)
 		{

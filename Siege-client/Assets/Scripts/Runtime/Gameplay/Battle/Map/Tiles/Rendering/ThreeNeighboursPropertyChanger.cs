@@ -27,8 +27,8 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering
 
 			if (allNeighbours.All(k => !k.IsDiagonalPositionTo(sourceTile).Value))
 			{
-				Vector2Int missingSide = sourceTile.MissingNeighboursPositions().
-					First(k => !k.IsDiagonalPositionTo(sourceTile.CellPosition).Value);
+				Vector2Int missingSide = sourceTile.MissingNeighboursPositions()
+					.First(k => !k.IsDiagonalPositionTo(sourceTile.CellPosition).Value);
 
 				material.SetTexture(TileRenderer.TileTex, _config.Tile3_3_2);
 				var rotator = new Uv3_3_2Rotator(missingSide);

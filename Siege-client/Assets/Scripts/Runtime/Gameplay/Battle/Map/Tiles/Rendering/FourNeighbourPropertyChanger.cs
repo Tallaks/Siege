@@ -25,7 +25,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering
 			IEnumerable<Vector2Int> missingTiles = sourceTile.MissingNeighboursPositions();
 
 			IUvRotator rotator;
-			
+
 			if (!diagonalNeighbours.Any())
 			{
 				material.SetTexture(TileRenderer.TileTex, _config.Tile4_4_0);
@@ -77,7 +77,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering
 				if (diagonalIsBetweenSides)
 				{
 					material.SetTexture(TileRenderer.TileTex, _config.Tile4_2_2);
-					Vector2Int missingDiagonal 
+					Vector2Int missingDiagonal
 						= diagonalBetweenTiles.First(k => missingTiles.Contains(k));
 					var transformer = new Uv4_2_2Transformer(missingDiagonal, missingSide);
 					material.SetFloat(TileRenderer.AngleProperty, transformer.AngleDeg(sourceTile));
@@ -109,11 +109,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering
 				material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
 				return;
 			}
-			
+
 			material.SetTexture(TileRenderer.TileTex, _config.Tile3_2_3);
 			rotator = new Uv3_2_3Rotator(diagonalBetweenSides);
 			material.SetFloat(TileRenderer.AngleProperty, rotator.AngleDeg(sourceTile));
-			return;
 		}
 	}
 }

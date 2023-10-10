@@ -8,17 +8,18 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters
 	[RequireComponent(typeof(Collider))]
 	public abstract class CharacterInteraction : MonoBehaviour, IInteractable
 	{
-		[SerializeField, Required, ShowIn(PrefabKind.PrefabAsset)]
-		private BaseCharacter _owner;
+		[SerializeField, Required, ShowIn(PrefabKind.PrefabAsset)] private BaseCharacter _owner;
 
 		public CustomTile Tile { get; private set; }
 
 		public BaseCharacter Visitor =>
 			_owner;
 
-		public void Assign(CustomTile customTile) =>
-			Tile = customTile;
-
 		public abstract void Interact();
+
+		public void Assign(CustomTile customTile)
+		{
+			Tile = customTile;
+		}
 	}
 }

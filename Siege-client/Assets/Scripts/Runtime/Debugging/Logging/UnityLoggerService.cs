@@ -5,16 +5,16 @@ namespace Kulinaria.Siege.Runtime.Debugging.Logging
 	public class UnityLoggerService : ILoggerService
 	{
 		public static int DefaultPriority;
-		
+
 		public void Log(object message, LoggerLevel level, int priority = 10)
 		{
-			if(priority >= DefaultPriority)
+			if (priority >= DefaultPriority)
 				Debug.Log($"{LoggerPart(level)}: {message}");
 		}
 
 		public void Log(object message, int priority = 10)
 		{
-			if(priority >= DefaultPriority)
+			if (priority >= DefaultPriority)
 				Log(message, LoggerLevel.None, priority);
 		}
 

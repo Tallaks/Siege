@@ -11,11 +11,12 @@ using Zenject;
 
 namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 {
-	[RequireComponent(typeof(Renderer))]
-	[RequireComponent(typeof(TileRenderer))]
-	[RequireComponent(typeof(TileInteraction))]
+	[RequireComponent(typeof(Renderer)), RequireComponent(typeof(TileRenderer)),
+	 RequireComponent(typeof(TileInteraction))]
 	public class CustomTile : MonoBehaviour
 	{
+		private readonly Dictionary<CustomTile, int> _neighboursWithDistances = new();
+
 		public IReadOnlyDictionary<CustomTile, int> NeighboursWithDistances =>
 			_neighboursWithDistances;
 
@@ -31,11 +32,10 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 			set => GetComponent<Renderer>().enabled = value;
 		}
 
-		public BaseCharacter Visitor =>
-			_visitor;
+		public BaseCharacter Visitor { get; private set; }
 
 		public bool HasVisitor =>
-			_visitor != null;
+			Visitor != null;
 
 		public TileRenderer Renderer =>
 			GetComponent<TileRenderer>();
@@ -43,11 +43,12 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 		public TileInteraction Interaction =>
 			GetComponent<TileInteraction>();
 
-		private readonly Dictionary<CustomTile, int> _neighboursWithDistances = new();
+		public Vector2Int this[int x, int y] =>
+			new(CellPosition.x + x, CellPosition.y + y);
+
+		private ILoggerService _logger;
 
 		private IGridMap _map;
-		private ILoggerService _logger;
-		private BaseCharacter _visitor;
 
 		[Inject]
 		private void Construct(ILoggerService logger, IGridMap map, IClickInteractor selector)
@@ -65,15 +66,14 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles
 
 		public void RegisterVisitor(BaseCharacter visitor)
 		{
-			_visitor = visitor;
-			_visitor.Interaction.Assign(this);
+			Visitor = visitor;
+			Visitor.Interaction.Assign(this);
 		}
 
-		public void UnregisterVisitor() =>
-			_visitor = null;
-
-		public Vector2Int this[int x, int y] =>
-			new(CellPosition.x + x, CellPosition.y + y);
+		public void UnregisterVisitor()
+		{
+			Visitor = null;
+		}
 
 		private void AddNeighbours(Vector2Int cellPos)
 		{

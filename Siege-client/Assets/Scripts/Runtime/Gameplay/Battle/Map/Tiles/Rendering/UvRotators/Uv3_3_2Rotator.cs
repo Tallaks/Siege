@@ -7,7 +7,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering.UvRotators
 	{
 		private readonly Vector2Int _missingSide;
 
-		public  Uv3_3_2Rotator(Vector2Int missingSide) => 
+		public Uv3_3_2Rotator(Vector2Int missingSide) =>
 			_missingSide = missingSide;
 
 		public float AngleDeg(CustomTile sourceTile)
@@ -20,7 +20,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Tiles.Rendering.UvRotators
 				return 180f;
 			if (sourceTile[0, 1] == _missingSide)
 				return 270f;
-			
+
 			throw new InvalidEnumArgumentException("Некорректный тайл для определения!");
 		}
 	}

@@ -39,8 +39,8 @@ namespace Kulinaria.Siege.Tests.GridMap
 			PrepareTiles();
 			Container.Resolve<IGridMap>().GenerateMap();
 
-			Assert.NotZero(Object.FindObjectsOfType<CustomTile>(includeInactive: true).Length);
-			Assert.AreEqual(4, Object.FindObjectsOfType<CustomTile>(includeInactive: true).Length);
+			Assert.NotZero(Object.FindObjectsOfType<CustomTile>(true).Length);
+			Assert.AreEqual(4, Object.FindObjectsOfType<CustomTile>(true).Length);
 			Assert.AreEqual(4, Container.Resolve<IGridMap>().AllTiles.Count());
 			yield break;
 		}
@@ -57,7 +57,7 @@ namespace Kulinaria.Siege.Tests.GridMap
 			PrepareTiles();
 			Container.Resolve<IGridMap>().GenerateMap();
 
-			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
+			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(true);
 			Assert.NotZero(customTiles.Length);
 			Assert.AreEqual(2, customTiles.Length);
 			Assert.AreEqual(
@@ -78,8 +78,8 @@ namespace Kulinaria.Siege.Tests.GridMap
 
 			PrepareTiles();
 			Container.Resolve<IGridMap>().GenerateMap();
-			
-			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
+
+			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(true);
 			Assert.NotZero(customTiles.Length);
 			Assert.AreEqual(5, customTiles.Length);
 			Assert.AreEqual(
@@ -99,8 +99,8 @@ namespace Kulinaria.Siege.Tests.GridMap
 			ArrayGridMap.GridArray = new[,] { { 1, 1 }, { 1, 1 } };
 			PrepareTiles();
 			Container.Resolve<IGridMap>().GenerateMap();
-			
-			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(includeInactive: true);
+
+			CustomTile[] customTiles = Object.FindObjectsOfType<CustomTile>(true);
 			Assert.IsFalse(customTiles[0].CellPosition == customTiles[1].CellPosition);
 			Assert.IsFalse(customTiles[0].CellPosition == customTiles[2].CellPosition);
 			Assert.IsFalse(customTiles[0].CellPosition == customTiles[3].CellPosition);

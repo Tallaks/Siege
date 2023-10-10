@@ -8,12 +8,13 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players
 	public class PlayerInteraction : CharacterInteraction
 	{
 		private ILoggerService _loggerService;
+		private IPathFinder _pathFinder;
 		private IPathSelector _pathSelector;
 		private ITileActivator _tileActivator;
-		private IPathFinder _pathFinder;
 
 		[Inject]
-		private void Construct(ILoggerService loggerService, IPathFinder pathFinder, IPathSelector pathSelector, ITileActivator tileActivator)
+		private void Construct(ILoggerService loggerService, IPathFinder pathFinder, IPathSelector pathSelector,
+			ITileActivator tileActivator)
 		{
 			_pathFinder = pathFinder;
 			_tileActivator = tileActivator;
@@ -32,7 +33,7 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Characters.Players
 				}
 
 				_loggerService.Log("Draw path between two tiles", LoggerLevel.Map);
-				if(_pathFinder.GetShortestPath(to: Tile).Count != 0)
+				if (_pathFinder.GetShortestPath(Tile).Count != 0)
 					_pathSelector.SelectSecondTile(Tile);
 				else
 					SelectPlayer();

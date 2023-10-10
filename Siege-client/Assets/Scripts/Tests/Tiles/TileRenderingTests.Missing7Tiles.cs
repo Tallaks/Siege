@@ -12,57 +12,57 @@ namespace Kulinaria.Siege.Tests.Tiles
 		{
 			var config = Resources.Load<TileSpritesConfig>("Configs/TileRules");
 			PrepareTiles();
-			
+
 			var grid = new[,]
 			{
 				{ 0, 1, 0 },
 				{ 0, 1, 0 },
-				{ 0, 0, 0 },
+				{ 0, 0, 0 }
 			};
-			
+
 			yield return AssertTileTextureAndAngleFor(grid, 180f, config.Tile1_3_4);
 
 			grid = new[,]
 			{
 				{ 0, 0, 0 },
 				{ 0, 1, 0 },
-				{ 0, 1, 0 },
+				{ 0, 1, 0 }
 			};
 
 			yield return AssertTileTextureAndAngleFor(grid, 0f, config.Tile1_3_4);
-			
+
 			grid = new[,]
 			{
 				{ 1, 0, 0 },
 				{ 0, 1, 0 },
-				{ 0, 0, 0 },
+				{ 0, 0, 0 }
 			};
 
 			yield return AssertTileTextureFor(grid, config.Tile0_4_4);
-			
+
 			grid = new[,]
 			{
 				{ 0, 0, 1 },
 				{ 0, 1, 0 },
-				{ 0, 0, 0 },
+				{ 0, 0, 0 }
 			};
 
 			yield return AssertTileTextureFor(grid, config.Tile0_4_4);
-			
+
 			grid = new[,]
 			{
 				{ 0, 0, 0 },
 				{ 0, 1, 0 },
-				{ 0, 0, 1 },
+				{ 0, 0, 1 }
 			};
 
 			yield return AssertTileTextureFor(grid, config.Tile0_4_4);
-			
+
 			grid = new[,]
 			{
 				{ 0, 0, 0 },
 				{ 0, 1, 0 },
-				{ 1, 0, 0 },
+				{ 1, 0, 0 }
 			};
 
 			yield return AssertTileTextureFor(grid, config.Tile0_4_4);

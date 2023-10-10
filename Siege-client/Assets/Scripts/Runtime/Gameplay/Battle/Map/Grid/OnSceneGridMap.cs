@@ -9,15 +9,16 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid
 {
 	public class OnSceneGridMap : IGridMap
 	{
-		private List<CustomTile> _tiles = new();
 		public IEnumerable<CustomTile> AllTiles
 		{
 			get => _tiles;
 			private set => _tiles = new List<CustomTile>(value);
 		}
 
-		public IEnumerable<CustomTile> EmptyTiles => 
+		public IEnumerable<CustomTile> EmptyTiles =>
 			_tiles.Where(k => !k.HasVisitor);
+
+		private List<CustomTile> _tiles = new();
 
 		public void GenerateMap()
 		{
@@ -34,7 +35,9 @@ namespace Kulinaria.Siege.Runtime.Gameplay.Battle.Map.Grid
 			AllTiles = new List<CustomTile>();
 		}
 
-		public CustomTile GetTile(int x, int y) => 
-			_tiles.FirstOrDefault(k => k.transform.localPosition == new Vector2Int(x, y).ToWorld());
+		public CustomTile GetTile(int x, int y)
+		{
+			return _tiles.FirstOrDefault(k => k.transform.localPosition == new Vector2Int(x, y).ToWorld());
+		}
 	}
 }
