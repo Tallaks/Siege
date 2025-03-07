@@ -39,7 +39,7 @@ namespace Kulinaria.Siege.Runtime.Infrastructure.ZenjectInstallers
 			Container
 				.Bind<ICoroutineRunner>()
 				.To<CoroutineRunner>()
-				.FromMethod(() => new GameObject().AddComponent<CoroutineRunner>())
+				.FromInstance(new GameObject().AddComponent<CoroutineRunner>())
 				.AsSingle();
 
 			Container
